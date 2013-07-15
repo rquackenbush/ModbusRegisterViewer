@@ -38,24 +38,22 @@
 
                         <Image  Source="..\Images\caslogo.png" Width="300" ></Image>
                         
-                        <TextBlock TextWrapping="Wrap" Grid.Row="1" Padding="10">
-                            <TextBlock FontSize="16" FontWeight="Bold">
-                                Version <TextBlock Text="{Binding Path=Version}"></TextBlock>
-                            </TextBlock>
-                        </TextBlock>
-                        
-                        <!--<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" x:Name="Scroller">
+
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" x:Name="Scroller">
 
                             <TextBlock Padding="6" TextWrapping="Wrap"  Width="{Binding ElementName=Scroller, Path=ViewportWidth}">
-                           
-                                <TextBlock FontWeight="Bold" TextWrapping="Wrap">Licenses</TextBlock>
-                                <LineBreak/>
                                 
-                                <TextBlock Text="{Binding Path=Licenses[0].Text}" TextWrapping="Wrap"></TextBlock>
+                                <TextBlock FontSize="16" FontWeight="Bold">
+                                    Version <TextBlock Text="{Binding Path=Version}"></TextBlock>
+                                </TextBlock><LineBreak/>
+                                <LineBreak/>
+                                <TextBlock FontWeight="Bold" TextWrapping="Wrap">Licenses</TextBlock><LineBreak/>
+                                <LineBreak/>
+                                <TextBlock Text="{Binding Path=License}" TextWrapping="Wrap"></TextBlock>
                          
                             </TextBlock>
 
-                        </ScrollViewer>-->
+                        </ScrollViewer>
                     </Grid>
                     
                     <Button Grid.Row="2" HorizontalAlignment="Right" MinWidth="60" Margin="8" Command="{Binding Path=HideCommand}">

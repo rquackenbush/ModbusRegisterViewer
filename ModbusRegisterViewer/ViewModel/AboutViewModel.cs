@@ -13,6 +13,8 @@ namespace ModbusRegisterViewer.ViewModel
     public class AboutViewModel : ViewModelBase
     {
         private Visibility _visibility;
+        private readonly Lazy<string> _license;
+
 
         public AboutViewModel()
         {
@@ -20,6 +22,13 @@ namespace ModbusRegisterViewer.ViewModel
             this.HideCommand = new RelayCommand(Hide);
 
             _visibility = Visibility.Collapsed;
+
+            _license = new Lazy<string>(() =>
+                {
+                    var assembly = this.GetType().Assembly;
+
+                    return assembly.ReadManifestResourceStream("ModbusRegisterViewer.Licenses.Licenses.txt");
+                });
         }
 
         private void Show()
@@ -48,6 +57,11 @@ namespace ModbusRegisterViewer.ViewModel
         public string Version
         {
             get { return this.GetType().Assembly.GetName().Version.ToString(); }
+        }
+
+        public string License
+        {
+            get { return _license.Value; }
         }
     }
 }
