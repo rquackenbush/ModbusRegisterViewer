@@ -1,4 +1,4 @@
 Modbus Registry Viewer
 ======================
 
-Open source Modbus software.
+Utility to view the Input and Holding registers on a modbus slave device.
