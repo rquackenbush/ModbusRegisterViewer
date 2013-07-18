@@ -42,5 +42,10 @@ namespace ModbusRegisterViewer.ViewModel
         {
             get { return string.Format("0x{0:x4}", _value); }
         }
+
+        public string Binary
+        {
+            get { return Convert.ToString(_value, 2).PadLeft(16, '0').Insert(8, " "); }
+        }
     }
 }

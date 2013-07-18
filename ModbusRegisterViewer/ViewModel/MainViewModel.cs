@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Timers;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -8,6 +9,7 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using System.Collections.Generic;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using ModbusRegisterViewer.Model;
 
 namespace ModbusRegisterViewer.ViewModel
@@ -26,6 +28,9 @@ namespace ModbusRegisterViewer.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        private readonly object _communicationLock = new object();
+        private bool _isRunning = false;
+
         private RegisterTypeViewModel _registerType;
         private int? _slaveAddress;
         private int? _startingRegister;
@@ -33,6 +38,8 @@ namespace ModbusRegisterViewer.ViewModel
         private ObservableCollection<RegisterViewModel> _registers;
         private readonly AboutViewModel _aboutViewModel = new AboutViewModel();
         private readonly ExceptionViewModel _exceptionViewModel = new ExceptionViewModel();
+
+        private readonly Timer _autoRefreshTimer = new Timer(2000);
 
         private readonly List<RegisterTypeViewModel> _registerTypes = new List<RegisterTypeViewModel>()
         {
@@ -45,7 +52,7 @@ namespace ModbusRegisterViewer.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            this.GetRegistersCommand = new RelayCommand(GetRegisters);
+            this.GetRegistersCommand = new RelayCommand(GetRegisters, CanGetRegisters);
 
             this.ExitCommand = new RelayCommand(Exit);
 
@@ -67,76 +74,110 @@ namespace ModbusRegisterViewer.ViewModel
             StartingRegister = settings.StartingRegister;
             NumberOfRegisters = settings.NumberOfRegisters;
 
-            RegisterType = _registerTypes.FirstOrDefault(rt => (int) rt.RegisterType == settings.RegisterType);
+            RegisterType = _registerTypes.FirstOrDefault(rt => (int)rt.RegisterType == settings.RegisterType);
+
+            _autoRefreshTimer.Elapsed += _autoRefreshTimer_Elapsed;
+        }
+
+        void _autoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(GetRegisters);
+        }
+
+        private bool CanGetRegisters()
+        {
+            return !this.IsAutoRefresh;
         }
 
         private void GetRegisters()
         {
+            if (_isRunning)
+                return;
+
             try
             {
-                if (!SlaveAddress.HasValue)
-                    return;
-
-                if (!StartingRegister.HasValue)
-                    return;
-
-                if (!NumberOfRegisters.HasValue)
-                    return;
-
-                var slaveAddress = (byte)SlaveAddress.Value;
-                var startingRegister = (ushort)(StartingRegister.Value);
-                var numberOfRegisters = (ushort)NumberOfRegisters.Value;
-
-                if (RegisterType == null)
-                    return;
-
-                //Save theese query criteria
-                var settings = Properties.Settings.Default;
-
-                settings.SlaveAddress = slaveAddress;
-                settings.StartingRegister = startingRegister;
-                settings.NumberOfRegisters = numberOfRegisters;
-                settings.RegisterType = (int) RegisterType.RegisterType;
-
-                settings.Save();
-
-                ushort[] results;
-
-                using (var context = new MasterContext())
+                lock (_communicationLock)
                 {
-                    context.Master.Transport.ReadTimeout = 2000;
-
-                    switch (RegisterType.RegisterType)
+                    try
                     {
-                        case Model.RegisterType.Input:
+                        _isRunning = true;
 
-                            results = context.Master.ReadInputRegisters(slaveAddress, (ushort)(startingRegister - 1), numberOfRegisters);
+                        if (!SlaveAddress.HasValue)
+                            return;
 
-                            break;
+                        if (!StartingRegister.HasValue)
+                            return;
 
-                        case Model.RegisterType.Holding:
+                        if (!NumberOfRegisters.HasValue)
+                            return;
 
-                            results = context.Master.ReadHoldingRegisters(slaveAddress, (ushort)(startingRegister - 1), numberOfRegisters);
+                        var slaveAddress = (byte)SlaveAddress.Value;
+                        var startingRegister = (ushort)(StartingRegister.Value);
+                        var numberOfRegisters = (ushort)NumberOfRegisters.Value;
 
-                            break;
+                        if (RegisterType == null)
+                            return;
 
-                        default:
-                            throw new InvalidOperationException(string.Format("Unrecognized enum value {0}", RegisterType.RegisterType));
+                        //Save theese query criteria
+                        var settings = Properties.Settings.Default;
+
+                        settings.SlaveAddress = slaveAddress;
+                        settings.StartingRegister = startingRegister;
+                        settings.NumberOfRegisters = numberOfRegisters;
+                        settings.RegisterType = (int)RegisterType.RegisterType;
+
+                        settings.Save();
+
+                        ushort[] results;
+
+                        using (var context = new MasterContext())
+                        {
+                            context.Master.Transport.ReadTimeout = 2000;
+
+                            switch (RegisterType.RegisterType)
+                            {
+                                case Model.RegisterType.Input:
+
+                                    results = context.Master.ReadInputRegisters(slaveAddress,
+                                                                                (ushort)(startingRegister - 1),
+                                                                                numberOfRegisters);
+
+                                    break;
+
+                                case Model.RegisterType.Holding:
+
+                                    results = context.Master.ReadHoldingRegisters(slaveAddress,
+                                                                                  (ushort)(startingRegister - 1),
+                                                                                  numberOfRegisters);
+
+                                    break;
+
+                                default:
+                                    throw new InvalidOperationException(string.Format("Unrecognized enum value {0}",
+                                                                                      RegisterType.RegisterType));
+                            }
+                        }
+
+                        ushort registerNumber = startingRegister;
+
+                        var rows = results.Select(r => new RegisterViewModel(registerNumber++, r));
+
+                        Registers = new ObservableCollection<RegisterViewModel>(rows);
+                    }
+                    finally
+                    {
+                        _isRunning = false;
                     }
                 }
-
-                ushort registerNumber = startingRegister;
-
-                var rows = results.Select(r => new RegisterViewModel(registerNumber++, r));
-
-                Registers = new ObservableCollection<RegisterViewModel>(rows);
             }
             catch (Exception ex)
             {
-                this.Exception.ShowCommand.Execute(ex);
+                if (this.IsAutoRefresh)
+                {
+                    this.IsAutoRefresh = false;
+                }
 
-                //ex.Display();
-                //MessageBox.Show(ex.Message);
+                this.Exception.ShowCommand.Execute(ex);
             }
         }
 
@@ -151,17 +192,36 @@ namespace ModbusRegisterViewer.ViewModel
 
         public ObservableCollection<RegisterViewModel> Registers
         {
-            get { return _registers;  }
+            get { return _registers; }
             private set
             {
                 _registers = value;
                 RaisePropertyChanged(() => Registers);
             }
         }
-        
+
         public List<RegisterTypeViewModel> RegisterTypes
         {
-            get { return _registerTypes;  }
+            get { return _registerTypes; }
+        }
+
+        public bool IsAutoRefresh
+        {
+            get { return _autoRefreshTimer.Enabled; }
+            set
+            {
+                if (_autoRefreshTimer.Enabled != value)
+                {
+                    _autoRefreshTimer.Enabled = value;
+
+                    if (value)
+                    {
+                        GetRegisters();
+                    }
+
+                    RaisePropertyChanged(() => IsAutoRefresh);
+                }
+            }
         }
 
         public RegisterTypeViewModel RegisterType
@@ -173,7 +233,7 @@ namespace ModbusRegisterViewer.ViewModel
                 RaisePropertyChanged(() => RegisterType);
             }
         }
-        
+
         public int? SlaveAddress
         {
             get { return _slaveAddress; }
@@ -186,7 +246,7 @@ namespace ModbusRegisterViewer.ViewModel
 
         public int? StartingRegister
         {
-            get { return _startingRegister;  }
+            get { return _startingRegister; }
             set
             {
                 _startingRegister = value;
@@ -196,7 +256,7 @@ namespace ModbusRegisterViewer.ViewModel
 
         public int? NumberOfRegisters
         {
-            get { return _numberOfregisters;  }
+            get { return _numberOfregisters; }
             set
             {
                 _numberOfregisters = value;
