@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FtdAdapter</name>
+    </assembly>
+    <members>
+        <member name="T:FtdAdapter.FtdDeviceInfo">
+            <summary>
+            Provides information about an attached FTDI USB device.
+            </summary>
+        </member>
+        <member name="M:FtdAdapter.FtdDeviceInfo.op_Equality(FtdAdapter.FtdDeviceInfo,FtdAdapter.FtdDeviceInfo)">
+            <summary>
+            Implements the operator ==.
+            </summary>
+            <param name="left">The left.</param>
+            <param name="right">The right.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:FtdAdapter.FtdDeviceInfo.op_Inequality(FtdAdapter.FtdDeviceInfo,FtdAdapter.FtdDeviceInfo)">
+            <summary>
+            Implements the operator !=.
+            </summary>
+            <param name="left">The left.</param>
+            <param name="right">The right.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:FtdAdapter.FtdDeviceInfo.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <param name="obj">Another object to compare to.</param>
+            <returns>
+            true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:FtdAdapter.FtdDeviceInfo.GetHashCode">
+            <summary>
+            Returns the hash code for this instance.
+            </summary>
+            <returns>
+            A 32-bit signed integer that is the hash code for this instance.
+            </returns>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.Id">
+            <summary>
+            Complete device ID, comprising Vendor ID and Product ID.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.VendorId">
+            <summary>
+            Vendor ID.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.ProductId">
+            <summary>
+            Product ID
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.SerialNumber">
+            <summary>
+            Serial number of device.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.Flags">
+            <summary>
+            Device flags.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.Type">
+            <summary>
+            Device type.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.LocationId">
+            <summary>
+            LocID
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.Description">
+            <summary>
+            Description of device.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdDeviceInfo.IsOpen">
+            <summary>
+            Gets a value indicating if the device is already open.
+            </summary>
+        </member>
+        <member name="T:FtdAdapter.FtdStopBits">
+            <summary>
+            Specifies the number of stop bits used on the UsbPort object.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdStopBits.One">
+            <summary>
+            One stop bit is used.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdStopBits.OnePointFive">
+            <summary>
+            1.5 stop bits are used.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdStopBits.Two">
+            <summary>
+            Two stop bits are used.
+            </summary>
+        </member>
+        <member name="T:FtdAdapter.FtdParity">
+            <summary>
+            Specifies the parity used on the UsbPort object.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdParity.None">
+            <summary>
+            No parity check occurs.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdParity.Odd">
+            <summary>
+            Sets the parity bit so that the count of bits set is an odd number.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdParity.Even">
+            <summary>
+            Sets the parity bit so that the count of bits set is an even number.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdParity.Mark">
+            <summary>
+            Leaves the parity bit set to 1.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdParity.Space">
+            <summary>
+            Leaves the parity bit set to 0.
+            </summary>
+        </member>
+        <member name="T:FtdAdapter.FtdFlowControl">
+            <summary>
+             Specifies the flow control used on the UsbPort object.
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdFlowControl.None">
+            <summary>
+             No flow control is used
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdFlowControl.RtsCts">
+            <summary>
+             RTS CTS are used for flow control
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdFlowControl.DtrDsr">
+            <summary>
+            DTR DSR are used for flow control
+            </summary>
+        </member>
+        <member name="F:FtdAdapter.FtdFlowControl.XonXoff">
+            <summary>
+             XON XOFF are used for flow control
+            </summary>
+        </member>
+        <member name="T:FtdAdapter.FtdStatus">
+            <summary>
+            Specifies the result of a UsbPort operation.
+            </summary>
+        </member>
+        <member name="T:FtdAdapter.OpenExFlags">
+            <summary>
+            Specifies how to open the device
+            </summary>
+        </member>
+        <member name="T:FtdAdapter.FtdUsbPort">
+            <summary>
+            Wrapper class for the FTD2XX USB resource.
+            </summary>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FtdAdapter.FtdUsbPort"/> class.
+            </summary>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.GetDeviceCount">
+            <summary>
+            Returns the number of D2XX devices connected to the system.
+            </summary>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.GetDeviceInfos">
+            <summary>
+            Gets an array of the currently connected device's device info.
+            </summary>
+            <returns>An array of FtdDeviceInfo objects.</returns>
+            <exception cref="T:System.IO.IOException"></exception>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.GetDeviceInfo(System.UInt32)">
+            <summary>
+            Gets the device info at the specified device index.
+            </summary>
+            <param name="index">Index of the device.</param>
+            <returns>An FtdDeviceInfo instance.</returns>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.OpenByIndex(System.UInt32)">
+            <summary>
+            Opens the device by index.
+            </summary>
+            <param name="index">Must be 0 if only one device is attached. For multiple devices 1, 2 etc.</param>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.OpenByLocationId(System.UInt32)">
+            <summary>
+            Opens the device by location id.
+            </summary>
+            <param name="locationId">The location id.</param>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.OpenBySerialNumber(System.String)">
+            <summary>
+            Opens the device by serial number.
+            </summary>
+            <param name="serialNumber">The serial number.</param>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.OpenByDescription(System.String)">
+            <summary>
+            Opens the device by description.
+            </summary>
+            <param name="description">The description.</param>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.Close">
+            <summary>
+            Closes the port connection.
+            </summary>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Writes a specified number of bytes to the port from an output buffer, starting at the specified offset.
+            </summary>
+            <param name="buffer">The byte array that contains the data to write to the port.</param>
+            <param name="offset">The offset in the buffer array to begin writing.</param>
+            <param name="count">The number of bytes to write.</param>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Reads a number of bytes from the UsbPort input buffer and writes those bytes into a byte array at the specified offset.
+            </summary>
+            <param name="buffer">The byte array to write the input to.</param>
+            <param name="offset">The offset in the buffer array to begin writing.</param>
+            <param name="count">The number of bytes to read.</param>
+            <returns>The number of bytes read.</returns>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.DiscardInBuffer">
+            <summary>
+            Purges the receive buffer.
+            </summary>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.SetFlowControl(FtdAdapter.FtdFlowControl,System.Byte,System.Byte)">
+            <summary>
+             Set flow control.
+            </summary>
+            <param name="flowControl">Type of flow control</param>
+            <param name="xOn">XON symbol</param>
+            <param name="xOff">XOFF symbol</param>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.InvokeFtdMethod(System.Func{FtdAdapter.FtdStatus})">
+            <summary>
+            Invokes FT method and checks the FTStatus result, throw IOException if result is something other than FTStatus.OK
+            </summary>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:FtdAdapter.FtdUsbPort.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        </member>
+        <member name="P:FtdAdapter.FtdUsbPort.BaudRate">
+            <summary>
+            Gets or sets the serial baud rate. 
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdUsbPort.DataBits">
+            <summary>
+            Gets or sets the standard length of data bits per byte. 
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdUsbPort.InfiniteTimeout">
+            <summary>
+            Indicates that no time-out should occur.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdUsbPort.ReadTimeout">
+            <summary>
+            Gets or sets the number of milliseconds before a time-out occurs when a read operation does not finish.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdUsbPort.WriteTimeout">
+            <summary>
+            Gets or sets the number of milliseconds before a time-out occurs when a write operation does not finish.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdUsbPort.StopBits">
+            <summary>
+            Gets or sets the standard number of stopbits per byte.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdUsbPort.Parity">
+            <summary>
+            Gets or sets the parity-checking protocol.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.FtdUsbPort.IsOpen">
+            <summary>
+            Gets a value indicating the open or closed status of the UsbPort object.
+            </summary>
+        </member>
+        <member name="T:FtdAdapter.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:FtdAdapter.Resources.PortIsAlreadyOpen">
+            <summary>
+              Looks up a localized string similar to Port is already open..
+            </summary>
+        </member>
+    </members>
+</doc>

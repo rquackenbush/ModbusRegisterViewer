@@ -1,7 +1,7 @@
 /*
   In App.xaml:
   <Application.Resources>
-      <vm:ViewModelLocator xmlns:vm="clr-namespace:ModbusRegisterViewer"
+      <vm:ViewModelLocator xmlns:vm="clr-namespace:ModbusTools.Sniffer"
                            x:Key="Locator" />
   </Application.Resources>
   
@@ -16,7 +16,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 
-namespace ModbusRegisterViewer.ViewModel
+namespace ModbusTools.Sniffer.ViewModel
 {
     /// <summary>
     /// This class contains static references to all the view models in the
@@ -42,25 +42,16 @@ namespace ModbusRegisterViewer.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<RegisterViewerViewModel>();
-            SimpleIoc.Default.Register<AboutViewModel>();
-            SimpleIoc.Default.Register<SnifferViewModel>();
+            //SimpleIoc.Default.Register<MainViewModel>();
         }
 
-        public RegisterViewerViewModel RegisterViewer
-        {
-            get { return ServiceLocator.Current.GetInstance<RegisterViewerViewModel>(); }
-        }
-
-        public AboutViewModel About
-        {
-            get { return ServiceLocator.Current.GetInstance<AboutViewModel>(); }
-        }
-
-        public SnifferViewModel Sniffer
-        {
-            get { return ServiceLocator.Current.GetInstance<SnifferViewModel>(); }
-        }
+        //public MainViewModel Main
+        //{
+        //    get
+        //    {
+        //        return ServiceLocator.Current.GetInstance<MainViewModel>();
+        //    }
+        //}
         
         public static void Cleanup()
         {

@@ -5,7 +5,7 @@
         Title="Modbus Register Viewer
         " Height="519" Width="865"
         Background="{StaticResource WindowBackground}"
-        DataContext="{Binding Source={StaticResource Locator}, Path=Main}" Icon="/Images/Connection_Manager.png"
+        DataContext="{Binding Source={StaticResource Locator}, Path=RegisterViewer}" Icon="/Images/Connection_Manager.png"
 >
 
     <Window.Resources>
@@ -46,11 +46,20 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Menu>
                 <MenuItem Header="_File">
+                    <MenuItem Header="_Open..." Command="{Binding Path=OpenCommand}"></MenuItem>
+                    <Separator />
+                    <MenuItem Header="_Save" Command="{Binding Path=SaveCommand}" Visibility="Collapsed"/>
+                    <MenuItem Header="Save _As..." Command="{Binding Path=SaveAsCommand}"/>
+                    <Separator />
                     <MenuItem Header="E_xit" Command="{Binding Path=ExitCommand}" />
+                </MenuItem>
+                <MenuItem Header="_Tools">
+                    <MenuItem Header="Modbus Sniffer..." Click="ModbusSniffer_MenuClick"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About Modbus Register Viewer..." Command="{Binding Path=About.ShowCommand}" />
@@ -90,8 +99,6 @@
 
             </Grid>
 
-
-
             <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Path=Registers}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
@@ -103,6 +110,19 @@
                 </DataGrid.Columns>
             </DataGrid>
 
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Style="{StaticResource LabelStyle}">Adapter:</TextBlock>
+                <ComboBox Grid.Column="1" Margin="4" MinWidth="200" ItemsSource="{Binding Path=Adapters}" SelectedItem="{Binding Path=SelectedAdapter}" DisplayMemberPath="Description"  VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+                <Button Grid.Column="2" Command="{Binding Path=RefreshAdaptersCommand}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Image Source="/Images/Refresh.png" Width="16" ></Image>
+                </Button>
+            </Grid>
         </Grid>
 
         <views:AboutView  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Path=About}"></views:AboutView>

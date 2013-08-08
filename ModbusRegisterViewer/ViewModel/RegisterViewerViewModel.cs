@@ -5,11 +5,12 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-
+using FtdAdapter;
 using GalaSoft.MvvmLight;
 using System.Collections.Generic;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
+using Microsoft.Win32;
 using ModbusRegisterViewer.Model;
 
 namespace ModbusRegisterViewer.ViewModel
@@ -26,7 +27,7 @@ namespace ModbusRegisterViewer.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class MainViewModel : ViewModelBase
+    public class RegisterViewerViewModel : ViewModelBase
     {
         private readonly object _communicationLock = new object();
         private bool _isRunning = false;
@@ -41,6 +42,9 @@ namespace ModbusRegisterViewer.ViewModel
 
         private readonly Timer _autoRefreshTimer = new Timer(2000);
 
+        private readonly ObservableCollection<AdapterViewModel> _adapters = new ObservableCollection<AdapterViewModel>();
+        private AdapterViewModel _selectedAdapter;
+
         private readonly List<RegisterTypeViewModel> _registerTypes = new List<RegisterTypeViewModel>()
         {
             new RegisterTypeViewModel(Model.RegisterType.Input, "Input"),
@@ -50,11 +54,13 @@ namespace ModbusRegisterViewer.ViewModel
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public MainViewModel()
+        public RegisterViewerViewModel()
         {
             this.GetRegistersCommand = new RelayCommand(GetRegisters, CanGetRegisters);
-
             this.ExitCommand = new RelayCommand(Exit);
+            this.OpenCommand = new RelayCommand(Open, CanOpen);
+            this.SaveAsCommand = new RelayCommand(SaveAs, CanSaveAs);
+            this.RefreshAdaptersCommand = new RelayCommand(RefreshAdapters);
 
             if (IsInDesignMode)
             {
@@ -77,16 +83,117 @@ namespace ModbusRegisterViewer.ViewModel
             RegisterType = _registerTypes.FirstOrDefault(rt => (int)rt.RegisterType == settings.RegisterType);
 
             _autoRefreshTimer.Elapsed += _autoRefreshTimer_Elapsed;
+
+            RefreshAdapters();
+
+            SelectAdapter(settings.AdapterSerialNumber);
         }
 
         void _autoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(GetRegisters);
         }
+        
+        public ICommand OpenCommand { get; private set; }
+        public ICommand SaveCommand { get; private set; }
+        public ICommand SaveAsCommand { get; private set; }
+        public ICommand ExitCommand { get; private set; }
+        public ICommand GetRegistersCommand { get; private set; }
+        public ICommand RefreshAdaptersCommand { get; private set; }
+
+        private void RefreshAdapters()
+        {
+            string selectedSerialNumber = null;
+
+            if (this.SelectedAdapter != null)
+                selectedSerialNumber = this.SelectedAdapter.SerialNumber;
+
+            this.Adapters.Clear();
+
+            var infos = FtdUsbPort.GetDeviceInfos();
+
+            foreach (var info in infos)
+            {
+                this.Adapters.Add(new AdapterViewModel(info));
+            }
+
+            //Attempt to reselect the original adapter.
+            SelectAdapter(selectedSerialNumber);
+        }
+
+        /// <summary>
+        /// Selects an adapter.
+        /// </summary>
+        /// <param name="serialNumber"></param>
+        private void SelectAdapter(string serialNumber)
+        {
+            var initialAdapter = this.Adapters.FirstOrDefault(a => a.SerialNumber == serialNumber);
+
+            if (initialAdapter == null)
+                initialAdapter = this.Adapters.FirstOrDefault();
+
+            this.SelectedAdapter = initialAdapter;
+        }
+
+        private bool CanOpen()
+        {
+            return !this.IsAutoRefresh;
+        }
+
+        private void Open()
+        {
+            var openFileDialog = new OpenFileDialog()
+                {
+                    Filter = "Xml File|*.xml"
+                };
+
+            if (openFileDialog.ShowDialog() != true)
+                return;
+
+            var snapshot = DataContractUtilities.FromFile<Snapshot>(openFileDialog.FileName);
+
+            var registerNumber = snapshot.StartingRegister;
+
+            this.Registers = new ObservableCollection<RegisterViewModel>(
+                snapshot.Registers.Select(v => new RegisterViewModel(registerNumber++, v))
+            );
+        }
+
+        private bool CanSaveAs()
+        {
+            return !this.IsAutoRefresh
+                && this.Registers != null 
+                && this.Registers.Any() 
+                && this.RegisterType != null
+                && this.SlaveAddress.HasValue
+                && this.StartingRegister.HasValue;
+        }
+
+        private void SaveAs()
+        {
+
+            var saveFileDialog = new SaveFileDialog()
+                {
+                    Filter = "Xml File|*.xml"
+                };
+
+            if (saveFileDialog.ShowDialog() != true)
+                return;
+
+            var snapshot = new Snapshot()
+                {
+                    RegisterType = this.RegisterType.RegisterType,
+                    SlaveId = (byte) this.SlaveAddress.Value,
+                    StartingRegister = (ushort) this.StartingRegister.Value,
+                    Registers = this.Registers.Select(r => r.Value).ToArray()
+                };
+
+            DataContractUtilities.ToFile(saveFileDialog.FileName, snapshot);
+        }
 
         private bool CanGetRegisters()
         {
-            return !this.IsAutoRefresh;
+            return !this.IsAutoRefresh && this.SelectedAdapter != null;
         }
 
         private void GetRegisters()
@@ -126,11 +233,16 @@ namespace ModbusRegisterViewer.ViewModel
                         settings.NumberOfRegisters = numberOfRegisters;
                         settings.RegisterType = (int)RegisterType.RegisterType;
 
+                        if (this.SelectedAdapter == null)
+                            settings.AdapterSerialNumber = null;
+                        else
+                            settings.AdapterSerialNumber = this.SelectedAdapter.SerialNumber;
+
                         settings.Save();
 
                         ushort[] results;
 
-                        using (var context = new MasterContext())
+                        using (var context = new MasterContext(this.SelectedAdapter.SerialNumber))
                         {
                             context.Master.Transport.ReadTimeout = 2000;
 
@@ -185,10 +297,6 @@ namespace ModbusRegisterViewer.ViewModel
         {
             Application.Current.Shutdown();
         }
-
-        public ICommand GetRegistersCommand { get; private set; }
-
-        public ICommand ExitCommand { get; private set; }
 
         public ObservableCollection<RegisterViewModel> Registers
         {
@@ -262,6 +370,21 @@ namespace ModbusRegisterViewer.ViewModel
                 _numberOfregisters = value;
                 RaisePropertyChanged(() => NumberOfRegisters);
             }
+        }
+
+        public AdapterViewModel SelectedAdapter
+        {
+            get { return _selectedAdapter; }
+            set
+            {
+                _selectedAdapter = value;
+                RaisePropertyChanged(() => SelectedAdapter);
+             }
+        }
+
+        public ObservableCollection<AdapterViewModel>  Adapters
+        {
+            get { return _adapters; }
         }
 
         public AboutViewModel About

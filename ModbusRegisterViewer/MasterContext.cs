@@ -23,6 +23,20 @@ namespace ModbusRegisterViewer
             _master = ModbusSerialMaster.CreateRtu(_port);
         }
 
+        public MasterContext(string serialNumber)
+        {
+            _port = new FtdUsbPort();
+
+            // configure serial port
+            _port.BaudRate = 19200;
+            _port.DataBits = 8;
+            _port.Parity = FtdParity.Even;
+            _port.StopBits = FtdStopBits.One;
+            _port.OpenBySerialNumber(serialNumber);
+
+            _master = ModbusSerialMaster.CreateRtu(_port);
+        }
+
         public IModbusSerialMaster Master
         {
             get 

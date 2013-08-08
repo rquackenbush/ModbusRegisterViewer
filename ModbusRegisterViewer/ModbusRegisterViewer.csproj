@@ -35,7 +35,7 @@
     <SuiteName>CAS Modbus Utilities</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>17</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -73,9 +73,8 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FtdAdapter, Version=1.11.0.0, Culture=neutral, PublicKeyToken=b5aba55fcbc8d946, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\PersonalProjects\rich.quackenbush\ModbusViewer\ThirdParty\FtdAdapter.dll</HintPath>
+    <Reference Include="FtdAdapter">
+      <HintPath>..\ThirdParty\FtdAdapter.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight.Extras.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
@@ -86,12 +85,12 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="Modbus, Version=1.11.0.0, Culture=neutral, PublicKeyToken=b5aba55fcbc8d946, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Modbus">
       <HintPath>..\ThirdParty\Modbus.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -102,6 +101,10 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Unme.Common, Version=1.1.0.0, Culture=neutral, PublicKeyToken=da57c01ae4598fdd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\Unme.Common.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -131,22 +134,48 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AssemblyExtensions.cs" />
+    <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="MasterContext.cs" />
+    <Compile Include="Model\BufferRender.cs" />
+    <Compile Include="Model\DataContractConstants.cs" />
+    <Compile Include="Model\DataContractUtilities.cs" />
+    <Compile Include="Model\FunctionCodes.cs" />
+    <Compile Include="Model\FunctionDescriptionFactory.cs" />
+    <Compile Include="Model\MessageDirection.cs" />
+    <Compile Include="Model\MessageUtilities.cs" />
+    <Compile Include="Model\PacketSnifferStateMachine.cs" />
     <Compile Include="Model\RegisterType.cs" />
+    <Compile Include="Model\Snapshot.cs" />
+    <Compile Include="Model\SnifferCapture.cs" />
+    <Compile Include="Model\SnifferMapper.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
+    <Compile Include="ViewModel\AdapterViewModel.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\PacketViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewerViewModel.cs" />
     <Compile Include="ViewModel\RegisterTypeViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\SnifferViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GenericPacketViewers\ReadRegistersResponseView.xaml.cs">
+      <DependentUpon>ReadRegistersResponseView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PackatDetailViewFactory.cs" />
+    <Compile Include="Views\SnifferView.xaml.cs">
+      <DependentUpon>SnifferView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\ExceptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow.xaml">
+    <Page Include="Views\GenericPacketViewers\ReadRegistersResponseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RegisterViewerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -157,11 +186,15 @@
     <Compile Include="Views\ExceptionView.xaml.cs">
       <DependentUpon>ExceptionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="Views\RegisterViewerView.xaml.cs">
+      <DependentUpon>RegisterViewerView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SnifferView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -184,7 +217,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="ModbusRegisterViewer_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -199,6 +231,10 @@
     <Content Include="FTD2XX.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\Erase.png" />
+    <Resource Include="Images\Play.png" />
+    <Resource Include="Images\Stop.png" />
+    <Resource Include="Images\Refresh.png" />
     <EmbeddedResource Include="Licenses\Licenses.txt" />
     <Resource Include="Images\caslogo.png" />
     <Resource Include="Images\Connection_Manager.png" />
