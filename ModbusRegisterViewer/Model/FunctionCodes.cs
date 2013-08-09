@@ -16,6 +16,8 @@ namespace ModbusRegisterViewer.Model
 
         public const byte ReadCoils = 1;
 
+        public const byte ReadInputRegisters = 4;
+
         public const byte WriteSingleCoil = 5;
 
         public const byte WriteMultipleCoils = 15;

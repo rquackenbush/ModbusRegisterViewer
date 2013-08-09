@@ -21,9 +21,9 @@ namespace ModbusRegisterViewer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class RegisterViewerView : Window
     {
-        public MainWindow()
+        public RegisterViewerView()
         {
             InitializeComponent();
         }
@@ -33,16 +33,6 @@ namespace ModbusRegisterViewer
             var window = new SnifferView();
 
             window.Show();
-        }
-
-        private void ModbusSniffer_MenuClick(object sender, RoutedEventArgs e)
-        {
-            //Thread thread = new Thread(StartWindow);
-            //thread.SetApartmentState(ApartmentState.STA);
-
-            //thread.Start();
-
-            StartWindow();
         }
     }
 

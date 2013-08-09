@@ -35,7 +35,7 @@
     <SuiteName>CAS Modbus Utilities</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>17</ApplicationRevision>
+    <ApplicationRevision>21</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -71,6 +71,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Gear.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FtdAdapter">
@@ -137,6 +140,8 @@
     <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="MasterContext.cs" />
     <Compile Include="Model\BufferRender.cs" />
+    <Compile Include="Model\CaptureFileReader.cs" />
+    <Compile Include="Model\CaptureFileWriter.cs" />
     <Compile Include="Model\DataContractConstants.cs" />
     <Compile Include="Model\DataContractUtilities.cs" />
     <Compile Include="Model\FunctionCodes.cs" />
@@ -144,10 +149,14 @@
     <Compile Include="Model\MessageDirection.cs" />
     <Compile Include="Model\MessageUtilities.cs" />
     <Compile Include="Model\PacketSnifferStateMachine.cs" />
+    <Compile Include="Model\PromiscuousListener.cs" />
     <Compile Include="Model\RegisterType.cs" />
+    <Compile Include="Model\RequestSizeCalculator.cs" />
+    <Compile Include="Model\Sample.cs" />
     <Compile Include="Model\Snapshot.cs" />
     <Compile Include="Model\SnifferCapture.cs" />
     <Compile Include="Model\SnifferMapper.cs" />
+    <Compile Include="Converters\SamplesConverter.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AdapterViewModel.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
@@ -155,13 +164,17 @@
     <Compile Include="ViewModel\RegisterViewerViewModel.cs" />
     <Compile Include="ViewModel\RegisterTypeViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\SampleViewModel.cs" />
     <Compile Include="ViewModel\SnifferViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GenericPacketViewers\ReadRegistersResponseView.xaml.cs">
-      <DependentUpon>ReadRegistersResponseView.xaml</DependentUpon>
+    <Compile Include="Views\GenericPacketViewers\RegistersView.xaml.cs">
+      <DependentUpon>RegistersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LauncherView.xaml.cs">
+      <DependentUpon>LauncherView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PackatDetailViewFactory.cs" />
     <Compile Include="Views\SnifferView.xaml.cs">
@@ -171,7 +184,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GenericPacketViewers\ReadRegistersResponseView.xaml">
+    <Page Include="Views\GenericPacketViewers\RegistersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LauncherView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -231,6 +248,12 @@
     <Content Include="FTD2XX.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\Gear.png" />
+    <Resource Include="Gear.ico" />
+    <Resource Include="Images\Gear.ico" />
+    <Resource Include="Images\Network_Map.png" />
+    <Resource Include="Images\305_Close_32x42_72.png" />
+    <Resource Include="Images\305_Close_48x48_72.png" />
     <Resource Include="Images\Erase.png" />
     <Resource Include="Images\Play.png" />
     <Resource Include="Images\Stop.png" />

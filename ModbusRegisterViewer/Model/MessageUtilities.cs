@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Modbus.Utility;
+using Unme.Common;
 
 namespace ModbusRegisterViewer.Model
 {
@@ -56,6 +58,13 @@ namespace ModbusRegisterViewer.Model
                 throw new ArgumentException("message must be at least four bytes long");
 
             return BitConverter.ToUInt16(message, message.Length - 2);
+        }
+
+        public static ushort NetworkBytesToUInt16(byte[] message, int bufferPosition)
+        {
+            var bytes = message.Slice(bufferPosition, 2).ToArray();
+
+            return ModbusUtility.NetworkBytesToHostUInt16(bytes)[0];
         }
     }
 }

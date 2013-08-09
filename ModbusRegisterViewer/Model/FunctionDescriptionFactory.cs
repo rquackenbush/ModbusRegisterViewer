@@ -62,6 +62,9 @@ namespace ModbusRegisterViewer.Model
 
                 case FunctionCodes.WriteSingleRegister:
                     return "Write Single Register";
+
+                case FunctionCodes.ReadInputRegisters:
+                    return "Read Input Registers";
                
                 default:
                     return "Unknown";

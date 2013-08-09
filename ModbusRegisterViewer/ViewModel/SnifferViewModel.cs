@@ -12,39 +12,39 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Win32;
 using Modbus.Device;
 using ModbusRegisterViewer.Model;
+using Unme.Common;
 
 namespace ModbusRegisterViewer.ViewModel
 {
     public class SnifferViewModel : ViewModelBase
     {
-        private const string Filter = "Xml Files(*.xml)|*.xml";
-
-        private Task _task;
-        private FtdUsbPort _port;
-        //private ModbusPromiscuousSerialSlave _slave;
-        private ModbusPromiscuousSerialSlave _slave;
-        private ObservableCollection<PacketViewModel> _packets = new ObservableCollection<PacketViewModel>();
+        private const string Filter = "Modbus Capture Files(*.mbcap)|*.mbcap";
 
         public event EventHandler SelectionChanged;
 
+        private Task _task;
+        private FtdUsbPort _port;
+        private ObservableCollection<PacketViewModel> _packets = new ObservableCollection<PacketViewModel>();
+
+        private PromiscuousListener _listener;
         private PacketViewModel _selectedPacket;
 
-        private readonly PacketSnifferStateMachine _stateMachine = new PacketSnifferStateMachine();
+        private string _capturePath;
+        private CaptureFileWriter _writer;
 
         public SnifferViewModel()
         {
             if (this.IsInDesignMode)
             {
                 //Populate some dummy data
-                _packets.Add(PacketViewModel.CreateValidPacket(DateTime.Now.Subtract(TimeSpan.FromSeconds(5)), new byte[] { 55, 16, 1, 0, 6, 7 }, MessageDirection.Request, null ));
-                _packets.Add(PacketViewModel.CreateValidPacket(DateTime.Now.Subtract(TimeSpan.FromSeconds(5)), new byte[] { 55, 16, 4, 5, 6, 7, 1, 0 }, MessageDirection.Response, _packets[0]));
+                //_packets.Add(PacketViewModel.CreateValidPacket(4000, new byte[] { 55, 16, 1, 0, 6, 7 }, MessageDirection.Request, null ));
+                //_packets.Add(PacketViewModel.CreateValidPacket(4003, new byte[] { 55, 16, 4, 5, 6, 7, 1, 0 }, MessageDirection.Response, _packets[0]));
             }
 
             this.StartCommand = new RelayCommand(Start, CanStart);
             this.StopCommand = new RelayCommand(Stop, CanStop);
             this.ClearCommand = new RelayCommand(Clear, CanClear);
             this.OpenCommand = new RelayCommand(Open, CanOpen);
-            this.SaveCommand = new RelayCommand(Save, CanSave);
             this.CloseCommand = new RelayCommand(Close, CanClose);
             
         }
@@ -53,8 +53,36 @@ namespace ModbusRegisterViewer.ViewModel
         public ICommand StopCommand { get; private set; }
         public ICommand ClearCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
-        public ICommand SaveCommand { get; private set; }
         public ICommand CloseCommand { get; private set; }
+
+        private void Open(string path)
+        {
+            
+            var packets = new ObservableCollection<PacketViewModel>();
+
+            using (var reader = new CaptureFileReader(path))
+            {
+                var stateMachine = new PacketSnifferStateMachine(20, reader.TicksPerMillisecond);
+
+                var sample = reader.Read();
+
+                while (sample != null)
+                {
+                    var packet = stateMachine.ProcessSample(sample);
+
+                    if (packet != null)
+                    {
+                        packets.Add(packet);
+                    }
+                    
+                    sample = reader.Read();
+                }
+            }
+
+            this.Packets = packets;
+
+            this.SelectedPacket = this.Packets.FirstOrDefault();
+        }
 
         private void Open()
         {
@@ -66,36 +94,10 @@ namespace ModbusRegisterViewer.ViewModel
             if (dialog.ShowDialog() != true)
                 return;
 
-            var capture =  DataContractUtilities.FromFile<SnifferCapture>(dialog.FileName);
-
-            this.Clear();
-
-
-            this.Packets = new ObservableCollection<PacketViewModel>(capture.Packets.Select(p => p.FromModel()));
-            
+            Open(dialog.FileName);
         }
 
         private bool CanOpen()
-        {
-            return _task == null;
-        }
-
-        private void Save()
-        {
-            var dialog = new SaveFileDialog()
-                {
-                    Filter = Filter
-                };
-
-            if (dialog.ShowDialog() != true)
-                return;
-
-            var capture = this.Packets.ToModel();
-
-            DataContractUtilities.ToFile(dialog.FileName, capture);
-        }
-
-        private bool CanSave()
         {
             return _task == null;
         }
@@ -112,6 +114,20 @@ namespace ModbusRegisterViewer.ViewModel
 
         private void Start()
         {
+            var dialog = new SaveFileDialog()
+                {
+                    Filter = Filter
+                };
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            //Save the filename
+            _capturePath = dialog.FileName;
+
+            //Try to create the file first
+            _writer = new CaptureFileWriter(dialog.FileName, TimeSpan.TicksPerMillisecond);
+
             _port = new FtdUsbPort();
 
             // configure serial port
@@ -123,20 +139,16 @@ namespace ModbusRegisterViewer.ViewModel
 
             _port.ReadTimeout = 3000;
 
-            _slave = ModbusPromiscuousSerialSlave.CreateRtu(_port);
+            _listener = new PromiscuousListener(_port);
 
-            //When a message is received
-            _slave.MessageSniffed += OnMessageSniffed;
-
-            //When an invalid message is detected.
-            _slave.InvalidMessage += OnInvalidMessage;
+            _listener.Sample += OnSample;
 
             //Spin up the listener in its own thread
             _task = new Task(() =>
             {
                 try
                 {
-                    _slave.Listen();
+                    _listener.Listen();
                 }
                 catch (Exception ex)
                 {
@@ -145,9 +157,7 @@ namespace ModbusRegisterViewer.ViewModel
                 }
                 finally
                 {
-
                     _task = null;
-
                 }
             });
 
@@ -163,14 +173,17 @@ namespace ModbusRegisterViewer.ViewModel
         {
             try
             {
-                if (_slave != null)
+                if (_writer != null)
+                {
+                    //Console.WriteLine("Samples: {0}", _writer.SampleCount);
+                }
+
+                if (_listener != null)
                 {
                     //When a message is received
-                    _slave.MessageSniffed -= OnMessageSniffed;
-                    _slave.InvalidMessage -= OnInvalidMessage;
+                    _listener.Sample -= OnSample;
 
-                    _slave.Dispose();
-                    _slave = null;
+                    DisposableUtility.Dispose(ref _listener);
                 }
 
                 if (_port != null)
@@ -178,20 +191,32 @@ namespace ModbusRegisterViewer.ViewModel
                     if (_port.IsOpen)
                     {
                         _port.DiscardInBuffer();
-
-                        _port.Close();
                     }
 
-                    _port.Dispose();
-                    _port = null;
+                    DisposableUtility.Dispose(ref _port);
                 }
 
-                Console.WriteLine("Close Completed");
+                //Ditch the writer
+                DisposableUtility.Dispose(ref _writer);
 
+                //Console.WriteLine("Close Completed");
+                
+                if (!string.IsNullOrWhiteSpace(_capturePath))
+                {
+                    Open(_capturePath);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+        }
+
+        void OnSample(object sender, SampleEventArgs e)
+        {
+            if (_writer != null)
+            {
+                _writer.WriteSample(e.Sample);
             }
         }
 
@@ -234,20 +259,6 @@ namespace ModbusRegisterViewer.ViewModel
                     RaiseSelectionChanged();
                 }
             }
-        }
-
-        private void OnInvalidMessage(object sender, InvalidData e)
-        {
-            var packetViewModel = PacketViewModel.CreateInvalidPacket(DateTime.Now, e.Message, e.Reason);
-
-            DispatcherHelper.CheckBeginInvokeOnUI(() => _packets.Add(packetViewModel));
-        }
-
-        private void OnMessageSniffed(object sender, RawSlaveData e)
-        {
-            var packetViewModel = _stateMachine.ProcessMessage(e.Message, DateTime.Now);
-            
-            DispatcherHelper.CheckBeginInvokeOnUI(() => _packets.Add(packetViewModel));
         }
 
         public ObservableCollection<PacketViewModel> Packets

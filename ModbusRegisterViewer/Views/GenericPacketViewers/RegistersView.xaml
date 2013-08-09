@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ModbusRegisterViewer.Views.GenericPacketViewers.ReadRegistersResponseView"
+﻿<UserControl x:Class="ModbusRegisterViewer.Views.GenericPacketViewers.RegistersView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <Style x:Key="RowStyle" TargetType="DataGridRow">
-            <Setter Property="FontSize" Value="18"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
             <Setter Property="FontFamily" Value="Consolas"></Setter>
         </Style>
 
@@ -16,13 +16,11 @@
         </Style>
 
         <Style TargetType="DataGridCell" x:Key="RegisterDataGridlCellStyle">
-            <!--<Setter Property="Background" Value="#E9F4F7"></Setter>-->
         </Style>
 
         <Style TargetType="DataGridColumnHeader">
-            <Setter Property="FontSize" Value="18"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
             <Setter Property="FontWeight" Value="Bold"></Setter>
-            <!--<Setter Property="FontFamily" Value="Consolas"></Setter>-->
         </Style>
     </UserControl.Resources>
 

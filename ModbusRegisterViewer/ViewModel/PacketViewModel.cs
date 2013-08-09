@@ -9,41 +9,50 @@ namespace ModbusRegisterViewer.ViewModel
 {
     public class PacketViewModel
     {
-        private readonly byte[] _message;
         private readonly PacketViewModel _previousPacket;
         private readonly string _invalidReason;
-        private readonly DateTime _timestamp;
+        private readonly long _time;
         private readonly MessageDirection _direction = MessageDirection.Unknown;
+        private readonly Sample[] _samples;
+        private readonly Lazy<byte[]> _message;
 
-         private PacketViewModel(DateTime timetamp, byte[] message)
+        private PacketViewModel(long time, Sample[] samples)
          {
-             _timestamp = timetamp;
-             _message = message; 
+             _time = time;
+             _samples = samples; 
+
+            _message = new Lazy<byte[]>(() =>
+                {
+                    if (_samples == null)
+                        return null;
+
+                    return _samples.Select(s => s.Value).ToArray();
+                });
          }
 
-         private PacketViewModel(DateTime timestamp, byte[] message, MessageDirection direction, PacketViewModel previousPacket)
-             : this(timestamp, message)
+        private PacketViewModel(long time, Sample[] samples, MessageDirection direction, PacketViewModel previousPacket)
+            : this(time, samples)
         {
             
             _direction = direction;
             _previousPacket = previousPacket;
         }
 
-        private PacketViewModel (DateTime timestamp, byte[] message, string invalidReason)
-            : this(timestamp, message)
+        private PacketViewModel(long time, Sample[] samples, string invalidReason)
+            : this(time, samples)
         {
             _invalidReason = invalidReason;
         }
 
-        public static PacketViewModel CreateValidPacket(DateTime timestamp, byte[] message, MessageDirection direction,
+        public static PacketViewModel CreateValidPacket(long time, Sample[] samples, MessageDirection direction,
                                                         PacketViewModel previousPacket)
         {
-            return new PacketViewModel(timestamp, message, direction, previousPacket);
+            return new PacketViewModel(time, samples, direction, previousPacket);
         }
 
-        public static PacketViewModel CreateInvalidPacket(DateTime timestamp, byte[] message, string invalidReason)
+        public static PacketViewModel CreateInvalidPacket(long time, Sample[] samples, string invalidReason)
         {
-            return new PacketViewModel(timestamp, message, invalidReason);
+            return new PacketViewModel(time, samples, invalidReason);
         }
 
         public bool IsInvalid
@@ -56,9 +65,9 @@ namespace ModbusRegisterViewer.ViewModel
             get { return _invalidReason; }
         }
 
-        public DateTime Timestamp 
+        public long Time 
         {
-            get { return _timestamp; }
+            get { return _time; }
         }
 
         public PacketViewModel PreviousPacket
@@ -66,25 +75,25 @@ namespace ModbusRegisterViewer.ViewModel
             get { return _previousPacket; }
         }
 
-        public byte Function
+        public byte? Function
         {
             get 
             {
-                if (_message == null || _message.Length < 2)
-                    return 0;
+                if (_samples == null || _samples.Length < 2)
+                    return null;
 
-                return _message[1]; 
+                return _samples[1].Value; 
             }
         }
 
-        public byte Address
+        public byte? Address
         {
             get
             {
-                if (_message == null || _message.Length < 1)
-                    return 0;
+                if (_samples == null || _samples.Length < 1)
+                    return null;
 
-                return _message[0]; 
+                return _samples[0].Value; 
             }
         }
 
@@ -95,51 +104,50 @@ namespace ModbusRegisterViewer.ViewModel
                 if (this.IsInvalid)
                     return this.InvalidReason;
 
-                if (_message != null && _message.Length >= 2)
-                {
-                    byte functionCode = _message[1];
+                var function = this.Function;
 
-                    return FunctionDescriptionFactory.GetFunctionDescription(functionCode);
-                }
+                if (function.HasValue)
+                    return FunctionDescriptionFactory.GetFunctionDescription(function.Value);
 
                 return "Unknown";
             }
         }
 
-        public string Payload
-        {
-            get 
-            { 
-                if (this.IsInvalid)
-                {
-                    if (_message != null)
-                    {
-                        //Render the entire raw message
-                        return BufferRender.GetDisplayString(_message);
-                    }
-                }
-                else if (_message != null && _message.Length > 4)
-                {
-                    var payloadBytes = _message.Skip(2).Take(_message.Length - 4).ToArray();
+        //public string Payload
+        //{
+        //    get 
+        //    { 
+        //        if (this.IsInvalid)
+        //        {
+        //            if (_message != null)
+        //            {
+        //                //Render the entire raw message
+        //                return BufferRender.GetDisplayString(_message);
+        //            }
+        //        }
+        //        else if (_message != null && _message.Length > 4)
+        //        {
+        //            var payloadBytes = _message.Skip(2).Take(_message.Length - 4).ToArray();
 
-                    return  BufferRender.GetDisplayString(payloadBytes);     
-                }
+        //            return  BufferRender.GetDisplayString(payloadBytes);     
+        //        }
 
-                return null;
-            }
-        }
+        //        return null;
+        //    }
+        //}
 
-        public UInt16 CRC
+
+        public UInt16? CRC
         {
             get
             {
-                if (_message == null)
-                    return 0;
+                if (this.Message == null)
+                    return null;
 
-                if (_message.Length < 4)
-                    return 0;
+                if (this.Message.Length < 4)
+                    return null;
 
-                return MessageUtilities.GetCRC(_message); 
+                return MessageUtilities.GetCRC(this.Message); 
             }
         }
 
@@ -147,27 +155,38 @@ namespace ModbusRegisterViewer.ViewModel
         {
             get
             {
-                if (_message == null)
+                if (_samples == null)
                     return 0;
 
-                return _message.Length; 
+                return _samples.Length; 
             }
         }
 
         public byte[] Message
         {
-            get { return _message; }
+            get { return _message.Value; }
+
         }
 
-        public int? ResponseTime
+        //public byte[] Message
+        //{
+        //    get { return _message; }
+        //}
+
+        public long? ResponseTime
         {
             get
             {
                 if (this.PreviousPacket == null)
                     return null;
 
-                return (int)this.Timestamp.Subtract(this.PreviousPacket.Timestamp).TotalMilliseconds;
+                return this.Time - this.PreviousPacket.Time;
             }
+        }
+
+        public Sample[] Samples
+        {
+            get { return _samples; }
         }
 
         public MessageDirection Direction 

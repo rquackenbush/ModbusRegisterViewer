@@ -21,11 +21,11 @@ namespace ModbusRegisterViewer.Views.GenericPacketViewers
     /// <summary>
     /// Interaction logic for ReadRegistersResponseView.xaml
     /// </summary>
-    public partial class ReadRegistersResponseView : UserControl
+    public partial class RegistersView : UserControl
     {
         private readonly PacketViewModel _packet;
 
-        public ReadRegistersResponseView(PacketViewModel packet)
+        public RegistersView(PacketViewModel packet, ushort startingRegister, ushort[] values)
         {
             InitializeComponent();
 
@@ -33,22 +33,11 @@ namespace ModbusRegisterViewer.Views.GenericPacketViewers
             
             byte length = packet.Message[2];
 
-            var registerBytes = packet.Message.Skip(3).Take(length).ToArray();
+            
 
-            var rawRegisters = ModbusUtility.NetworkBytesToHostUInt16(registerBytes);
+            ushort registerNumber = startingRegister;
 
-            ushort registerNumber = 0;
-
-            if (packet.PreviousPacket != null && packet.PreviousPacket.Message.Length > 3)
-            {
-                var registerNumberBuffer = packet.PreviousPacket.Message.Slice(2, 2).ToArray();
-
-                registerNumber = ModbusUtility.NetworkBytesToHostUInt16(registerNumberBuffer)[0];
-
-                registerNumber++;
-            }
-
-            var registers = rawRegisters.Select(v => new RegisterViewModel(registerNumber++, v));
+            var registers = values.Select(v => new RegisterViewModel(registerNumber++, v));
 
             this.RegistersDataGrid.ItemsSource = registers;
         }

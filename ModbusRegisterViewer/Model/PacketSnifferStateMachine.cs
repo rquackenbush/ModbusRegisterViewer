@@ -10,91 +10,178 @@ namespace ModbusRegisterViewer.Model
 {
     public class PacketSnifferStateMachine
     {
-        private readonly Dictionary<byte, SlaveStateMachine> _slaves = new Dictionary<byte, SlaveStateMachine>();
+        private const int BufferSize = 256;
 
-        public PacketViewModel ProcessMessage(byte[] message, DateTime timestamp)
-        {
-            if (message == null || message.Length == 0)
-                return null;
-
-            SlaveStateMachine slave = null;
-
-            var slaveId = MessageUtilities.GetSlaveId(message);
-
-            if (!_slaves.TryGetValue(slaveId, out slave))
-            {
-                slave = new SlaveStateMachine(slaveId);
-
-                _slaves.Add(slaveId, slave);
-            }
-
-            return slave.ProcessMessage(message, timestamp);
-        }
-    }
-
-    public class SlaveStateMachine
-    {
-        private readonly byte _slaveId;
-        private SlaveState _state = SlaveState.Idle;
+        private long? _firstTime;
+        private readonly long _interMessageTimeout;
+        private readonly long _ticksPerMillisecond;
 
         private PacketViewModel _previousPacket;
+        private int _bufferPosition;
+        private byte? _previousSlaveId;
 
-        private enum SlaveState
+        /// <summary>
+        /// This is the buffer the samples get stored in until a message is produced
+        /// </summary>
+        private readonly Sample[] _buffer = new Sample[BufferSize];
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="interMessageTimeout">The timeout in between messages (milliseconds)</param>
+        /// <param name="ticksPerMillisecond">Ticks per millisecond.</param>
+        public PacketSnifferStateMachine(long interMessageTimeout, long ticksPerMillisecond)
         {
-            /// <summary>
-            /// Nothing - we're just waiting for some packets.
-            /// </summary>
-            Idle,
-
-            /// <summary>
-            /// We've recieved a request and we're waiting for a response
-            /// </summary>
-            AwaitingResponse,
+            _interMessageTimeout = interMessageTimeout * ticksPerMillisecond;
+            _ticksPerMillisecond = ticksPerMillisecond;
         }
-
-        public SlaveStateMachine(byte slaveId)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sample"></param>
+        /// <param name="intermessageTimeout">The max amount of time inbetween messages.</param>
+        /// <returns>A packet view model if a packet was created, null otherwise.</returns>
+        public PacketViewModel ProcessSample(Sample sample)
         {
-            _slaveId = slaveId;
-        }
 
-        public PacketViewModel ProcessMessage(byte[] message, DateTime timestamp)
-        {
-            //Get the crc of this message
-            ushort currentCrc = MessageUtilities.GetCRC(message);
-            ushort currentFunction = MessageUtilities.GetFunction(message);
+            if (sample == null)
+                return null;
 
-            var direction = MessageDirection.Unknown;
+            if (_firstTime == null)
+                _firstTime = sample.Ticks;
 
-            if (_state == SlaveState.Idle || ( _previousPacket != null && (currentFunction != _previousPacket.Function || currentCrc == _previousPacket.CRC)))
+            long sampleTime = (sample.Ticks - _firstTime.Value) /_ticksPerMillisecond;
+
+            PacketViewModel packet = null;
+
+            //Check to see if we've gone beyond the end of the buffer
+            if (_bufferPosition >= BufferSize - 2)
             {
-                //We've gotten the request - now wait for the response
-                _state = SlaveState.AwaitingResponse;
-            
-                //This is a request
-                direction = MessageDirection.Request;
+                
+                //Go back to the beginning
+                _bufferPosition = 0;
+
+                //Return an invalid packet
+                packet = PacketViewModel.CreateInvalidPacket(sampleTime,
+                                                                 _buffer.ToArray(),
+                                                                 "Maximum buffer exceeded.");
             }
             else
             {
-                //This appears to be a valid response
-                direction = MessageDirection.Response;
+                //Check to see if we have a previous sample available
+                Sample previousSample = null;
 
-                //Let's away another request
-                _state = SlaveState.Idle;
+                if (_bufferPosition > 0)
+                {
+                    previousSample = _buffer[_bufferPosition - 1];
+                }
+
+                //Calculate the interval between this packet and the previous one
+                long? interval = null;
+
+                if (previousSample != null)
+                    interval = sample.Ticks - previousSample.Ticks;
+
+                //Has the previous message timed out?
+                if (interval > _interMessageTimeout)
+                {
+                    packet = PacketViewModel.CreateInvalidPacket(sampleTime,
+                                                               _buffer.Take(_bufferPosition).ToArray(), 
+                                                               "Timed out");
+                    
+                    _bufferPosition = 0;
+
+                }
+
+                //Save the sample
+                _buffer[_bufferPosition] = sample;
+
+                //Increase the position
+                _bufferPosition++;
+
+                if (_bufferPosition > 6)
+                {
+                    //This is the entire message
+                    var message = _buffer.Take(_bufferPosition).Select(s => s.Value).ToArray();
+
+                    var currentSlaveId = MessageUtilities.GetSlaveId(message);
+
+                    int messageSize;
+
+                    if (_previousSlaveId.HasValue && _previousSlaveId.Value == currentSlaveId)
+                    {
+                        messageSize = RequestSizeCalculator.GetResponseMessageLength(message);
+                    }
+                    else
+                    {
+                        //In case the message was lost - just start over
+                        _previousSlaveId = null;
+                        _previousPacket = null;
+
+                        messageSize = RequestSizeCalculator.GetRequestMessageLength(message);
+                    }
+
+                    //Check to see if this is supposed to be completed
+                    if (_bufferPosition >= messageSize)
+                    {
+                        //It has been too long in between messages - be done with the previous message
+                        var messageFrame = _buffer.Take(_bufferPosition - 2).Select(s => s.Value).ToArray();
+
+                        //Calculate the CRC with the given set of bytes
+                        var calculatedCrc = BitConverter.ToUInt16(ModbusUtility.CalculateCrc(messageFrame), 0);
+
+                        //Get the crc that is stored in the message
+                        var messageCrc = MessageUtilities.GetCRC(message);
+
+                        //Check to see if the crc's match
+                        if (calculatedCrc == messageCrc)
+                        {
+                            //Determine the diection
+                            var direction = _previousSlaveId.HasValue
+                                                ? MessageDirection.Response
+                                                : MessageDirection.Request;
+
+                            //We have a good messsage
+                            packet = PacketViewModel.CreateValidPacket(sampleTime,
+                                                                       _buffer.Take(_bufferPosition).ToArray(), 
+                                                                       direction, 
+                                                                       _previousPacket);
+
+
+                            if (direction == MessageDirection.Request)
+                            {
+                                //Save this address 
+                                _previousSlaveId = MessageUtilities.GetSlaveId(message);
+
+                                _previousPacket = packet;
+                            }
+                            else
+                            {
+                                _previousSlaveId = null;
+                                _previousPacket = null;
+                            }
+                        }
+                        else
+                        {
+                            packet = PacketViewModel.CreateInvalidPacket(sampleTime,
+                                                                         _buffer.Take(_bufferPosition).ToArray(), 
+                                                                         "Invalid CRC");
+
+                            _previousSlaveId = null;
+                            _previousPacket = null;
+                        }
+
+                        _bufferPosition = 0;
+                    }
+                }
             }
 
-            //Create the packet
-            var packet = PacketViewModel.CreateValidPacket(timestamp, message, direction, direction == MessageDirection.Response ? _previousPacket : null);
 
-            //Create the packet
-            _previousPacket = packet;
+            return packet;
 
-            //Return a new view model
-            return _previousPacket;
+            
         }
 
-        public byte SlaveId
-        {
-            get { return _slaveId; }
-        }
     }
 }
