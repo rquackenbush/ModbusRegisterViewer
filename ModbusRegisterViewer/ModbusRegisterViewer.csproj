@@ -61,7 +61,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>2A3464C2ECD552DC1D963F838F405FA32A87FF94</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>C2104AD63A8BB9311EA7C7209A85E81C8F5C0BB4</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>ModbusRegisterViewer_TemporaryKey.pfx</ManifestKeyFile>
