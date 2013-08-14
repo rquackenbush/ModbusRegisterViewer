@@ -75,29 +75,60 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
                 <TextBlock Style="{StaticResource LabelStyle}">Modbus Slave Id</TextBlock>
-
                 <xctk:IntegerUpDown Minimum="1" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveAddress}"/>
 
-                <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="2">Starting Register</TextBlock>
+                <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="0" Grid.Row="1">Starting Address</TextBlock>
+                <xctk:IntegerUpDown Minimum="1" Maximum="65536"  Grid.Column="1" Grid.Row="1" MinWidth="60" Value="{Binding Path=StartingRegister}" />
 
-                <xctk:IntegerUpDown Minimum="1" Maximum="65536"  Grid.Column="3" MinWidth="60" Value="{Binding Path=StartingRegister}" />
+                <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="1">Number</TextBlock>
+                <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="5" Grid.Row="1" MinWidth="60" x:Name="NumberOfRegistersUpDown" Value="{Binding Path=NumberOfRegisters}" />
 
-                <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4">Number of Registers</TextBlock>
+                <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="0">Type</TextBlock>
+                <ComboBox x:Name="RegisterTypeComboBox" DisplayMemberPath="Display" Grid.Column="5" Margin="2" ItemsSource="{Binding Path=RegisterTypes}" SelectedItem="{Binding Path=RegisterType}" />
 
-                <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="5" MinWidth="60" x:Name="NumberOfRegistersUpDown" Value="{Binding Path=NumberOfRegisters}" />
+                <Button Grid.Column="7" Margin="4" MinWidth="100" Command="{Binding Path=ReadCommand}">Read</Button>
 
-                <ComboBox x:Name="RegisterTypeComboBox" DisplayMemberPath="Display" Grid.Column="6" Margin="2" ItemsSource="{Binding Path=RegisterTypes}" SelectedItem="{Binding Path=RegisterType}" />
+                <Button Grid.Column="7" Grid.Row="1" Margin="4" MinWidth="100" Command="{Binding Path=WriteCommand}">Write</Button>
 
-                <Button Grid.Column="7" Margin="4" MinWidth="100" Command="{Binding Path=GetRegistersCommand}">Get Registers</Button>
+                <CheckBox Grid.Column="8" Margin="4" VerticalAlignment="Center" Foreground="White" IsChecked="{Binding Path=IsAutoRefresh}" ToolTip="If checked, will only write the items that have been changed using individual write commands.">Auto Refresh</CheckBox>
 
-                <CheckBox Grid.Column="8" Margin="4" VerticalAlignment="Center" Foreground="White" IsChecked="{Binding Path=IsAutoRefresh}">Auto Refresh</CheckBox>
+                <CheckBox Grid.Column="8" Grid.Row="1" Margin="4" VerticalAlignment="Center" Foreground="White" IsChecked="{Binding Path=WriteIndividually}" Content="Write Individually">
+                    <CheckBox.ToolTip>
+                        <TextBlock>
+                            If checked, only items that have been changed will be written.  Otherwise, all items in the current range will be written.
+                        </TextBlock>
+                    </CheckBox.ToolTip>
+                </CheckBox>
 
             </Grid>
 
-            <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding Path=Registers}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
+            <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Registers}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
                 <DataGrid.Columns>
+                    <DataGridTemplateColumn IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="/images/126_Edit_16x16_72.png" Width="16">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Visibility" Value="Hidden"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=IsDirty}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
                     <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
                     <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />

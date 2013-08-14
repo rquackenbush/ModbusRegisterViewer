@@ -35,7 +35,7 @@
     <SuiteName>CAS Modbus Utilities</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>22</ApplicationRevision>
+    <ApplicationRevision>24</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -157,6 +157,8 @@
     <Compile Include="Model\SnifferCapture.cs" />
     <Compile Include="Model\SnifferMapper.cs" />
     <Compile Include="Converters\SamplesConverter.cs" />
+    <Compile Include="Services\IMessageBoxService.cs" />
+    <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AdapterViewModel.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
@@ -167,6 +169,7 @@
     <Compile Include="ViewModel\SampleViewModel.cs" />
     <Compile Include="ViewModel\SnifferViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\WriteableRegisterViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
@@ -249,6 +252,7 @@
     <Content Include="FTD2XX.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\126_Edit_16x16_72.png" />
     <Resource Include="Images\Gear.png" />
     <Resource Include="Gear.ico" />
     <Resource Include="Images\Gear.ico" />

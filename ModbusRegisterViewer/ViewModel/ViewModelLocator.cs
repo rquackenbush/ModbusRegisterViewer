@@ -15,6 +15,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using ModbusRegisterViewer.Services;
 
 namespace ModbusRegisterViewer.ViewModel
 {
@@ -45,6 +46,11 @@ namespace ModbusRegisterViewer.ViewModel
             SimpleIoc.Default.Register<RegisterViewerViewModel>();
             SimpleIoc.Default.Register<AboutViewModel>();
             SimpleIoc.Default.Register<SnifferViewModel>();
+
+            if (!SimpleIoc.Default.IsRegistered<IMessageBoxService>())
+            {
+                SimpleIoc.Default.Register<IMessageBoxService>(() => new MessageBoxService());
+            }
         }
 
         public RegisterViewerViewModel RegisterViewer

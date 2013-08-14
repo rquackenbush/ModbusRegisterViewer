@@ -5,7 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
+using ModbusRegisterViewer.Services;
 
 namespace ModbusRegisterViewer
 {
@@ -17,6 +19,8 @@ namespace ModbusRegisterViewer
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             DispatcherHelper.Initialize();
+
+            
         }
     }
 }

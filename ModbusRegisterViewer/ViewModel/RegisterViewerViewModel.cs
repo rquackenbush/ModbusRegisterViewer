@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Win32;
 using ModbusRegisterViewer.Model;
+using ModbusRegisterViewer.Services;
 
 namespace ModbusRegisterViewer.ViewModel
 {
@@ -30,33 +31,42 @@ namespace ModbusRegisterViewer.ViewModel
     public class RegisterViewerViewModel : ViewModelBase
     {
         private readonly object _communicationLock = new object();
-        private bool _isRunning = false;
+        private bool _isRunning;
 
         private RegisterTypeViewModel _registerType;
         private int? _slaveAddress;
         private int? _startingRegister;
         private int? _numberOfregisters;
-        private ObservableCollection<RegisterViewModel> _registers;
+        private bool _writeIndividually;
+        private ObservableCollection<WriteableRegisterViewModel> _registers;
         private readonly AboutViewModel _aboutViewModel = new AboutViewModel();
         private readonly ExceptionViewModel _exceptionViewModel = new ExceptionViewModel();
 
         private readonly Timer _autoRefreshTimer = new Timer(2000);
 
+        private readonly IMessageBoxService _messageBoxService;
+
         private readonly ObservableCollection<AdapterViewModel> _adapters = new ObservableCollection<AdapterViewModel>();
         private AdapterViewModel _selectedAdapter;
 
+        private static readonly RegisterTypeViewModel _registerTypeInput = new RegisterTypeViewModel(Model.RegisterType.Input, "Input");
+        private static readonly RegisterTypeViewModel _registerTypeHolding = new RegisterTypeViewModel(Model.RegisterType.Holding, "Holding");
+
         private readonly List<RegisterTypeViewModel> _registerTypes = new List<RegisterTypeViewModel>()
         {
-            new RegisterTypeViewModel(Model.RegisterType.Input, "Input"),
-            new RegisterTypeViewModel(Model.RegisterType.Holding, "Holding")
+            _registerTypeInput,
+            _registerTypeHolding
         };
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public RegisterViewerViewModel()
+        public RegisterViewerViewModel(IMessageBoxService messageBoxService)
         {
-            this.GetRegistersCommand = new RelayCommand(GetRegisters, CanGetRegisters);
+            _messageBoxService = messageBoxService;
+
+            this.ReadCommand = new RelayCommand(Read, CanRead);
+            this.WriteCommand = new RelayCommand(Write, CanWrite);
             this.ExitCommand = new RelayCommand(Exit);
             this.OpenCommand = new RelayCommand(Open, CanOpen);
             this.SaveAsCommand = new RelayCommand(SaveAs, CanSaveAs);
@@ -64,13 +74,13 @@ namespace ModbusRegisterViewer.ViewModel
 
             if (IsInDesignMode)
             {
-                this.Registers = new ObservableCollection<RegisterViewModel>()
+                this.Registers = new ObservableCollection<WriteableRegisterViewModel>()
                 {
-                    new RegisterViewModel(1000, 0),
-                    new RegisterViewModel(1001, 20),
-                    new RegisterViewModel(1002, 23),
-                    new RegisterViewModel(1003, 24),
-                    new RegisterViewModel(1004, 25),
+                    new WriteableRegisterViewModel(1000, 0),
+                    new WriteableRegisterViewModel(1001, 20),
+                    new WriteableRegisterViewModel(1002, 23),
+                    new WriteableRegisterViewModel(1003, 24),
+                    new WriteableRegisterViewModel(1004, 25),
                 };
             }
 
@@ -91,14 +101,15 @@ namespace ModbusRegisterViewer.ViewModel
 
         void _autoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(GetRegisters);
+            DispatcherHelper.CheckBeginInvokeOnUI(Read);
         }
         
         public ICommand OpenCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
         public ICommand SaveAsCommand { get; private set; }
         public ICommand ExitCommand { get; private set; }
-        public ICommand GetRegistersCommand { get; private set; }
+        public ICommand ReadCommand { get; private set; }
+        public ICommand WriteCommand { get; private set; }
         public ICommand RefreshAdaptersCommand { get; private set; }
 
         private void RefreshAdapters()
@@ -154,8 +165,8 @@ namespace ModbusRegisterViewer.ViewModel
 
             var registerNumber = snapshot.StartingRegister;
 
-            this.Registers = new ObservableCollection<RegisterViewModel>(
-                snapshot.Registers.Select(v => new RegisterViewModel(registerNumber++, v))
+            this.Registers = new ObservableCollection<WriteableRegisterViewModel>(
+                snapshot.Registers.Select(v => new WriteableRegisterViewModel(registerNumber++, v))
             );
         }
 
@@ -191,96 +202,193 @@ namespace ModbusRegisterViewer.ViewModel
             DataContractUtilities.ToFile(saveFileDialog.FileName, snapshot);
         }
 
-        private bool CanGetRegisters()
+        private bool CanWrite()
+        {
+            return this.RegisterType == _registerTypeHolding && this.Registers != null && this.Registers.Any();
+        }
+
+        private void Write()
+        {
+            try
+            {
+                if (!SlaveAddress.HasValue)
+                    return;
+
+                var slaveAddress = (byte)SlaveAddress.Value;
+
+                if (this.WriteIndividually)
+                {
+                    var changedRegisters = this.Registers.Where(r => r.IsDirty);
+
+                    if (!changedRegisters.Any())
+                        return;
+
+                    ExecuteComm(context =>
+                        {
+                            foreach (var register in changedRegisters)
+                            {
+                                context.Value.Master.WriteSingleRegister(slaveAddress, (ushort)(register.RegisterNumber - 1), register.Value);
+
+                                register.IsDirty = false;
+                            }        
+                        });
+                }
+                else
+                {
+                    if (!StartingRegister.HasValue)
+                        return;
+
+                    if (!NumberOfRegisters.HasValue)
+                        return;
+
+                    var startingRegister = (ushort)(StartingRegister.Value);
+                    var numberOfRegisters = (ushort)NumberOfRegisters.Value;
+
+                    var data = this.Registers.Select(r => r.Value).ToArray();
+
+                    ExecuteComm(context =>
+                        {
+                            context.Value.Master.WriteMultipleRegisters(slaveAddress, (ushort)(startingRegister - 1),  data);
+                        });
+
+                    MarkRegistersClean();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Exception.ShowCommand.Execute(ex);
+            }
+        }
+
+        private void MarkRegistersClean()
+        {
+            if (this.Registers == null)
+                return;
+
+            foreach (var register in this.Registers)
+            {
+                register.IsDirty = false;
+            }
+        }
+
+        private bool CanRead()
         {
             return !this.IsAutoRefresh && this.SelectedAdapter != null;
         }
 
-        private void GetRegisters()
+        /// <summary>
+        /// Executes code against a communication context
+        /// </summary>
+        /// <param name="action"></param>
+        private void ExecuteComm(Action<Lazy<MasterContext>> action)
+        {
+            lock (_communicationLock)
+            {
+                //We don't want to have to create this if we don't have to, so use a lazy loader
+                Lazy<MasterContext> context = new Lazy<MasterContext>(() =>
+                    {
+                        var result = new MasterContext(this.SelectedAdapter.SerialNumber);
+
+                        result.Master.Transport.ReadTimeout = 2000;
+                        result.Master.Transport.WriteTimeout = 2000;
+
+                        return result;
+                    });
+
+                try
+                {
+                    _isRunning = true;
+
+                    //Execute the action
+                    action(context);
+                }
+                finally
+                {
+                    _isRunning = false;
+
+                    if (context.IsValueCreated)
+                    {
+                        context.Value.Dispose();
+                    }
+                }
+            }
+        }
+
+        private void Read()
         {
             if (_isRunning)
                 return;
 
             try
             {
-                lock (_communicationLock)
-                {
-                    try
+                if (!SlaveAddress.HasValue)
+                    return;
+
+                if (!StartingRegister.HasValue)
+                    return;
+
+                if (!NumberOfRegisters.HasValue)
+                    return;
+
+                var slaveAddress = (byte)SlaveAddress.Value;
+                var startingRegister = (ushort)(StartingRegister.Value);
+                var numberOfRegisters = (ushort)NumberOfRegisters.Value;
+
+                if (RegisterType == null)
+                    return;
+
+                //Save theese query criteria
+                var settings = Properties.Settings.Default;
+
+                settings.SlaveAddress = slaveAddress;
+                settings.StartingRegister = startingRegister;
+                settings.NumberOfRegisters = numberOfRegisters;
+                settings.RegisterType = (int)RegisterType.RegisterType;
+
+                if (this.SelectedAdapter == null)
+                    settings.AdapterSerialNumber = null;
+                else
+                    settings.AdapterSerialNumber = this.SelectedAdapter.SerialNumber;
+
+                settings.Save();
+
+                ushort[] results = null;
+
+                ExecuteComm(c =>
                     {
-                        _isRunning = true;
-
-                        if (!SlaveAddress.HasValue)
-                            return;
-
-                        if (!StartingRegister.HasValue)
-                            return;
-
-                        if (!NumberOfRegisters.HasValue)
-                            return;
-
-                        var slaveAddress = (byte)SlaveAddress.Value;
-                        var startingRegister = (ushort)(StartingRegister.Value);
-                        var numberOfRegisters = (ushort)NumberOfRegisters.Value;
-
-                        if (RegisterType == null)
-                            return;
-
-                        //Save theese query criteria
-                        var settings = Properties.Settings.Default;
-
-                        settings.SlaveAddress = slaveAddress;
-                        settings.StartingRegister = startingRegister;
-                        settings.NumberOfRegisters = numberOfRegisters;
-                        settings.RegisterType = (int)RegisterType.RegisterType;
-
-                        if (this.SelectedAdapter == null)
-                            settings.AdapterSerialNumber = null;
-                        else
-                            settings.AdapterSerialNumber = this.SelectedAdapter.SerialNumber;
-
-                        settings.Save();
-
-                        ushort[] results;
-
-                        using (var context = new MasterContext(this.SelectedAdapter.SerialNumber))
+                        switch (RegisterType.RegisterType)
                         {
-                            context.Master.Transport.ReadTimeout = 2000;
+                            case Model.RegisterType.Input:
 
-                            switch (RegisterType.RegisterType)
-                            {
-                                case Model.RegisterType.Input:
+                                results = c.Value.Master.ReadInputRegisters(slaveAddress,
+                                                                            (ushort)(startingRegister - 1),
+                                                                            numberOfRegisters);
 
-                                    results = context.Master.ReadInputRegisters(slaveAddress,
+                                break;
+
+                            case Model.RegisterType.Holding:
+
+                                results = c.Value.Master.ReadHoldingRegisters(slaveAddress,
                                                                                 (ushort)(startingRegister - 1),
                                                                                 numberOfRegisters);
 
-                                    break;
+                                break;
 
-                                case Model.RegisterType.Holding:
-
-                                    results = context.Master.ReadHoldingRegisters(slaveAddress,
-                                                                                  (ushort)(startingRegister - 1),
-                                                                                  numberOfRegisters);
-
-                                    break;
-
-                                default:
-                                    throw new InvalidOperationException(string.Format("Unrecognized enum value {0}",
-                                                                                      RegisterType.RegisterType));
-                            }
+                            default:
+                                throw new InvalidOperationException(string.Format("Unrecognized enum value {0}",
+                                                                                    RegisterType.RegisterType));
                         }
+                    });
 
-                        ushort registerNumber = startingRegister;
+                ushort registerNumber = startingRegister;
 
-                        var rows = results.Select(r => new RegisterViewModel(registerNumber++, r));
+                if (results != null)
+                {
+                    var rows = results.Select(r => new WriteableRegisterViewModel(registerNumber++, r));
 
-                        Registers = new ObservableCollection<RegisterViewModel>(rows);
-                    }
-                    finally
-                    {
-                        _isRunning = false;
-                    }
+                    Registers = new ObservableCollection<WriteableRegisterViewModel>(rows);
                 }
+
             }
             catch (Exception ex)
             {
@@ -298,7 +406,7 @@ namespace ModbusRegisterViewer.ViewModel
             Application.Current.Shutdown();
         }
 
-        public ObservableCollection<RegisterViewModel> Registers
+        public ObservableCollection<WriteableRegisterViewModel> Registers
         {
             get { return _registers; }
             private set
@@ -324,11 +432,21 @@ namespace ModbusRegisterViewer.ViewModel
 
                     if (value)
                     {
-                        GetRegisters();
+                        Read();
                     }
 
                     RaisePropertyChanged(() => IsAutoRefresh);
                 }
+            }
+        }
+
+        public bool WriteIndividually
+        {
+            get { return _writeIndividually; }
+            set
+            {
+                _writeIndividually = value;
+                RaisePropertyChanged(() => WriteIndividually);
             }
         }
 

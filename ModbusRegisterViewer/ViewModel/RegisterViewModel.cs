@@ -7,10 +7,10 @@ using GalaSoft.MvvmLight;
 
 namespace ModbusRegisterViewer.ViewModel
 {
-    public class RegisterViewModel : ViewModelBase
+    public class RegisterViewModel
     {
-        private readonly ushort _value;
         private readonly ushort _registerNumber;
+        private readonly ushort _value;
 
         public RegisterViewModel(ushort registerNumber, ushort value)
         {
