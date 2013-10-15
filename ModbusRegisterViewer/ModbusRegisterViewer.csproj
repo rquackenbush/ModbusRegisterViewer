@@ -35,7 +35,7 @@
     <SuiteName>CAS Modbus Utilities</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>24</ApplicationRevision>
+    <ApplicationRevision>25</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -73,7 +73,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Gear.ico</ApplicationIcon>
+    <ApplicationIcon>equipment_zoom_128.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FtdAdapter">
@@ -93,6 +93,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -144,6 +145,9 @@
     <Compile Include="Model\CaptureFileWriter.cs" />
     <Compile Include="Model\DataContractConstants.cs" />
     <Compile Include="Model\DataContractUtilities.cs" />
+    <Compile Include="Model\FieldType.cs" />
+    <Compile Include="Model\FieldTypeFactory.cs" />
+    <Compile Include="Model\FieldTypeUnsigned16.cs" />
     <Compile Include="Model\FunctionCodes.cs" />
     <Compile Include="Model\FunctionDescriptionFactory.cs" />
     <Compile Include="Model\MessageDirection.cs" />
@@ -154,24 +158,32 @@
     <Compile Include="Model\RequestSizeCalculator.cs" />
     <Compile Include="Model\Sample.cs" />
     <Compile Include="Model\Snapshot.cs" />
-    <Compile Include="Model\SnifferCapture.cs" />
-    <Compile Include="Model\SnifferMapper.cs" />
-    <Compile Include="Converters\SamplesConverter.cs" />
     <Compile Include="Services\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
+    <Compile Include="ViewModel\ActivityLogViewModel.cs" />
     <Compile Include="ViewModel\AdapterViewModel.cs" />
+    <Compile Include="ViewModel\ControlPanelDesignerViewModel.cs" />
+    <Compile Include="ViewModel\ControlPanelViewModel.cs" />
+    <Compile Include="ViewModel\ControlViewModel.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
+    <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="ViewModel\PacketViewModel.cs" />
+    <Compile Include="ViewModel\RangeViewModel.cs" />
+    <Compile Include="ViewModel\ReadWrite.cs" />
     <Compile Include="ViewModel\RegisterViewerViewModel.cs" />
     <Compile Include="ViewModel\RegisterTypeViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
     <Compile Include="ViewModel\SampleViewModel.cs" />
+    <Compile Include="ViewModel\SlaveSimulatorViewModel.cs" />
     <Compile Include="ViewModel\SnifferViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\WriteableRegisterViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ControlPanelDesignerView.xaml.cs">
+      <DependentUpon>ControlPanelDesignerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GenericPacketViewers\RegistersView.xaml.cs">
       <DependentUpon>RegistersView.xaml</DependentUpon>
@@ -180,9 +192,16 @@
       <DependentUpon>LauncherView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PackatDetailViewFactory.cs" />
+    <Compile Include="Views\SlaveSimulatorView.xaml.cs">
+      <DependentUpon>SlaveSimulatorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SnifferView.xaml.cs">
       <DependentUpon>SnifferView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\ControlPanelDesignerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ExceptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -211,6 +230,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SlaveSimulatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,9 +272,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="equipment_zoom_128.ico" />
     <Content Include="FTD2XX.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\equipment_zoom_128.ico" />
+    <Resource Include="Images\equipment_zoom_48.png" />
+    <Resource Include="Images\flow_write_48.png" />
     <Resource Include="Images\126_Edit_16x16_72.png" />
     <Resource Include="Images\Gear.png" />
     <Resource Include="Gear.ico" />

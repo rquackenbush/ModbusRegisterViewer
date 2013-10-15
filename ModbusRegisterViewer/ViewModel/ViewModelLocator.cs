@@ -43,9 +43,17 @@ namespace ModbusRegisterViewer.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<RegisterViewerViewModel>();
+
+            //if (!SimpleIoc.Default.IsRegistered<RegisterViewerViewModel>())
+            //{
+            //    SimpleIoc.Default.Register<RegisterViewerViewModel>(
+            //        () => new RegisterViewerViewModel(new MessageBoxService()));
+            //}
+
             SimpleIoc.Default.Register<AboutViewModel>();
             SimpleIoc.Default.Register<SnifferViewModel>();
+            SimpleIoc.Default.Register<ControlPanelDesignerViewModel>();
+            SimpleIoc.Default.Register<SlaveSimulatorViewModel>();
 
             if (!SimpleIoc.Default.IsRegistered<IMessageBoxService>())
             {
@@ -55,7 +63,10 @@ namespace ModbusRegisterViewer.ViewModel
 
         public RegisterViewerViewModel RegisterViewer
         {
-            get { return ServiceLocator.Current.GetInstance<RegisterViewerViewModel>(); }
+            get
+            {
+                return new RegisterViewerViewModel(new MessageBoxService());
+            }
         }
 
         public AboutViewModel About
@@ -66,6 +77,16 @@ namespace ModbusRegisterViewer.ViewModel
         public SnifferViewModel Sniffer
         {
             get { return ServiceLocator.Current.GetInstance<SnifferViewModel>(); }
+        }
+
+        public ControlPanelDesignerViewModel ControlPanelDesigner
+        {
+            get { return ServiceLocator.Current.GetInstance<ControlPanelDesignerViewModel>(); }
+        }
+
+        public SlaveSimulatorViewModel SlaveSimulator
+        {
+            get { return ServiceLocator.Current.GetInstance<SlaveSimulatorViewModel>(); }
         }
         
         public static void Cleanup()

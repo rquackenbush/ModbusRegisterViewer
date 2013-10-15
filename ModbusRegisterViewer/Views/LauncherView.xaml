@@ -4,9 +4,9 @@
         WindowStyle="None"
         BorderThickness="0"
         ResizeMode="NoResize"
-        
+        SizeToContent="Height"
         WindowStartupLocation="CenterScreen"
-        Title="LauncherView" Height="229" Width="580" Background="#FF0C3455" Icon="/ModbusRegisterViewer;component/Images/Gear.png">
+        Title="LauncherView"  Width="580" Background="#FF0C3455" Icon="/ModbusRegisterViewer;component/Images/equipment_zoom_48.png">
     
     <Window.Resources>
         <Style TargetType="Label" x:Key="TitleLabel">
@@ -96,6 +96,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 
                 <Grid.ColumnDefinitions>
@@ -123,17 +124,32 @@
 
                 <Image Margin="5" Source="/ModbusRegisterViewer;component/Images/Network_Map.png"  Grid.Row="1"/>
 
-                <Grid Grid.Column="1" Style="{StaticResource ToolDescription}" Grid.Row="2">
+                <Grid Grid.Column="1" Style="{StaticResource ToolDescription}" Grid.Row="1">
 
                     <Button Click="LaunchSpy" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
 
                         <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
-                        <TextBlock FontWeight="Bold" FontFamily="Arial">Modbus Spy</TextBlock>
+                        <TextBlock FontWeight="Bold" FontFamily="Arial">Modbus Spy - Beta</TextBlock>
                         <LineBreak/>
                         <TextBlock>Captures and decodes modbus packets.</TextBlock>
                     </TextBlock>
                         
                         </Button>
+                </Grid>
+
+                <Image Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"  Grid.Row="2"/>
+
+                <Grid Grid.Column="1" Style="{StaticResource ToolDescription}" Grid.Row="2">
+
+                    <Button Click="LaunchSlaveSimulator" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
+
+                        <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                        <TextBlock FontWeight="Bold" FontFamily="Arial">Modbus Slave Device Simulator</TextBlock>
+                        <LineBreak/>
+                        <TextBlock>Simulate a Modbus Slave Device</TextBlock>
+                    </TextBlock>
+
+                    </Button>
                 </Grid>
 
             </Grid>

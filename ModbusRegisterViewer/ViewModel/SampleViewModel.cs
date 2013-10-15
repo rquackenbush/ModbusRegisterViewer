@@ -9,23 +9,30 @@ namespace ModbusRegisterViewer.ViewModel
 {
     public class SampleViewModel
     {
+        private readonly PacketViewModel _packet;
         private readonly Sample _previousSample;
         private readonly Sample _sample;
 
-        public SampleViewModel(Sample sample, Sample previousSample)
+        public SampleViewModel(PacketViewModel packet, Sample sample, Sample previousSample)
         {
+            _packet = packet;
             _sample = sample;
             _previousSample = previousSample;
         }
 
-        public long Time
+        public double Time
         {
-            get { return _sample.Ticks; }
+            get { return _packet.GetRelativeMilliseconds(_sample.Ticks); }
         }
 
         public byte Value
         {
             get { return _sample.Value; }
+        }
+
+        public long Ticks
+        {
+            get { return _sample.Ticks; }
         }
 
         public string Hex
@@ -38,14 +45,14 @@ namespace ModbusRegisterViewer.ViewModel
             get { return Convert.ToString(this.Value, 2).PadLeft(8, '0'); }
         }
 
-        public long? Interval
+        public double? Interval
         {
             get
             {
                 if (_previousSample == null)
                     return null;
 
-                return _sample.Ticks - _previousSample.Ticks;
+                return ((double)(_sample.Ticks - _previousSample.Ticks)) / _packet.TicksPerMillisecond;
             }
         }
     }

@@ -11,15 +11,19 @@ namespace ModbusRegisterViewer.ViewModel
     {
         private readonly PacketViewModel _previousPacket;
         private readonly string _invalidReason;
-        private readonly long _time;
+        
         private readonly MessageDirection _direction = MessageDirection.Unknown;
         private readonly Sample[] _samples;
         private readonly Lazy<byte[]> _message;
 
-        private PacketViewModel(long time, Sample[] samples)
-         {
-             _time = time;
-             _samples = samples; 
+        private readonly long _offsetTicks;
+        private readonly long _ticksPerMillisecond;
+
+        private PacketViewModel(long offsetTicks, long ticksPerMillisecond, Sample[] samples)
+        {
+            _offsetTicks = offsetTicks;
+            _ticksPerMillisecond = ticksPerMillisecond;
+            _samples = samples; 
 
             _message = new Lazy<byte[]>(() =>
                 {
@@ -30,29 +34,39 @@ namespace ModbusRegisterViewer.ViewModel
                 });
          }
 
-        private PacketViewModel(long time, Sample[] samples, MessageDirection direction, PacketViewModel previousPacket)
-            : this(time, samples)
+        private PacketViewModel(long offsetTicks, long ticksPerMillisecond, Sample[] samples, MessageDirection direction, PacketViewModel previousPacket)
+            : this(offsetTicks, ticksPerMillisecond, samples)
         {
             
             _direction = direction;
             _previousPacket = previousPacket;
         }
 
-        private PacketViewModel(long time, Sample[] samples, string invalidReason)
-            : this(time, samples)
+        private PacketViewModel(long offsetTicks, long ticksPerMillisecond, Sample[] samples, string invalidReason)
+            : this(offsetTicks, ticksPerMillisecond, samples)
         {
             _invalidReason = invalidReason;
         }
 
-        public static PacketViewModel CreateValidPacket(long time, Sample[] samples, MessageDirection direction,
+        public static PacketViewModel CreateValidPacket(long offsetTicks, long ticksPerMillisecond, Sample[] samples, MessageDirection direction,
                                                         PacketViewModel previousPacket)
         {
-            return new PacketViewModel(time, samples, direction, previousPacket);
+            return new PacketViewModel(offsetTicks, ticksPerMillisecond, samples, direction, previousPacket);
         }
 
-        public static PacketViewModel CreateInvalidPacket(long time, Sample[] samples, string invalidReason)
+        public static PacketViewModel CreateInvalidPacket(long offsetTicks, long ticksPerMillisecond, Sample[] samples, string invalidReason)
         {
-            return new PacketViewModel(time, samples, invalidReason);
+            return new PacketViewModel(offsetTicks, ticksPerMillisecond, samples, invalidReason);
+        }
+
+        public long OffsetTicks
+        {
+            get { return _offsetTicks; }
+        }
+
+        public long TicksPerMillisecond
+        {
+            get { return _ticksPerMillisecond; }
         }
 
         public bool IsInvalid
@@ -65,9 +79,20 @@ namespace ModbusRegisterViewer.ViewModel
             get { return _invalidReason; }
         }
 
-        public long Time 
+        internal double GetRelativeMilliseconds(long ticks)
         {
-            get { return _time; }
+            return ((double)(ticks - _offsetTicks))/ _ticksPerMillisecond;
+        }
+
+        public double? Time 
+        {
+            get
+            {
+                if (_samples == null || _samples.Length == 0)
+                    return null;
+
+                return GetRelativeMilliseconds(_samples[0].Ticks);
+            }
         }
 
         public PacketViewModel PreviousPacket
@@ -113,30 +138,6 @@ namespace ModbusRegisterViewer.ViewModel
             }
         }
 
-        //public string Payload
-        //{
-        //    get 
-        //    { 
-        //        if (this.IsInvalid)
-        //        {
-        //            if (_message != null)
-        //            {
-        //                //Render the entire raw message
-        //                return BufferRender.GetDisplayString(_message);
-        //            }
-        //        }
-        //        else if (_message != null && _message.Length > 4)
-        //        {
-        //            var payloadBytes = _message.Skip(2).Take(_message.Length - 4).ToArray();
-
-        //            return  BufferRender.GetDisplayString(payloadBytes);     
-        //        }
-
-        //        return null;
-        //    }
-        //}
-
-
         public UInt16? CRC
         {
             get
@@ -168,19 +169,29 @@ namespace ModbusRegisterViewer.ViewModel
 
         }
 
-        //public byte[] Message
-        //{
-        //    get { return _message; }
-        //}
-
-        public long? ResponseTime
+        public double? ResponseTime
         {
             get
             {
                 if (this.PreviousPacket == null)
                     return null;
 
-                return this.Time - this.PreviousPacket.Time;
+                if (this.PreviousPacket.Samples == null)
+                    return null;
+
+                if (this.PreviousPacket.Samples.Length == 0)
+                    return null;
+
+                if (this.Samples == null)
+                    return null;
+
+                if (this.Samples.Length == 0)
+                    return null;
+
+                var lastRequestSample = this.PreviousPacket.Samples.Last();
+                var firstResponseSample = this.Samples[0];
+
+                return ((double)(firstResponseSample.Ticks - lastRequestSample.Ticks))/_ticksPerMillisecond;
             }
         }
 
@@ -192,6 +203,27 @@ namespace ModbusRegisterViewer.ViewModel
         public MessageDirection Direction 
         {
             get { return _direction;  }
+        }
+
+        public SampleViewModel[] SampleViewModels
+        {
+            get
+            {
+                if (this.Samples == null)
+                    return null;
+
+                var viewModels = new SampleViewModel[this.Samples.Length];
+
+                for(int sampleIndex = 0; sampleIndex < this.Samples.Length; sampleIndex++)
+                {
+                    if (sampleIndex == 0)
+                        viewModels[sampleIndex] = new SampleViewModel(this, this.Samples[sampleIndex], null);
+                    else
+                        viewModels[sampleIndex] = new SampleViewModel(this, this.Samples[sampleIndex], this.Samples[sampleIndex - 1]);
+                }
+
+                return viewModels;
+            }
         }
     }
 }

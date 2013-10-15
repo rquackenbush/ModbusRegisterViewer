@@ -56,5 +56,10 @@ namespace ModbusRegisterViewer.Views
         {
             LaunchView<SnifferView>();
         }
+
+        private void LaunchSlaveSimulator(object sender, RoutedEventArgs e)
+        {
+            LaunchView<SlaveSimulatorView>();
+        }
     }
 }

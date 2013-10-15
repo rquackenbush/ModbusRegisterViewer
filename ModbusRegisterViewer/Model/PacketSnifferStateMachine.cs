@@ -63,9 +63,10 @@ namespace ModbusRegisterViewer.Model
                 _bufferPosition = 0;
 
                 //Return an invalid packet
-                packet = PacketViewModel.CreateInvalidPacket(sampleTime,
-                                                                 _buffer.ToArray(),
-                                                                 "Maximum buffer exceeded.");
+                packet = PacketViewModel.CreateInvalidPacket(_firstTime.Value,
+                                                             _ticksPerMillisecond,
+                                                             _buffer.ToArray(),
+                                                             "Maximum buffer exceeded.");
             }
             else
             {
@@ -86,9 +87,10 @@ namespace ModbusRegisterViewer.Model
                 //Has the previous message timed out?
                 if (interval > _interMessageTimeout)
                 {
-                    packet = PacketViewModel.CreateInvalidPacket(sampleTime,
-                                                               _buffer.Take(_bufferPosition).ToArray(), 
-                                                               "Timed out");
+                    packet = PacketViewModel.CreateInvalidPacket(_firstTime.Value,
+                                                                 _ticksPerMillisecond,
+                                                                 _buffer.Take(_bufferPosition).ToArray(),
+                                                                 "Timed out");
                     
                     _bufferPosition = 0;
 
@@ -143,9 +145,10 @@ namespace ModbusRegisterViewer.Model
                                                 : MessageDirection.Request;
 
                             //We have a good messsage
-                            packet = PacketViewModel.CreateValidPacket(sampleTime,
-                                                                       _buffer.Take(_bufferPosition).ToArray(), 
-                                                                       direction, 
+                            packet = PacketViewModel.CreateValidPacket(_firstTime.Value,
+                                                                       _ticksPerMillisecond,
+                                                                       _buffer.Take(_bufferPosition).ToArray(),
+                                                                       direction,
                                                                        _previousPacket);
 
 
@@ -164,8 +167,9 @@ namespace ModbusRegisterViewer.Model
                         }
                         else
                         {
-                            packet = PacketViewModel.CreateInvalidPacket(sampleTime,
-                                                                         _buffer.Take(_bufferPosition).ToArray(), 
+                            packet = PacketViewModel.CreateInvalidPacket(_firstTime.Value,
+                                                                         _ticksPerMillisecond,
+                                                                         _buffer.Take(_bufferPosition).ToArray(),
                                                                          "Invalid CRC");
 
                             _previousSlaveId = null;
