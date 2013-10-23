@@ -35,7 +35,7 @@
     <SuiteName>CAS Modbus Utilities</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>25</ApplicationRevision>
+    <ApplicationRevision>28</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -161,29 +161,22 @@
     <Compile Include="Services\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
-    <Compile Include="ViewModel\ActivityLogViewModel.cs" />
+    <Compile Include="ViewModel\SlaveSimulator\ActivityLogViewModel.cs" />
     <Compile Include="ViewModel\AdapterViewModel.cs" />
-    <Compile Include="ViewModel\ControlPanelDesignerViewModel.cs" />
-    <Compile Include="ViewModel\ControlPanelViewModel.cs" />
-    <Compile Include="ViewModel\ControlViewModel.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
-    <Compile Include="ViewModel\FieldViewModel.cs" />
-    <Compile Include="ViewModel\PacketViewModel.cs" />
-    <Compile Include="ViewModel\RangeViewModel.cs" />
+    <Compile Include="ViewModel\SlaveSimulator\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\Sniffer\PacketViewModel.cs" />
     <Compile Include="ViewModel\ReadWrite.cs" />
-    <Compile Include="ViewModel\RegisterViewerViewModel.cs" />
-    <Compile Include="ViewModel\RegisterTypeViewModel.cs" />
-    <Compile Include="ViewModel\RegisterViewModel.cs" />
-    <Compile Include="ViewModel\SampleViewModel.cs" />
-    <Compile Include="ViewModel\SlaveSimulatorViewModel.cs" />
-    <Compile Include="ViewModel\SnifferViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewer\RegisterViewerViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewer\RegisterTypeViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewer\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\Sniffer\SampleViewModel.cs" />
+    <Compile Include="ViewModel\SlaveSimulator\SlaveSimulatorViewModel.cs" />
+    <Compile Include="ViewModel\Sniffer\SnifferViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="ViewModel\WriteableRegisterViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewer\WriteableRegisterViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ControlPanelDesignerView.xaml.cs">
-      <DependentUpon>ControlPanelDesignerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GenericPacketViewers\RegistersView.xaml.cs">
       <DependentUpon>RegistersView.xaml</DependentUpon>
@@ -198,10 +191,6 @@
     <Compile Include="Views\SnifferView.xaml.cs">
       <DependentUpon>SnifferView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\ControlPanelDesignerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\ExceptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

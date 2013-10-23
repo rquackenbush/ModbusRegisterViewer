@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Input;
 using FtdAdapter;
 using GalaSoft.MvvmLight;
@@ -12,9 +11,8 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using Modbus.Data;
 using Modbus.Device;
-using Xceed.Wpf.DataGrid.FilterCriteria;
 
-namespace ModbusRegisterViewer.ViewModel
+namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 {
     public class SlaveSimulatorViewModel : ViewModelBase
     {
@@ -24,6 +22,10 @@ namespace ModbusRegisterViewer.ViewModel
         private ModbusSerialSlave _slave;
         private int? _slaveAddress;
         private readonly ObservableCollection<ActivityLogViewModel>  _activityLog = new ObservableCollection<ActivityLogViewModel>();
+
+        private readonly DataStore _dataStore;
+        private List<RegisterViewModel> _holdingRegisters;
+        private List<RegisterViewModel> _inputRegisters;
 
         public SlaveSimulatorViewModel()
         {
@@ -38,6 +40,31 @@ namespace ModbusRegisterViewer.ViewModel
 
             this.SlaveAddress = settings.SlaveSimulatorSlaveAddress;
             SelectAdapter(settings.SlaveSimulatorAdapterSerialNumber);
+
+            //Create the data store
+            _dataStore = DataStoreFactory.CreateDefaultDataStore();
+
+            //Here are the listeners
+            _dataStore.DataStoreReadFrom += DataStoreOnDataStoreReadFrom;
+            _dataStore.DataStoreWrittenTo += DataStoreOnDataStoreWrittenTo;
+
+            //Set up the holding registers
+            {
+                ushort registerNumber = 0;
+
+                this.HoldingRegisters =
+                    _dataStore.HoldingRegisters.Select(
+                        r => new RegisterViewModel(_dataStore.HoldingRegisters, registerNumber++)).ToList();
+            }
+
+            //Set up the input registers
+            {
+                ushort registerNumber = 0;
+
+                this.InputRegisters =
+                    _dataStore.InputRegisters.Select(
+                        r => new RegisterViewModel(_dataStore.InputRegisters, registerNumber++)).ToList();
+            }
         }
 
         public ICommand StartCommand { get; private set; }
@@ -83,16 +110,9 @@ namespace ModbusRegisterViewer.ViewModel
 
             _slave = ModbusSerialSlave.CreateRtu(slaveAddresss, _port);
 
-            _slave.DataStore = DataStoreFactory.CreateDefaultDataStore();
+            _slave.DataStore = _dataStore;
 
-            //slave.ModbusSlaveRequestReceived += SlaveRequestReceived;
-            _slave.DataStore.DataStoreReadFrom += DataStoreOnDataStoreReadFrom;
-            _slave.DataStore.DataStoreWrittenTo += DataStoreOnDataStoreWrittenTo;
-
-            var task = new Task(() =>
-            {
-                _slave.Listen();
-            });
+            var task = new Task(() => _slave.Listen());
 
             task.Start();              
         }
@@ -135,7 +155,37 @@ namespace ModbusRegisterViewer.ViewModel
 
         private void DataStoreOnDataStoreWrittenTo(object sender, DataStoreEventArgs args)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(() => this.ActivityLog.Add(CreateLog(args, ReadWrite.Write)));
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                //Add it to the event log
+                this.ActivityLog.Add(CreateLog(args, ReadWrite.Write));
+
+                switch (args.ModbusDataType)
+                {
+                    case ModbusDataType.InputRegister:
+
+                        for (ushort registerIndex = args.StartAddress;
+                            registerIndex < args.Data.B.Count;
+                            registerIndex++)
+                        {
+                            this.InputRegisters[registerIndex].OnValueUpdated();
+                        }
+
+                        break;
+
+                    case ModbusDataType.HoldingRegister:
+
+                        for (ushort registerIndex = args.StartAddress;
+                            registerIndex < args.Data.B.Count;
+                            registerIndex++)
+                        {
+                            this.HoldingRegisters[registerIndex].OnValueUpdated();
+                        }
+
+                        break;
+                }
+
+            });
         }
 
         private void DataStoreOnDataStoreReadFrom(object sender, DataStoreEventArgs args)
@@ -186,6 +236,27 @@ namespace ModbusRegisterViewer.ViewModel
         {
             get { return _activityLog; }
         }
+
+        public List<RegisterViewModel> HoldingRegisters
+        {
+            get { return _holdingRegisters; }
+            private set
+            {
+                _holdingRegisters = value;
+                RaisePropertyChanged(() => HoldingRegisters);
+            }
+        }
+
+        public List<RegisterViewModel> InputRegisters
+        {
+            get { return _inputRegisters; }
+            private set
+            {
+                _inputRegisters = value;
+                RaisePropertyChanged(() => InputRegisters);
+            }
+        }
+
 
         public AdapterViewModel SelectedAdapter
         {

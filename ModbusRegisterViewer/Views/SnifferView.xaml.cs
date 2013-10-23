@@ -15,6 +15,7 @@ using FtdAdapter;
 using Modbus.Data;
 using Modbus.Device;
 using ModbusRegisterViewer.ViewModel;
+using ModbusRegisterViewer.ViewModel.Sniffer;
 
 namespace ModbusRegisterViewer.Views
 {

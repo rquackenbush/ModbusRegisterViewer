@@ -7,6 +7,7 @@ using System.Windows;
 using Modbus.Utility;
 using ModbusRegisterViewer.Model;
 using ModbusRegisterViewer.ViewModel;
+using ModbusRegisterViewer.ViewModel.Sniffer;
 using ModbusRegisterViewer.Views.GenericPacketViewers;
 using Unme.Common;
 

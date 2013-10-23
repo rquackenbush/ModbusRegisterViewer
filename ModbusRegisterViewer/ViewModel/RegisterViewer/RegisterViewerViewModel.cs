@@ -13,6 +13,7 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Win32;
 using ModbusRegisterViewer.Model;
 using ModbusRegisterViewer.Services;
+using ModbusRegisterViewer.ViewModel.RegisterViewer;
 
 namespace ModbusRegisterViewer.ViewModel
 {

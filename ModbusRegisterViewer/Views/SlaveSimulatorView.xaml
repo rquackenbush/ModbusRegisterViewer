@@ -38,6 +38,33 @@
         
         <Grid Grid.Row="1">
             <TabControl Margin="5">
+                
+                <TabItem Header="Holding">
+                    <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=HoldingRegisters}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
+                            <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
+                            <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
+                            <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
+                            <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                
+                <TabItem Header="Input">
+                    <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=InputRegisters}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
+                            <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
+                            <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
+                            <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
+                            <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                
                 <TabItem Header="Activity">
                     <DataGrid ItemsSource="{Binding Path=ActivityLog}" IsReadOnly="True" RowStyle="{StaticResource RowStyle}" AutoGenerateColumns="False">
                         <DataGrid.Columns>

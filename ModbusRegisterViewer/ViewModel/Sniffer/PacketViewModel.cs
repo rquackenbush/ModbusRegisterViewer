@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ModbusRegisterViewer.Model;
 
-namespace ModbusRegisterViewer.ViewModel
+namespace ModbusRegisterViewer.ViewModel.Sniffer
 {
     public class PacketViewModel
     {

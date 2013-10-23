@@ -16,6 +16,8 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using ModbusRegisterViewer.Services;
+using ModbusRegisterViewer.ViewModel.SlaveSimulator;
+using ModbusRegisterViewer.ViewModel.Sniffer;
 
 namespace ModbusRegisterViewer.ViewModel
 {
@@ -52,7 +54,6 @@ namespace ModbusRegisterViewer.ViewModel
 
             SimpleIoc.Default.Register<AboutViewModel>();
             SimpleIoc.Default.Register<SnifferViewModel>();
-            SimpleIoc.Default.Register<ControlPanelDesignerViewModel>();
             SimpleIoc.Default.Register<SlaveSimulatorViewModel>();
 
             if (!SimpleIoc.Default.IsRegistered<IMessageBoxService>())
@@ -77,11 +78,6 @@ namespace ModbusRegisterViewer.ViewModel
         public SnifferViewModel Sniffer
         {
             get { return ServiceLocator.Current.GetInstance<SnifferViewModel>(); }
-        }
-
-        public ControlPanelDesignerViewModel ControlPanelDesigner
-        {
-            get { return ServiceLocator.Current.GetInstance<ControlPanelDesignerViewModel>(); }
         }
 
         public SlaveSimulatorViewModel SlaveSimulator

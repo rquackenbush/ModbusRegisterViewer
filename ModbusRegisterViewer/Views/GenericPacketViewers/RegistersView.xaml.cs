@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Modbus.Utility;
 using ModbusRegisterViewer.ViewModel;
+using ModbusRegisterViewer.ViewModel.RegisterViewer;
+using ModbusRegisterViewer.ViewModel.Sniffer;
 using Unme.Common;
 
 namespace ModbusRegisterViewer.Views.GenericPacketViewers

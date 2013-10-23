@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 
-namespace ModbusRegisterViewer.ViewModel
+namespace ModbusRegisterViewer.ViewModel.RegisterViewer
 {
     public class WriteableRegisterViewModel : ViewModelBase 
     {

@@ -51,11 +51,17 @@ namespace ModbusRegisterViewer.Model
 
                     catch (IOException ioe)
                     {
-                        _streamResource.DiscardInBuffer();
+                        if (_streamResource != null)
+                        {
+                            _streamResource.DiscardInBuffer();
+                        }
                     }
                     catch (TimeoutException te)
                     {
-                        _streamResource.DiscardInBuffer();
+                        if (_streamResource != null)
+                        {
+                            _streamResource.DiscardInBuffer();
+                        }
                     }
                 }
                 catch (InvalidOperationException)

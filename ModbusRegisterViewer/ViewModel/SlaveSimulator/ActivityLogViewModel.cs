@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Modbus.Data;
 using Modbus.Utility;
 
-namespace ModbusRegisterViewer.ViewModel
+namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 {
     public class ActivityLogViewModel
     {
@@ -15,6 +12,7 @@ namespace ModbusRegisterViewer.ViewModel
         private readonly DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>> _data;
         private readonly ModbusDataType _dataType;
         private readonly ReadWrite _readWrite;
+        private readonly int _startingAddress;
 
         public ActivityLogViewModel(DateTime timestamp, ModbusDataType dataType, int startingAddress,  DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>> data, ReadWrite readWrite)
         {
@@ -26,6 +24,7 @@ namespace ModbusRegisterViewer.ViewModel
             _dataType = dataType;
             _readWrite = readWrite;
             _data = data;
+            _startingAddress = startingAddress;
         }
 
         public DateTime Timestamp
@@ -38,7 +37,10 @@ namespace ModbusRegisterViewer.ViewModel
             get { return _dataType; }
         }
 
-        public int StartingAddress { get; set; }
+        public int StartingAddress
+        {
+            get { return _startingAddress + 1; }
+        }
 
         public int Count
         {
