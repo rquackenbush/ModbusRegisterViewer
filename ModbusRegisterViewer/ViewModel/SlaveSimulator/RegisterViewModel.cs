@@ -16,7 +16,7 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
         public RegisterViewModel(ModbusDataCollection<ushort> registers,  ushort registerNumber)
         {
             _registers = registers;
-            _registerNumber = registerNumber;
+            _registerNumber = (ushort)(registerNumber + 1);
         }
 
         public ushort RegisterNumber

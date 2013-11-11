@@ -31,7 +31,7 @@ namespace ModbusRegisterViewer.Views
 
                         //To display the correct register numbers, we need to look at the request packet
                         // to see which register was asked for.
-                        if (packet.PreviousPacket != null && packet.PreviousPacket.Message.Length > 3)
+                        if (packet.AssociatedRequestPacket != null && packet.AssociatedRequestPacket.Message.Length > 3)
                         {
                             // Get the starting address bytes
                             startingAddress = MessageUtilities.NetworkBytesToUInt16(packet.Message, 2);

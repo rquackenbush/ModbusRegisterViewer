@@ -15,20 +15,21 @@ namespace ModbusRegisterViewer.Model
         private FileStream _file;
         private BinaryWriter _writer;
 
-        private const int FileFormatVersion = 1;
+        private const int FileFormatVersion = 2;
 
         public long _sampleCount;
         private Stopwatch _stopWatch = new Stopwatch();
         
 
-        public CaptureFileWriter(string path, long ticksPerMillisecond)
+        public CaptureFileWriter(string path)
         {
             _file = File.Create(path);
 
             _writer = new BinaryWriter(_file);
             
             _writer.Write(FileFormatVersion);
-            _writer.Write(ticksPerMillisecond);  //Reserved
+            _writer.Write(Stopwatch.Frequency);  //ticks per millisecond
+            _writer.Write(DateTime.Now.ToBinary());  //Write the start time of this capture.  This will be local time.
             _writer.Write(0);  //Reserved
 
             _stopWatch.Start();

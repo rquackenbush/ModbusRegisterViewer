@@ -9,6 +9,8 @@ using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using ModbusRegisterViewer.Model;
 using Unme.Common;
+using System.Windows;
+using System.Diagnostics;
 
 namespace ModbusRegisterViewer.ViewModel.Sniffer
 {
@@ -42,7 +44,8 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
             this.ClearCommand = new RelayCommand(Clear, CanClear);
             this.OpenCommand = new RelayCommand(Open, CanOpen);
             this.CloseCommand = new RelayCommand(Close, CanClose);
-            
+            this.ExportToExcelCommand = new RelayCommand(ExportToExcel, CanExportToExcel);
+            this.DisplayTicksPerSecondsCommand = new RelayCommand(DisplayTicksPerSecond);
         }
 
         public ICommand StartCommand { get; private set; }
@@ -50,6 +53,33 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
         public ICommand ClearCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
         public ICommand CloseCommand { get; private set; }
+        public ICommand ExportToExcelCommand { get; private set; }
+        public ICommand DisplayTicksPerSecondsCommand { get; private set; }
+
+        private void DisplayTicksPerSecond()
+        {
+            var message = string.Format("This timing hardware configuration supports {0:###,###,###,###,##0} ticks per second.", Stopwatch.Frequency);
+
+            MessageBox.Show(message);
+        }
+
+        private void ExportToExcel()
+        {
+            var dialog = new SaveFileDialog()
+            {
+                Filter = "CSV (*.csv)|*.csv"
+            };
+
+            if (dialog.ShowDialog() ==  true)
+            {
+                PacketsExporter.Export(dialog.FileName, this.Packets);
+            }
+        }
+
+        private bool CanExportToExcel()
+        {
+            return this.Packets.Count > 0;
+        }
 
         private void Open(string path)
         {
@@ -58,7 +88,8 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
 
             using (var reader = new CaptureFileReader(path))
             {
-                var stateMachine = new PacketSnifferStateMachine(20, reader.TicksPerMillisecond);
+                //var stateMachine = new PacketSnifferStateMachine(50, reader.TicksPerSecond, reader.StartTime);
+                var stateMachine = new ParallelPacketHandler(4000, reader.TicksPerSecond, reader.StartTime);
 
                 var sample = reader.Read();
 
@@ -122,7 +153,7 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
             _capturePath = dialog.FileName;
 
             //Try to create the file first
-            _writer = new CaptureFileWriter(dialog.FileName, TimeSpan.TicksPerMillisecond);
+            _writer = new CaptureFileWriter(dialog.FileName);
 
             _port = new FtdUsbPort();
 

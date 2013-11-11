@@ -12,17 +12,33 @@ namespace ModbusRegisterViewer.Model
     {
         private FileStream _file;
         private BinaryReader _reader;
-        private readonly long _ticksPerMillisecond;
+        private readonly long _ticksPerSecond;
         private readonly int _fileFormatVersion;
+        private DateTime _startTime;
 
         public CaptureFileReader(string path)
         {
             _file = File.OpenRead(path);
             _reader = new BinaryReader(_file);
+            _fileFormatVersion =_reader.ReadInt32();                        
 
-            _reader.ReadInt32();                        //FileFormatVersion
-            _ticksPerMillisecond = _reader.ReadInt64(); //TicksPerMillisecond
-            _reader.ReadInt32();                        //Reserved
+            switch(_fileFormatVersion)
+            {
+                case 2:
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid file format version.");
+            }
+
+            _ticksPerSecond = _reader.ReadInt64();
+            _startTime = DateTime.FromBinary(_reader.ReadInt64());
+            _reader.ReadInt32();                                    //Reserved
+        }
+
+        public DateTime StartTime
+        {
+            get { return _startTime; }
         }
 
         public int FileFormatVersion
@@ -30,9 +46,9 @@ namespace ModbusRegisterViewer.Model
             get { return _fileFormatVersion; }
         }
 
-        public long TicksPerMillisecond
+        public long TicksPerSecond
         {
-            get { return _ticksPerMillisecond;  }
+            get { return _ticksPerSecond;  }
         }
 
         public Sample Read()

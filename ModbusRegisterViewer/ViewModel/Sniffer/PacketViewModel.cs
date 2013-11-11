@@ -6,22 +6,20 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
 {
     public class PacketViewModel
     {
-        private readonly PacketViewModel _previousPacket;
+        
         private readonly string _invalidReason;
         
         private readonly MessageDirection _direction = MessageDirection.Unknown;
         private readonly Sample[] _samples;
         private readonly Lazy<byte[]> _message;
 
-        private readonly long _offsetTicks;
-        private readonly long _ticksPerMillisecond;
+        private readonly CaptureTimerInfo _captureTimerInfo;
 
-        private PacketViewModel(long offsetTicks, long ticksPerMillisecond, Sample[] samples)
+        private PacketViewModel(CaptureTimerInfo captureTimerInfo, Sample[] samples)
         {
-            _offsetTicks = offsetTicks;
-            _ticksPerMillisecond = ticksPerMillisecond;
-            _samples = samples; 
-
+            _captureTimerInfo = captureTimerInfo;
+            _samples = samples;
+            
             _message = new Lazy<byte[]>(() =>
                 {
                     if (_samples == null)
@@ -31,39 +29,27 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
                 });
          }
 
-        private PacketViewModel(long offsetTicks, long ticksPerMillisecond, Sample[] samples, MessageDirection direction, PacketViewModel previousPacket)
-            : this(offsetTicks, ticksPerMillisecond, samples)
+        private PacketViewModel(CaptureTimerInfo captureTimerInfo, Sample[] samples, MessageDirection direction)
+            : this(captureTimerInfo, samples)
         {
             
             _direction = direction;
-            _previousPacket = previousPacket;
         }
 
-        private PacketViewModel(long offsetTicks, long ticksPerMillisecond, Sample[] samples, string invalidReason)
-            : this(offsetTicks, ticksPerMillisecond, samples)
+        private PacketViewModel(CaptureTimerInfo captureTimerInfo, Sample[] samples, string invalidReason)
+            : this(captureTimerInfo, samples)
         {
             _invalidReason = invalidReason;
         }
 
-        public static PacketViewModel CreateValidPacket(long offsetTicks, long ticksPerMillisecond, Sample[] samples, MessageDirection direction,
-                                                        PacketViewModel previousPacket)
+        public static PacketViewModel CreateValidPacket(CaptureTimerInfo captureTimerInfo, Sample[] samples, MessageDirection direction)
         {
-            return new PacketViewModel(offsetTicks, ticksPerMillisecond, samples, direction, previousPacket);
+            return new PacketViewModel(captureTimerInfo, samples, direction);
         }
 
-        public static PacketViewModel CreateInvalidPacket(long offsetTicks, long ticksPerMillisecond, Sample[] samples, string invalidReason)
+        public static PacketViewModel CreateInvalidPacket(CaptureTimerInfo captureTimerInfo, Sample[] samples, string invalidReason)
         {
-            return new PacketViewModel(offsetTicks, ticksPerMillisecond, samples, invalidReason);
-        }
-
-        public long OffsetTicks
-        {
-            get { return _offsetTicks; }
-        }
-
-        public long TicksPerMillisecond
-        {
-            get { return _ticksPerMillisecond; }
+            return new PacketViewModel(captureTimerInfo, samples, invalidReason);
         }
 
         public bool IsInvalid
@@ -76,25 +62,25 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
             get { return _invalidReason; }
         }
 
-        internal double GetRelativeMilliseconds(long ticks)
+        public CaptureTimerInfo CaptureTimerInfo
         {
-            return ((double)(ticks - _offsetTicks))/ _ticksPerMillisecond;
+            get { return _captureTimerInfo; }
         }
 
-        public double? Time 
+        public DateTime? Time
         {
             get
             {
+                //Check top see if we ahve any data
                 if (_samples == null || _samples.Length == 0)
                     return null;
 
-                return GetRelativeMilliseconds(_samples[0].Ticks);
-            }
-        }
+                //Get the ticks
+                long ticks = _samples[0].Ticks;
 
-        public PacketViewModel PreviousPacket
-        {
-            get { return _previousPacket; }
+                //Get the offset time
+                return _captureTimerInfo.GetOffsetTime(ticks);
+            }
         }
 
         public byte? Function
@@ -170,13 +156,13 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
         {
             get
             {
-                if (this.PreviousPacket == null)
+                if (this.AssociatedRequestPacket == null)
                     return null;
 
-                if (this.PreviousPacket.Samples == null)
+                if (this.AssociatedRequestPacket.Samples == null)
                     return null;
 
-                if (this.PreviousPacket.Samples.Length == 0)
+                if (this.AssociatedRequestPacket.Samples.Length == 0)
                     return null;
 
                 if (this.Samples == null)
@@ -185,10 +171,12 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
                 if (this.Samples.Length == 0)
                     return null;
 
-                var lastRequestSample = this.PreviousPacket.Samples.Last();
+                var lastRequestSample = this.AssociatedRequestPacket.Samples.Last();
                 var firstResponseSample = this.Samples[0];
 
-                return ((double)(firstResponseSample.Ticks - lastRequestSample.Ticks))/_ticksPerMillisecond;
+                var ticks = firstResponseSample.Ticks - lastRequestSample.Ticks;
+
+                return _captureTimerInfo.TicksToMilliseconds(ticks);
             }
         }
 
@@ -222,5 +210,52 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
                 return viewModels;
             }
         }
+
+        public PacketErrorLevel ErrorLevel
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(this.InvalidReason))
+                    return PacketErrorLevel.Error;
+
+                if (this.Direction == MessageDirection.Request && this.AssociatedResponsePacket == null)
+                    return PacketErrorLevel.Warning;
+
+                if (this.Direction == MessageDirection.Response && this.AssociatedRequestPacket == null)
+                    return PacketErrorLevel.Error;
+
+                return PacketErrorLevel.None;
+            }
+        }
+
+        public string HoverText
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(this.InvalidReason))
+                    return this.InvalidReason;
+
+                if (this.Direction == MessageDirection.Request && this.AssociatedResponsePacket == null)
+                    return "This request has no response. This might mean that the device is not connected or responding.";
+
+                if (this.Direction == MessageDirection.Response && this.AssociatedRequestPacket == null)
+                    return "This response has no request";
+
+                return null;
+            }
+        }
+
+        public PacketViewModel AssociatedRequestPacket { get; internal set; }
+
+        public PacketViewModel AssociatedResponsePacket { get; internal set; }
+    }
+
+    public enum PacketErrorLevel
+    {
+        None,
+
+        Warning,
+        
+        Error
     }
 }

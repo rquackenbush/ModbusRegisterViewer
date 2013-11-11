@@ -16,9 +16,9 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
             _previousSample = previousSample;
         }
 
-        public double Time
+        public DateTime Time
         {
-            get { return _packet.GetRelativeMilliseconds(_sample.Ticks); }
+            get { return _packet.CaptureTimerInfo.GetOffsetTime(this.Ticks); }
         }
 
         public byte Value
@@ -48,7 +48,11 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
                 if (_previousSample == null)
                     return null;
 
-                return ((double)(_sample.Ticks - _previousSample.Ticks)) / _packet.TicksPerMillisecond;
+                long ticks = _sample.Ticks - _previousSample.Ticks;
+
+                return _packet.CaptureTimerInfo.TicksToMilliseconds(ticks);
+
+                //return ((double)(_sample.Ticks - _previousSample.Ticks)) / _packet.TicksPerMillisecond;
             }
         }
     }

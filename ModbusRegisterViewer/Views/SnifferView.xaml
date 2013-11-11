@@ -60,9 +60,13 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" Command="{Binding Path=OpenCommand}"></MenuItem>
                 <Separator/>
+                <MenuItem Header="Export to Excel..." Command="{Binding Path=ExportToExcelCommand}"></MenuItem>
+                <Separator/>
                 <MenuItem Header="_Close" Command="{Binding Path=CloseCommand}"></MenuItem>
             </MenuItem>
             <MenuItem Header="Tools">
+                <MenuItem Header="Display Ticks Per Second..." Command="{Binding Path=DisplayTicksPerSecondsCommand}" />
+                <Separator/>
                 <MenuItem Header="Start Capture..." Command="{Binding Path=StartCommand}"></MenuItem>
                 <MenuItem Header="Stop Capture" Command="{Binding Path=StopCommand}"></MenuItem>
             </MenuItem>
@@ -92,13 +96,66 @@
         
             <Grid Background="#FFE5E5E5" Margin="5">
                 <DataGrid Margin="5" AutoGenerateColumns="False" x:Name="DataGrid" IsReadOnly="True" ItemsSource="{Binding Path=Packets}" SelectionMode="Single" SelectedItem="{Binding Path=SelectedPacket}">
+                    
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=ErrorLevel}" Value="Error">
+                                    <Setter Property="Background" Value="Red"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=ErrorLevel}" Value="Warning">
+                                    <Setter Property="Background" Value="Yellow"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Time" Binding="{Binding Path=Time, StringFormat=0.0}"  />
+                        
+                        <DataGridTemplateColumn Header=" ">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Image Source="/ModbusRegisterViewer;component/Images/Warning_16x16_72.png" Width="16" ToolTip="{Binding Path=HoverText}" >
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=ErrorLevel}" Value="Warning">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+
+                                        <Grid>
+                                            <Image Source="/ModbusRegisterViewer;component/Images/Error_16x16_72.png" Width="16"  ToolTip="{Binding Path=HoverText}">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Path=ErrorLevel}" Value="Error">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTextColumn Header="Time" Binding="{Binding Path=Time, StringFormat=MM/dd/yyyy hh:mm:ss:fff tt}" Width="110" />
+                        
+                        
                         <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" />
                         <DataGridTextColumn Header="Func" Binding="{Binding Path=Function}" />
                         <DataGridTextColumn Header="Description" Binding="{Binding Path=Type}" />
                         <DataGridTextColumn Header="Direction" Binding="{Binding Path=Direction}" />
-                        <DataGridTextColumn Header="Interval" Binding="{Binding Path=ResponseTime, StringFormat=0.0}" />
+                        <DataGridTextColumn Header="Interval" Binding="{Binding Path=ResponseTime, StringFormat=0.000}" />
 
                         <DataGridTextColumn Header="CRC" Binding="{Binding Path=CRC}" />
                         <DataGridTextColumn Header="Size" Binding="{Binding Path=Bytes}"  />
@@ -125,7 +182,7 @@
                             </Grid.RowDefinitions>
                             
                             <TextBlock Style="{StaticResource DetailLabel}">Time</TextBlock>
-                            <TextBox Grid.Column="1"  Style="{StaticResource DetailValue}" Text="{Binding Path=SelectedPacket.Time, Mode=OneWay, StringFormat=0.0}"></TextBox>
+                            <TextBox Grid.Column="1"  Style="{StaticResource DetailValue}" Text="{Binding Path=SelectedPacket.Time, Mode=OneWay, StringFormat=MM/dd/yyyy hh:mm:ss:fff tt}"></TextBox>
 
                             <TextBlock Style="{StaticResource DetailLabel}" Grid.Row="1">Address</TextBlock>
                             <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource DetailValue}" Text="{Binding Path=SelectedPacket.Address, Mode=OneWay}"></TextBox>
@@ -138,8 +195,8 @@
 
                             <DataGrid AutoGenerateColumns="False" Margin="5" Grid.Row="4" Grid.ColumnSpan="2" ItemsSource="{Binding Path=SelectedPacket.SampleViewModels}" IsReadOnly="True" >
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Time" Binding="{Binding Path=Time, StringFormat=0.0}" />
-                                    <DataGridTextColumn Header="Interval" Binding="{Binding Path=Interval, StringFormat=0.0}" />
+                                    <DataGridTextColumn Header="Time" Binding="{Binding Path=Time, StringFormat=MM/dd/yyyy hh:mm:ss:fff tt}" />
+                                    <DataGridTextColumn Header="Interval" Binding="{Binding Path=Interval, StringFormat=0.000}" />
                                     <DataGridTextColumn Header="Ticks" Binding="{Binding Path=Ticks}" />
                                     <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
                                     <DataGridTextColumn Header="Dec" Binding="{Binding Path=Value}" />

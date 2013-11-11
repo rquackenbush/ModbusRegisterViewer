@@ -6,9 +6,46 @@ using System.Threading.Tasks;
 
 namespace ModbusRegisterViewer.Model
 {
-    public static class RequestSizeCalculator
+    public static class MessageSizeCalculator
     {
-        public static int GetRequestMessageLength(byte[] frameStart)
+        //public static int GetMessageLength(byte[] frameStart, MessageDirection probableMessageDirection)
+        //{
+        //    switch(probableMessageDirection)
+        //    {
+        //        case MessageDirection.Request:
+
+        //            //Get it
+        //            return GetRequestMessageLength(frameStart);
+
+        //            break;
+        //        case MessageDirection.Response:
+
+        //            try
+        //            {
+        //                return GetResponseMessageLength(frameStart);
+        //            }
+        //            catch(NotImplementedException)
+        //            {
+        //                return GetRequestMessageLength(frameStart);
+        //            }
+
+        //            break;
+
+        //        default:
+
+        //            //Get it
+        //            try
+        //            {
+        //                return GetRequestMessageLength(frameStart);
+        //            }
+        //            catch (NotImplementedException)
+        //            {
+        //                return GetResponseMessageLength(frameStart);
+        //            }
+        //    }
+        //}
+
+        public static int? GetRequestMessageLength(byte[] frameStart)
         {
             byte functionCode = MessageUtilities.GetFunction(frameStart);
 
@@ -30,11 +67,11 @@ namespace ModbusRegisterViewer.Model
                     return 9 + byteCount;
 
                 default:
-                    throw new NotImplementedException();
+                    return null;
             }
         }
 
-        public static int GetResponseMessageLength(byte[] frameStart)
+        public static int? GetResponseMessageLength(byte[] frameStart)
         {
             byte functionCode = MessageUtilities.GetFunction(frameStart);
 
@@ -58,7 +95,7 @@ namespace ModbusRegisterViewer.Model
                     return 8;
 
                 default:
-                    throw new NotImplementedException();
+                    return null;
             }
         }
     }

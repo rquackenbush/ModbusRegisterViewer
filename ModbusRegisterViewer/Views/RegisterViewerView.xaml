@@ -8,6 +8,11 @@
         DataContext="{Binding Source={StaticResource Locator}, Path=RegisterViewer}" Icon="/Images/Connection_Manager.png"
 >
 
+    <Window.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding Path=SaveCommand}"></KeyBinding>
+        <KeyBinding Key="F5" Command="{Binding Path=ReadCommand}"></KeyBinding>
+    </Window.InputBindings>
+
     <Window.Resources>
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
@@ -38,6 +43,9 @@
                     <MenuItem Header="Save _As..." Command="{Binding Path=SaveAsCommand}"/>
                     <Separator />
                     <MenuItem Header="E_xit" Command="{Binding Path=ExitCommand}" />
+                </MenuItem>
+                <MenuItem Header="_View">
+                    <MenuItem Header="Refresh" Command="{Binding Path=RefreshCommand}" InputGestureText="F5" />
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About Modbus Register Viewer..." Command="{Binding Path=About.ShowCommand}" />

@@ -35,7 +35,7 @@
     <SuiteName>CAS Modbus Utilities</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>28</ApplicationRevision>
+    <ApplicationRevision>32</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -143,6 +143,8 @@
     <Compile Include="Model\BufferRender.cs" />
     <Compile Include="Model\CaptureFileReader.cs" />
     <Compile Include="Model\CaptureFileWriter.cs" />
+    <Compile Include="Model\CaptureTimerInfo.cs" />
+    <Compile Include="Model\CaptureTimerInfoExtensions.cs" />
     <Compile Include="Model\DataContractConstants.cs" />
     <Compile Include="Model\DataContractUtilities.cs" />
     <Compile Include="Model\FieldType.cs" />
@@ -150,12 +152,17 @@
     <Compile Include="Model\FieldTypeUnsigned16.cs" />
     <Compile Include="Model\FunctionCodes.cs" />
     <Compile Include="Model\FunctionDescriptionFactory.cs" />
+    <Compile Include="Model\Sniffer\CrcComparer.cs" />
+    <Compile Include="Model\Sniffer\IPacketSnifferStateMachine.cs" />
     <Compile Include="Model\MessageDirection.cs" />
     <Compile Include="Model\MessageUtilities.cs" />
-    <Compile Include="Model\PacketSnifferStateMachine.cs" />
+    <Compile Include="Model\Sniffer\PacketSnifferStateMachine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\Sniffer\ParallelPacketSnifferStateMachine.cs" />
     <Compile Include="Model\PromiscuousListener.cs" />
     <Compile Include="Model\RegisterType.cs" />
-    <Compile Include="Model\RequestSizeCalculator.cs" />
+    <Compile Include="Model\MessageSizeCalculator.cs" />
     <Compile Include="Model\Sample.cs" />
     <Compile Include="Model\Snapshot.cs" />
     <Compile Include="Services\IMessageBoxService.cs" />
@@ -165,6 +172,7 @@
     <Compile Include="ViewModel\AdapterViewModel.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
     <Compile Include="ViewModel\SlaveSimulator\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\Sniffer\PacketsExporter.cs" />
     <Compile Include="ViewModel\Sniffer\PacketViewModel.cs" />
     <Compile Include="ViewModel\ReadWrite.cs" />
     <Compile Include="ViewModel\RegisterViewer\RegisterViewerViewModel.cs" />
@@ -261,6 +269,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Error_16x16_72.png" />
+    <Resource Include="Images\Warning_16x16_72.png" />
     <Resource Include="equipment_zoom_128.ico" />
     <Content Include="FTD2XX.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
