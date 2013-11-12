@@ -53,16 +53,23 @@ namespace ModbusRegisterViewer.Model
 
         public Sample Read()
         {
-            if (_file.Position < _file.Length - 1)
+            try
             {
-                //Read the timestamp
-                var ticks = _reader.ReadInt64();
-                var value = _reader.ReadByte();
+                if (_file.Position < _file.Length - 1)
+                {
+                    //Read the timestamp
+                    var ticks = _reader.ReadInt64();
+                    var value = _reader.ReadByte();
 
-                return new Sample(ticks, value);
-           }
-
-           return null;
+                    return new Sample(ticks, value);
+                }
+                else
+                    return null;
+            }
+            catch (EndOfStreamException)
+            {
+                return null;
+            }
         }
 
         public void Dispose()

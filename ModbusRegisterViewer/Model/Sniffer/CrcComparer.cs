@@ -14,7 +14,7 @@ namespace ModbusRegisterViewer.Model.Sniffer
             var messageFrame = message.Take(message.Length - 2).ToArray();
 
             //Calculate the CRC with the given set of bytes
-            var calculatedCrc = BitConverter.ToUInt16(ModbusUtility.CalculateCrc(messageFrame), 0);
+            var calculatedCrc = BitConverter.ToUInt16(ModbusUtility.CalculateCrc(messageFrame), 0);   
 
             //Get the crc that is stored in the message
             var messageCrc = MessageUtilities.GetCRC(message);

@@ -35,7 +35,7 @@
     <SuiteName>CAS Modbus Utilities</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>32</ApplicationRevision>
+    <ApplicationRevision>37</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -141,10 +141,10 @@
     <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="MasterContext.cs" />
     <Compile Include="Model\BufferRender.cs" />
-    <Compile Include="Model\CaptureFileReader.cs" />
-    <Compile Include="Model\CaptureFileWriter.cs" />
-    <Compile Include="Model\CaptureTimerInfo.cs" />
-    <Compile Include="Model\CaptureTimerInfoExtensions.cs" />
+    <Compile Include="Model\Sniffer\CaptureFileReader.cs" />
+    <Compile Include="Model\Sniffer\CaptureFileWriter.cs" />
+    <Compile Include="Model\Sniffer\CaptureTimerInfo.cs" />
+    <Compile Include="Model\Sniffer\CaptureTimerInfoExtensions.cs" />
     <Compile Include="Model\DataContractConstants.cs" />
     <Compile Include="Model\DataContractUtilities.cs" />
     <Compile Include="Model\FieldType.cs" />

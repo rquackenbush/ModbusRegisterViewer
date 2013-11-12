@@ -122,7 +122,7 @@ namespace ModbusRegisterViewer.Model
                             && _previousPacket.Direction == MessageDirection.Request
                             && _previousPacket.Function == packetFromStrategy.Function)
                         {
-                            _previousPacket.AssociatedResponsePacket = packet;
+                            _previousPacket.AssociatedResponsePacket = packetFromStrategy;
                             packetFromStrategy.AssociatedRequestPacket = _previousPacket;
                         }
 
