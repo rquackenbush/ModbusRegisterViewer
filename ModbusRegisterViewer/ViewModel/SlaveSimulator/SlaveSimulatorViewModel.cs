@@ -142,13 +142,21 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 
         private void Stop()
         {
-            _port.ReadTimeout = 1;
-            _port.WriteTimeout = 1;
-            _port.Dispose();
-            _slave.Dispose();
+            if (_port != null)
+            {
+                _port.ReadTimeout = 1;
+                _port.WriteTimeout = 1;
+                _port.Dispose();
 
-            _port = null;
-            _slave = null;
+                _port = null;
+            }
+
+            if (_slave != null)
+            {
+                _slave.Dispose();
+
+                _slave = null;
+            }
         }
 
         public int? SlaveAddress
@@ -183,7 +191,7 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
                     case ModbusDataType.InputRegister:
 
                         for (ushort registerIndex = args.StartAddress;
-                            registerIndex < args.Data.B.Count;
+                            registerIndex < args.StartAddress + args.Data.B.Count;
                             registerIndex++)
                         {
                             this.InputRegisters[registerIndex].OnValueUpdated();
@@ -194,7 +202,7 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
                     case ModbusDataType.HoldingRegister:
 
                         for (ushort registerIndex = args.StartAddress;
-                            registerIndex < args.Data.B.Count;
+                            registerIndex < args.StartAddress + args.Data.B.Count;
                             registerIndex++)
                         {
                             this.HoldingRegisters[registerIndex].OnValueUpdated();

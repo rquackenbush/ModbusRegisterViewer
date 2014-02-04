@@ -26,8 +26,12 @@
     </Window.Resources>
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250*"/>
+            <ColumnDefinition Width="607*"/>
+        </Grid.ColumnDefinitions>
 
-        <Grid>
+        <Grid Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -64,7 +68,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -142,8 +146,8 @@
             </Grid>
         </Grid>
 
-        <views:AboutView  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Path=About}"></views:AboutView>
+        <views:AboutView  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DataContext="{Binding Path=About}" Grid.ColumnSpan="2"></views:AboutView>
 
-        <views:ExceptionView DataContext="{Binding Path=Exception}"></views:ExceptionView>
+        <views:ExceptionView DataContext="{Binding Path=Exception}" Grid.ColumnSpan="2"></views:ExceptionView>
     </Grid>
 </Window>
