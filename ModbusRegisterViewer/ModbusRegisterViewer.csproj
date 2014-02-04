@@ -20,7 +20,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>http://richq-imac.captiveaire.com/ClickOncePub/ModbusRegisterViewer/</PublishUrl>
+    <PublishUrl>\\tools.captiveaire.com\Tools\ModbusTools\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -30,12 +30,13 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ProductName>CAS Modbus Register Viewer</ProductName>
-    <PublisherName>Rich</PublisherName>
-    <SuiteName>CAS Modbus Utilities</SuiteName>
+    <InstallUrl>http://tools.captiveaire.com/ModbusTools/</InstallUrl>
+    <ProductName>Modbus Tools</ProductName>
+    <PublisherName>CAS</PublisherName>
+    <SuiteName>CAS Embedded Tools</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>37</ApplicationRevision>
+    <ApplicationRevision>44</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -76,8 +77,9 @@
     <ApplicationIcon>equipment_zoom_128.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FtdAdapter">
-      <HintPath>..\ThirdParty\FtdAdapter.dll</HintPath>
+    <Reference Include="FtdAdapter, Version=1.11.0.0, Culture=neutral, PublicKeyToken=b5aba55fcbc8d946, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NModbus.1.11.0.0\lib\FtdAdapter.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight.Extras.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
@@ -85,11 +87,19 @@
     <Reference Include="GalaSoft.MvvmLight.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="Modbus">
-      <HintPath>..\ThirdParty\Modbus.dll</HintPath>
+    <Reference Include="Modbus, Version=1.11.0.0, Culture=neutral, PublicKeyToken=b5aba55fcbc8d946, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NModbus.1.11.0.0\lib\Modbus.dll</HintPath>
+    </Reference>
+    <Reference Include="Modbus.Extensions">
+      <HintPath>..\packages\NModbus.1.11.0.0\lib\Modbus.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -108,7 +118,7 @@
     </Reference>
     <Reference Include="Unme.Common, Version=1.1.0.0, Culture=neutral, PublicKeyToken=da57c01ae4598fdd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ThirdParty\Unme.Common.dll</HintPath>
+      <HintPath>..\packages\NModbus.1.11.0.0\lib\Unme.Common.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -141,6 +151,7 @@
     <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="MasterContext.cs" />
     <Compile Include="Model\BufferRender.cs" />
+    <Compile Include="Model\IStreamReaderExtensions.cs" />
     <Compile Include="Model\Sniffer\CaptureFileReader.cs" />
     <Compile Include="Model\Sniffer\CaptureFileWriter.cs" />
     <Compile Include="Model\Sniffer\CaptureTimerInfo.cs" />
@@ -269,6 +280,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Record.png" />
     <Resource Include="Images\Error_16x16_72.png" />
     <Resource Include="Images\Warning_16x16_72.png" />
     <Resource Include="equipment_zoom_128.ico" />

@@ -75,7 +75,7 @@
         <ToolBarTray Grid.Row="1">
             <ToolBar>
                 <Button Command="{Binding Path=StartCommand}" ToolTip="Start Capture">
-                    <modbusRegisterViewer:AutoGreyableImage Source="/Images/Play.png" Width="16" />
+                    <modbusRegisterViewer:AutoGreyableImage Source="/Images/Record.png" Width="16" />
                 </Button>
                 <Button Command="{Binding Path=StopCommand}" ToolTip="Stop Capture">
                     <modbusRegisterViewer:AutoGreyableImage Source="/Images/Stop.png" Width="16" />

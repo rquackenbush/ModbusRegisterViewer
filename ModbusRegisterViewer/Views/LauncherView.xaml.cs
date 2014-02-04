@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,16 +37,26 @@ namespace ModbusRegisterViewer.Views
                 this.DragMove();
         }
 
-        private void LaunchView<TView>() where TView : Window, new()
+        private void LaunchView<TView>() 
+            where TView : Window, new()
         {
-            //this.IsEnabled = false;
-
             var view = new TView();
 
             view.Show();
 
-            //this.Close();
+            //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint<TView>));
+            //newWindowThread.SetApartmentState(ApartmentState.STA);
+            //newWindowThread.IsBackground = true;
+            //newWindowThread.Start();
         }
+
+        //private void ThreadStartingPoint<TView>()
+        //    where TView : Window, new()
+        //{
+        //    var view = new TView();
+        //    view.Show();
+        //    System.Windows.Threading.Dispatcher.Run();
+        //}
 
         private void LaunchRegisterViewer(object sender, RoutedEventArgs e)
         {

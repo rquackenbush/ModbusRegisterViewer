@@ -45,7 +45,7 @@
                     <MenuItem Header="E_xit" Command="{Binding Path=ExitCommand}" />
                 </MenuItem>
                 <MenuItem Header="_View">
-                    <MenuItem Header="Refresh" Command="{Binding Path=RefreshCommand}" InputGestureText="F5" />
+                    <MenuItem Header="Refresh" Command="{Binding Path=ReadCommand}" InputGestureText="F5" />
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About Modbus Register Viewer..." Command="{Binding Path=About.ShowCommand}" />
