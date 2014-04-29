@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -85,54 +86,56 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 
         private void Start()
         {
-            
-                var settings = Properties.Settings.Default;
+            var settings = Properties.Settings.Default;
 
-                settings.SlaveSimulatorSlaveAddress = this.SlaveAddress ?? 0;
-                settings.SlaveSimulatorAdapterSerialNumber = this.SelectedAdapter == null
-                    ? ""
-                    : this.SelectedAdapter.SerialNumber;
+            settings.SlaveSimulatorSlaveAddress = this.SlaveAddress ?? 0;
+            settings.SlaveSimulatorAdapterSerialNumber = this.SelectedAdapter == null
+                ? ""
+                : this.SelectedAdapter.SerialNumber;
 
-                settings.Save();
+            settings.Save();
 
-                _port = new FtdUsbPort();
+            _port = new FtdUsbPort();
 
-                // configure serial port
-                _port.BaudRate = 19200;
-                _port.DataBits = 8;
-                _port.Parity = FtdParity.Even;
-                _port.StopBits = FtdStopBits.One;
+            // configure serial port
+            _port.BaudRate = 19200;
+            _port.DataBits = 8;
+            _port.Parity = FtdParity.Even;
+            _port.StopBits = FtdStopBits.One;
 
-                _port.OpenBySerialNumber(this.SelectedAdapter.SerialNumber);
+            _port.OpenBySerialNumber(this.SelectedAdapter.SerialNumber);
 
-                _port.ReadTimeout = 2000;
-                _port.WriteTimeout = 2000;
+            _port.ReadTimeout = 2000;
+            _port.WriteTimeout = 2000;
 
-                var slaveAddresss = (byte) this.SlaveAddress;
+            var slaveAddresss = (byte) this.SlaveAddress;
 
-                _slave = ModbusSerialSlave.CreateRtu(slaveAddresss, _port);
+            _slave = ModbusSerialSlave.CreateRtu(slaveAddresss, _port);
 
-                _slave.DataStore = _dataStore;
+            _slave.DataStore = _dataStore;
 
-                var task = new Task(() =>
+            var task = new Task(() =>
+            {
+                try
                 {
-                    try
-                    {
-                        _slave.Listen();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString(), ex.Message);
-                    }
+                    _slave.Listen();
+                }
+                catch (IOException)
+                {
+                    //We'll just ignore this.
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
 
-                    Stop();
+                Stop();
 
-                    DispatcherHelper.CheckBeginInvokeOnUI(CommandManager.InvalidateRequerySuggested);
+                DispatcherHelper.CheckBeginInvokeOnUI(CommandManager.InvalidateRequerySuggested);
+                   
+            });
 
-                    
-                });
-
-                task.Start();
+            task.Start();
          }
 
         private bool CanStart()
