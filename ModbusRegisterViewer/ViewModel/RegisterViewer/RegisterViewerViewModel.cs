@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Timers;
 using System.Windows;
@@ -72,6 +73,7 @@ namespace ModbusRegisterViewer.ViewModel
             this.OpenCommand = new RelayCommand(Open, CanOpen);
             this.SaveAsCommand = new RelayCommand(SaveAs, CanSaveAs);
             this.RefreshAdaptersCommand = new RelayCommand(RefreshAdapters);
+            this.ExportToCsvCommand = new RelayCommand(ExportToCsv, CanExportToCsv);
 
             if (IsInDesignMode)
             {
@@ -112,6 +114,47 @@ namespace ModbusRegisterViewer.ViewModel
         public ICommand ReadCommand { get; private set; }
         public ICommand WriteCommand { get; private set; }
         public ICommand RefreshAdaptersCommand { get; private set; }
+        public ICommand ExportToCsvCommand { get; private set; }
+
+        private void FillInRegisters()
+        {
+            Dictionary<ushort, WriteableRegisterViewModel> existingValues;
+
+            if (this.Registers == null)
+            {
+                existingValues = new Dictionary<ushort, WriteableRegisterViewModel>();
+            }
+            else
+            {
+                existingValues = this.Registers.ToDictionary(r => r.RegisterNumber, r => r);
+            }
+
+            //This is where the new reigsters will be
+            var newRegisters = new ObservableCollection<WriteableRegisterViewModel>();
+
+            if (this.NumberOfRegisters.HasValue && this.StartingRegister.HasValue)
+            {
+                //This is the register number for each iteration
+                var currentRegisterNumber = (ushort)this.StartingRegister.Value;
+
+                //Iterate through the new number of registers
+                for (int registerIndex = 0; registerIndex < this.NumberOfRegisters.Value; registerIndex++)
+                {
+                    WriteableRegisterViewModel registerViewModel;
+
+                    if (!existingValues.TryGetValue(currentRegisterNumber, out registerViewModel))
+                    {
+                        registerViewModel = new WriteableRegisterViewModel(currentRegisterNumber, 0);
+                    }
+                    
+                    newRegisters.Add(registerViewModel);
+
+                    currentRegisterNumber++;
+                }
+            }
+
+            this.Registers = newRegisters;
+        }
 
         private void RefreshAdapters()
         {
@@ -203,6 +246,32 @@ namespace ModbusRegisterViewer.ViewModel
             DataContractUtilities.ToFile(saveFileDialog.FileName, snapshot);
         }
 
+        private bool CanExportToCsv()
+        {
+            return Registers != null && Registers.Any();
+        }
+
+        private void ExportToCsv()
+        {
+            var fileDialog = new SaveFileDialog()
+                {
+                    Filter = "Comma Separated Value (.csv)|*.csv"
+                };
+
+            if (fileDialog.ShowDialog() != true)
+                return;
+
+            using (var writer = File.CreateText(fileDialog.FileName))
+            {
+                writer.WriteLine("Register,Value");
+
+                foreach (var register in this.Registers)
+                {
+                    writer.WriteLine("{0},{1}", register.RegisterNumber, register.Value);
+                }
+            }
+        }
+
         private bool CanWrite()
         {
             return this.RegisterType == _registerTypeHolding && this.Registers != null && this.Registers.Any();
@@ -219,7 +288,7 @@ namespace ModbusRegisterViewer.ViewModel
 
                 if (this.WriteIndividually)
                 {
-                    var changedRegisters = this.Registers.Where(r => r.IsDirty);
+                    var changedRegisters = this.Registers.Where(r => r.IsDirty).ToArray();
 
                     if (!changedRegisters.Any())
                         return;
@@ -478,6 +547,7 @@ namespace ModbusRegisterViewer.ViewModel
             {
                 _startingRegister = value;
                 RaisePropertyChanged(() => StartingRegister);
+                FillInRegisters();
             }
         }
 
@@ -488,6 +558,7 @@ namespace ModbusRegisterViewer.ViewModel
             {
                 _numberOfregisters = value;
                 RaisePropertyChanged(() => NumberOfRegisters);
+                FillInRegisters();
             }
         }
 

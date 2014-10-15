@@ -49,14 +49,14 @@ namespace ModbusRegisterViewer.Model
                         this.Sample.Raise(this, new SampleEventArgs(sample));
                     }
 
-                    catch (IOException ioe)
+                    catch (IOException)
                     {
                         if (_streamResource != null)
                         {
                             _streamResource.DiscardInBuffer();
                         }
                     }
-                    catch (TimeoutException te)
+                    catch (TimeoutException)
                     {
                         if (_streamResource != null)
                         {

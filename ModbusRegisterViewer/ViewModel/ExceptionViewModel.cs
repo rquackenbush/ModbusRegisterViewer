@@ -14,7 +14,7 @@ namespace ModbusRegisterViewer.ViewModel
     {
         private string _title;
         private string _message;
-        private string _details;
+        //private string _details;
         private Visibility _visibility;
         private Exception _exception;
 

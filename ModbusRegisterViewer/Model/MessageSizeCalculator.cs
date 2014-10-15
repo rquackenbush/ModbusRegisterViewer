@@ -84,8 +84,6 @@ namespace ModbusRegisterViewer.Model
 
                     return frameStart[2] + 5;
 
-                    break;
-
                 case FunctionCodes.WriteSingleCoil:
                 case FunctionCodes.WriteSingleRegister:
                 case FunctionCodes.WriteMultipleCoils:

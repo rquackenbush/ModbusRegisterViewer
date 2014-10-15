@@ -206,9 +206,8 @@ namespace ModbusRegisterViewer.Model
     internal abstract class PacketHandlerStrategy
     {
         private readonly PacketHandlerSharedState _sharedState;
-        private bool _isFaulted;
-
-        public PacketHandlerStrategy(PacketHandlerSharedState sharedState)
+        
+        internal PacketHandlerStrategy(PacketHandlerSharedState sharedState)
         {
             _sharedState = sharedState;
         }

@@ -45,6 +45,9 @@
                     <Separator />
                     <MenuItem Header="_Save" Command="{Binding Path=SaveCommand}" Visibility="Collapsed"/>
                     <MenuItem Header="Save _As..." Command="{Binding Path=SaveAsCommand}"/>
+                    <MenuItem Header="Export" >
+                        <MenuItem  Header="Export to CSV..." Command="{Binding Path=ExportToCsvCommand}" />
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="E_xit" Command="{Binding Path=ExitCommand}" />
                 </MenuItem>

@@ -24,9 +24,8 @@ namespace ModbusRegisterViewer.Views
     /// </summary>
     public partial class SnifferView : Window
     {
-        private FtdUsbPort _port;
-
-        private ModbusSlave _slave;
+        //private FtdUsbPort _port;
+        //private ModbusSlave _slave;
 
         private SnifferViewModel _viewModel;
 
