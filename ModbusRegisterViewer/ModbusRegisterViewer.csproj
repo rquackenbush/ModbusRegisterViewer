@@ -151,7 +151,9 @@
     <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="MasterContext.cs" />
     <Compile Include="Model\BufferRender.cs" />
+    <Compile Include="Model\CaptureFileRawExporter.cs" />
     <Compile Include="Model\IStreamReaderExtensions.cs" />
+    <Compile Include="Model\ModbusExtensions.cs" />
     <Compile Include="Model\Sniffer\CaptureFileReader.cs" />
     <Compile Include="Model\Sniffer\CaptureFileWriter.cs" />
     <Compile Include="Model\Sniffer\CaptureTimerInfo.cs" />

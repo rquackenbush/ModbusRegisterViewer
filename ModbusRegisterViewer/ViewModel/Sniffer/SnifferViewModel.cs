@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using ModbusRegisterViewer.Model;
+using ModbusRegisterViewer.ViewModel.RegisterViewer;
 using Unme.Common;
 using System.Windows;
 using System.Diagnostics;
@@ -16,7 +17,8 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
 {
     public class SnifferViewModel : ViewModelBase
     {
-        private const string Filter = "Modbus Capture Files(*.mbcap)|*.mbcap";
+        private const string CaptureFilter = "Modbus Capture Files(*.mbcap)|*.mbcap";
+        private const string CsvFilter = "Comma Separated Value(*.csv)|*.csv";
 
         public event EventHandler SelectionChanged;
 
@@ -46,6 +48,7 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
             this.CloseCommand = new RelayCommand(Close, CanClose);
             this.ExportToExcelCommand = new RelayCommand(ExportToExcel, CanExportToExcel);
             this.DisplayTicksPerSecondsCommand = new RelayCommand(DisplayTicksPerSecond);
+            this.ExportRawCommand = new RelayCommand(ExportRaw, CanExportRaw);
         }
 
         public ICommand StartCommand { get; private set; }
@@ -55,6 +58,7 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
         public ICommand CloseCommand { get; private set; }
         public ICommand ExportToExcelCommand { get; private set; }
         public ICommand DisplayTicksPerSecondsCommand { get; private set; }
+        public ICommand ExportRawCommand { get; private set; }
 
         private void DisplayTicksPerSecond()
         {
@@ -115,13 +119,34 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
         {
             var dialog = new OpenFileDialog()
             {
-                Filter = Filter
+                Filter = CaptureFilter
             };
 
             if (dialog.ShowDialog() != true)
                 return;
 
+            _capturePath = dialog.FileName;
+
             Open(dialog.FileName);
+        }
+
+        private bool CanExportRaw()
+        {
+            return !string.IsNullOrWhiteSpace(_capturePath);
+        }
+
+        private void ExportRaw()
+        {
+            var dialog = new SaveFileDialog()
+            {
+                Filter = CsvFilter
+            };
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            //Export it
+            CaptureFileRawExporter.Export(_capturePath, dialog.FileName);
         }
 
         private bool CanOpen()
@@ -143,7 +168,7 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
         {
             var dialog = new SaveFileDialog()
                 {
-                    Filter = Filter
+                    Filter = CaptureFilter
                 };
 
             if (dialog.ShowDialog() != true)

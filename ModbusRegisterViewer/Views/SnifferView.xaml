@@ -60,7 +60,8 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" Command="{Binding Path=OpenCommand}"></MenuItem>
                 <Separator/>
-                <MenuItem Header="Export to Excel..." Command="{Binding Path=ExportToExcelCommand}"></MenuItem>
+                <MenuItem Header="Export Packets to CSV..." Command="{Binding Path=ExportToExcelCommand}"></MenuItem>
+                <MenuItem Header="Export Raw to CSV..." Command="{Binding Path=ExportRawCommand}"></MenuItem>
                 <Separator/>
                 <MenuItem Header="_Close" Command="{Binding Path=CloseCommand}"></MenuItem>
             </MenuItem>

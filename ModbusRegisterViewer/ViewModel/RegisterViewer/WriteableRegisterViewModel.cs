@@ -34,6 +34,7 @@ namespace ModbusRegisterViewer.ViewModel.RegisterViewer
                     RaisePropertyChanged(() => LSB);
                     RaisePropertyChanged(() => Hex);
                     RaisePropertyChanged(() => Binary);
+                    RaisePropertyChanged(() => Signed);
 
                     this.IsDirty = true;
                 }
@@ -76,6 +77,11 @@ namespace ModbusRegisterViewer.ViewModel.RegisterViewer
         public string Binary
         {
             get { return Convert.ToString(_value, 2).PadLeft(16, '0').Insert(8, " "); }
+        }
+
+        public short Signed
+        {
+            get { return (short) this.Value; }
         }
 
         public bool IsDirty

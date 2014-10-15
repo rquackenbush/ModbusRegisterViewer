@@ -32,14 +32,17 @@ namespace ModbusRegisterViewer.ViewModel
     /// </summary>
     public class RegisterViewerViewModel : ViewModelBase
     {
+        private const byte DefaultBlockSize = 125;
+
         private readonly object _communicationLock = new object();
         private bool _isRunning;
 
         private RegisterTypeViewModel _registerType;
-        private int? _slaveAddress;
-        private int? _startingRegister;
-        private int? _numberOfregisters;
+        private byte _slaveAddress;
+        private ushort _startingRegister;
+        private ushort _numberOfregisters;
         private bool _writeIndividually;
+        private byte _blockSize = DefaultBlockSize;
         private ObservableCollection<WriteableRegisterViewModel> _registers;
         private readonly AboutViewModel _aboutViewModel = new AboutViewModel();
         private readonly ExceptionViewModel _exceptionViewModel = new ExceptionViewModel();
@@ -132,26 +135,25 @@ namespace ModbusRegisterViewer.ViewModel
             //This is where the new reigsters will be
             var newRegisters = new ObservableCollection<WriteableRegisterViewModel>();
 
-            if (this.NumberOfRegisters.HasValue && this.StartingRegister.HasValue)
+            
+            //This is the register number for each iteration
+            var currentRegisterNumber = StartingRegister;
+
+            //Iterate through the new number of registers
+            for (int registerIndex = 0; registerIndex < NumberOfRegisters; registerIndex++)
             {
-                //This is the register number for each iteration
-                var currentRegisterNumber = (ushort)this.StartingRegister.Value;
+                WriteableRegisterViewModel registerViewModel;
 
-                //Iterate through the new number of registers
-                for (int registerIndex = 0; registerIndex < this.NumberOfRegisters.Value; registerIndex++)
+                if (!existingValues.TryGetValue(currentRegisterNumber, out registerViewModel))
                 {
-                    WriteableRegisterViewModel registerViewModel;
-
-                    if (!existingValues.TryGetValue(currentRegisterNumber, out registerViewModel))
-                    {
-                        registerViewModel = new WriteableRegisterViewModel(currentRegisterNumber, 0);
-                    }
-                    
-                    newRegisters.Add(registerViewModel);
-
-                    currentRegisterNumber++;
+                    registerViewModel = new WriteableRegisterViewModel(currentRegisterNumber, 0);
                 }
+                    
+                newRegisters.Add(registerViewModel);
+
+                currentRegisterNumber++;
             }
+            
 
             this.Registers = newRegisters;
         }
@@ -217,11 +219,9 @@ namespace ModbusRegisterViewer.ViewModel
         private bool CanSaveAs()
         {
             return !this.IsAutoRefresh
-                && this.Registers != null 
-                && this.Registers.Any() 
-                && this.RegisterType != null
-                && this.SlaveAddress.HasValue
-                && this.StartingRegister.HasValue;
+                   && this.Registers != null
+                   && this.Registers.Any()
+                   && this.RegisterType != null;
         }
 
         private void SaveAs()
@@ -237,10 +237,10 @@ namespace ModbusRegisterViewer.ViewModel
 
             var snapshot = new Snapshot()
                 {
-                    RegisterType = this.RegisterType.RegisterType,
-                    SlaveId = (byte) this.SlaveAddress.Value,
-                    StartingRegister = (ushort) this.StartingRegister.Value,
-                    Registers = this.Registers.Select(r => r.Value).ToArray()
+                    RegisterType = RegisterType.RegisterType,
+                    SlaveId = SlaveAddress,
+                    StartingRegister = (ushort) StartingRegister,
+                    Registers = Registers.Select(r => r.Value).ToArray()
                 };
 
             DataContractUtilities.ToFile(saveFileDialog.FileName, snapshot);
@@ -281,11 +281,6 @@ namespace ModbusRegisterViewer.ViewModel
         {
             try
             {
-                if (!SlaveAddress.HasValue)
-                    return;
-
-                var slaveAddress = (byte)SlaveAddress.Value;
-
                 if (this.WriteIndividually)
                 {
                     var changedRegisters = this.Registers.Where(r => r.IsDirty).ToArray();
@@ -297,7 +292,7 @@ namespace ModbusRegisterViewer.ViewModel
                         {
                             foreach (var register in changedRegisters)
                             {
-                                context.Value.Master.WriteSingleRegister(slaveAddress, (ushort)(register.RegisterNumber - 1), register.Value);
+                                context.Value.Master.WriteSingleRegister(SlaveAddress, (ushort)(register.RegisterNumber - 1), register.Value);
 
                                 register.IsDirty = false;
                             }        
@@ -305,21 +300,9 @@ namespace ModbusRegisterViewer.ViewModel
                 }
                 else
                 {
-                    if (!StartingRegister.HasValue)
-                        return;
-
-                    if (!NumberOfRegisters.HasValue)
-                        return;
-
-                    var startingRegister = (ushort)(StartingRegister.Value);
-                    var numberOfRegisters = (ushort)NumberOfRegisters.Value;
-
                     var data = this.Registers.Select(r => r.Value).ToArray();
 
-                    ExecuteComm(context =>
-                        {
-                            context.Value.Master.WriteMultipleRegisters(slaveAddress, (ushort)(startingRegister - 1),  data);
-                        });
+                    ExecuteComm(context => context.Value.Master.WriteMultipleRegisters(SlaveAddress, (ushort)(StartingRegister - 1), data, BlockSize));
 
                     MarkRegistersClean();
                 }
@@ -391,28 +374,15 @@ namespace ModbusRegisterViewer.ViewModel
 
             try
             {
-                if (!SlaveAddress.HasValue)
-                    return;
-
-                if (!StartingRegister.HasValue)
-                    return;
-
-                if (!NumberOfRegisters.HasValue)
-                    return;
-
-                var slaveAddress = (byte)SlaveAddress.Value;
-                var startingRegister = (ushort)(StartingRegister.Value);
-                var numberOfRegisters = (ushort)NumberOfRegisters.Value;
-
                 if (RegisterType == null)
                     return;
 
                 //Save theese query criteria
                 var settings = Properties.Settings.Default;
 
-                settings.SlaveAddress = slaveAddress;
-                settings.StartingRegister = startingRegister;
-                settings.NumberOfRegisters = numberOfRegisters;
+                settings.SlaveAddress = SlaveAddress;
+                settings.StartingRegister = StartingRegister;
+                settings.NumberOfRegisters = NumberOfRegisters;
                 settings.RegisterType = (int)RegisterType.RegisterType;
 
                 if (this.SelectedAdapter == null)
@@ -430,17 +400,20 @@ namespace ModbusRegisterViewer.ViewModel
                         {
                             case Model.RegisterType.Input:
 
-                                results = c.Value.Master.ReadInputRegisters(slaveAddress,
-                                                                            (ushort)(startingRegister - 1),
-                                                                            numberOfRegisters);
+                                results = c.Value.Master.ReadInputRegisters(SlaveAddress,
+                                                                        (ushort) (StartingRegister - 1),
+                                                                        NumberOfRegisters,
+                                                                        BlockSize);
 
                                 break;
 
                             case Model.RegisterType.Holding:
 
-                                results = c.Value.Master.ReadHoldingRegisters(slaveAddress,
-                                                                                (ushort)(startingRegister - 1),
-                                                                                numberOfRegisters);
+                                results = c.Value.Master.ReadHoldingRegisters(SlaveAddress,
+                                                                                (ushort)(StartingRegister - 1),
+                                                                                NumberOfRegisters,
+                                                                                this.BlockSize);
+                                
 
                                 break;
 
@@ -450,7 +423,7 @@ namespace ModbusRegisterViewer.ViewModel
                         }
                     });
 
-                ushort registerNumber = startingRegister;
+                ushort registerNumber = StartingRegister;
 
                 if (results != null)
                 {
@@ -483,6 +456,16 @@ namespace ModbusRegisterViewer.ViewModel
             {
                 _registers = value;
                 RaisePropertyChanged(() => Registers);
+            }
+        }
+
+        public byte BlockSize
+        {
+            get { return _blockSize; }
+            set
+            {
+                _blockSize = value;
+                RaisePropertyChanged(() => BlockSize);
             }
         }
 
@@ -530,7 +513,7 @@ namespace ModbusRegisterViewer.ViewModel
             }
         }
 
-        public int? SlaveAddress
+        public byte SlaveAddress
         {
             get { return _slaveAddress; }
             set
@@ -540,7 +523,7 @@ namespace ModbusRegisterViewer.ViewModel
             }
         }
 
-        public int? StartingRegister
+        public ushort StartingRegister
         {
             get { return _startingRegister; }
             set
@@ -551,7 +534,7 @@ namespace ModbusRegisterViewer.ViewModel
             }
         }
 
-        public int? NumberOfRegisters
+        public ushort NumberOfRegisters
         {
             get { return _numberOfregisters; }
             set

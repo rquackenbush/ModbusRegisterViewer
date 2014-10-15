@@ -26,10 +26,7 @@
     </Window.Resources>
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250*"/>
-            <ColumnDefinition Width="607*"/>
-        </Grid.ColumnDefinitions>
+        
 
         <Grid Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
@@ -70,6 +67,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -83,19 +82,21 @@
                 <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="0" Grid.Row="1">Starting Address</TextBlock>
                 <xctk:IntegerUpDown Minimum="1" Maximum="65536"  Grid.Column="1" Grid.Row="1" MinWidth="60" Value="{Binding Path=StartingRegister}" />
 
+                <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="0">Block Size</TextBlock>
+                <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="5" Grid.Row="0" MinWidth="60" Value="{Binding Path=BlockSize}" />
+
                 <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="1">Number</TextBlock>
                 <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="5" Grid.Row="1" MinWidth="60" x:Name="NumberOfRegistersUpDown" Value="{Binding Path=NumberOfRegisters}" />
 
-                <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="0">Type</TextBlock>
-                <ComboBox x:Name="RegisterTypeComboBox" DisplayMemberPath="Display" Grid.Column="5" Margin="2" ItemsSource="{Binding Path=RegisterTypes}" SelectedItem="{Binding Path=RegisterType}" />
+                <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="6" Grid.Row="0">Type</TextBlock>
+                <ComboBox x:Name="RegisterTypeComboBox" DisplayMemberPath="Display" Grid.Column="7" Margin="2" ItemsSource="{Binding Path=RegisterTypes}" SelectedItem="{Binding Path=RegisterType}" />
 
-                <Button Grid.Column="7" Margin="4" MinWidth="100" Command="{Binding Path=ReadCommand}">Read</Button>
+                <Button Grid.Column="8" Margin="4" MinWidth="100" Command="{Binding Path=ReadCommand}">Read</Button>
+                <Button Grid.Column="8" Grid.Row="1" Margin="4" MinWidth="100" Command="{Binding Path=WriteCommand}">Write</Button>
 
-                <Button Grid.Column="7" Grid.Row="1" Margin="4" MinWidth="100" Command="{Binding Path=WriteCommand}">Write</Button>
+                <CheckBox Grid.Column="9" Margin="4" VerticalAlignment="Center" Foreground="White" IsChecked="{Binding Path=IsAutoRefresh}" ToolTip="If checked, will only write the items that have been changed using individual write commands.">Auto Refresh</CheckBox>
 
-                <CheckBox Grid.Column="8" Margin="4" VerticalAlignment="Center" Foreground="White" IsChecked="{Binding Path=IsAutoRefresh}" ToolTip="If checked, will only write the items that have been changed using individual write commands.">Auto Refresh</CheckBox>
-
-                <CheckBox Grid.Column="8" Grid.Row="1" Margin="4" VerticalAlignment="Center" Foreground="White" IsChecked="{Binding Path=WriteIndividually}" Content="Write Individually">
+                <CheckBox Grid.Column="9" Grid.Row="1" Margin="4" VerticalAlignment="Center" Foreground="White" IsChecked="{Binding Path=WriteIndividually}" Content="Write Individually">
                     <CheckBox.ToolTip>
                         <TextBlock>
                             If checked, only items that have been changed will be written.  Otherwise, all items in the current range will be written.
@@ -131,6 +132,7 @@
                     <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
                     <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
                     <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" IsReadOnly="True"  />
                 </DataGrid.Columns>
             </DataGrid>
 
