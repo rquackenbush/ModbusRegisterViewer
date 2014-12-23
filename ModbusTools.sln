@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{66DD80BC-CBA9-422B-AE71-712AE52F9CF4}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7D407A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusRegisterViewer", "ModbusRegisterViewer\ModbusRegisterViewer.csproj", "{7EA1062A-DC40-4BD9-86CD-C68D7575DB63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveProbe", "ModbusTools.SlaveProbe\ModbusTools.SlaveProbe.csproj", "{07833D29-192D-4460-9596-09CFC81DD69F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Common", "ModbusTools.Common\ModbusTools.Common.csproj", "{12696174-C514-4E69-ABDA-0E926A52BA57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Capture", "ModbusTools.Capture\ModbusTools.Capture.csproj", "{56814616-A273-4427-8164-EC5533D8B5BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveSimulator", "ModbusTools.SlaveSimulator\ModbusTools.SlaveSimulator.csproj", "{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveViewer", "ModbusTools.SlaveViewer\ModbusTools.SlaveViewer.csproj", "{2A3328D7-9854-44C3-9F42-865D2F0F075E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +35,22 @@ Global
 		{7EA1062A-DC40-4BD9-86CD-C68D7575DB63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EA1062A-DC40-4BD9-86CD-C68D7575DB63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EA1062A-DC40-4BD9-86CD-C68D7575DB63}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07833D29-192D-4460-9596-09CFC81DD69F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07833D29-192D-4460-9596-09CFC81DD69F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07833D29-192D-4460-9596-09CFC81DD69F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07833D29-192D-4460-9596-09CFC81DD69F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12696174-C514-4E69-ABDA-0E926A52BA57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12696174-C514-4E69-ABDA-0E926A52BA57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12696174-C514-4E69-ABDA-0E926A52BA57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12696174-C514-4E69-ABDA-0E926A52BA57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56814616-A273-4427-8164-EC5533D8B5BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56814616-A273-4427-8164-EC5533D8B5BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56814616-A273-4427-8164-EC5533D8B5BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56814616-A273-4427-8164-EC5533D8B5BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

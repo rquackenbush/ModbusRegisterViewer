@@ -60,7 +60,7 @@ namespace ModbusRegisterViewer.Views
 
         private void LaunchRegisterViewer(object sender, RoutedEventArgs e)
         {
-            LaunchView<RegisterViewerView>();
+            LaunchView<ModbusTools.SlaveViewer.View.RegisterViewerView>();
         }
 
         private void LaunchSpy(object sender, RoutedEventArgs e)

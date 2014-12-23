@@ -1,7 +1,7 @@
 /*
   In App.xaml:
   <Application.Resources>
-      <vm:ViewModelLocator xmlns:vm="clr-namespace:ModbusRegisterViewer"
+      <vm:ViewModelLocator xmlns:vm="clr-namespace:ModbusTools.Capture"
                            x:Key="Locator" />
   </Application.Resources>
   
@@ -15,11 +15,8 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
-using ModbusRegisterViewer.ViewModel.SlaveSimulator;
-using ModbusRegisterViewer.ViewModel.Sniffer;
-using ModbusTools.Common.Services;
 
-namespace ModbusRegisterViewer.ViewModel
+namespace ModbusTools.Capture.ViewModel
 {
     /// <summary>
     /// This class contains static references to all the view models in the
@@ -45,44 +42,15 @@ namespace ModbusRegisterViewer.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-
-            //if (!SimpleIoc.Default.IsRegistered<RegisterViewerViewModel>())
-            //{
-            //    SimpleIoc.Default.Register<RegisterViewerViewModel>(
-            //        () => new RegisterViewerViewModel(new MessageBoxService()));
-            //}
-
-            SimpleIoc.Default.Register<AboutViewModel>();
-            SimpleIoc.Default.Register<SnifferViewModel>();
-            SimpleIoc.Default.Register<SlaveSimulatorViewModel>();
-
-            if (!SimpleIoc.Default.IsRegistered<IMessageBoxService>())
-            {
-                SimpleIoc.Default.Register<IMessageBoxService>(() => new MessageBoxService());
-            }
+            SimpleIoc.Default.Register<MainViewModel>();
         }
 
-        public RegisterViewerViewModel RegisterViewer
+        public MainViewModel Main
         {
             get
             {
-                return new RegisterViewerViewModel(new MessageBoxService());
+                return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
-        }
-
-        public AboutViewModel About
-        {
-            get { return ServiceLocator.Current.GetInstance<AboutViewModel>(); }
-        }
-
-        public SnifferViewModel Sniffer
-        {
-            get { return ServiceLocator.Current.GetInstance<SnifferViewModel>(); }
-        }
-
-        public SlaveSimulatorViewModel SlaveSimulator
-        {
-            get { return ServiceLocator.Current.GetInstance<SlaveSimulatorViewModel>(); }
         }
         
         public static void Cleanup()

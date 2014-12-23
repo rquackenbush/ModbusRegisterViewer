@@ -51,8 +51,6 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
                 long ticks = _sample.Ticks - _previousSample.Ticks;
 
                 return _packet.CaptureTimerInfo.TicksToMilliseconds(ticks);
-
-                //return ((double)(_sample.Ticks - _previousSample.Ticks)) / _packet.TicksPerMillisecond;
             }
         }
     }

@@ -1,22 +1,25 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Timers;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using FtdAdapter;
 using GalaSoft.MvvmLight;
-using System.Collections.Generic;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Win32;
+using Modbus.Device;
 using ModbusRegisterViewer.Model;
 using ModbusRegisterViewer.ViewModel.RegisterViewer;
+using ModbusTools.Common;
 using ModbusTools.Common.Services;
+using ModbusTools.Common.ViewModel;
+using ModbusTools.SlaveViewer.Model;
 
-namespace ModbusRegisterViewer.ViewModel
+namespace ModbusTools.SlaveViewer.ViewModel
 {
     /// <summary>
     /// This class contains properties that the main View can data bind to.
@@ -44,18 +47,16 @@ namespace ModbusRegisterViewer.ViewModel
         private bool _writeIndividually;
         private byte _blockSize = DefaultBlockSize;
         private ObservableCollection<WriteableRegisterViewModel> _registers;
-        private readonly AboutViewModel _aboutViewModel = new AboutViewModel();
-        private readonly ExceptionViewModel _exceptionViewModel = new ExceptionViewModel();
 
         private readonly Timer _autoRefreshTimer = new Timer(2000);
 
         private readonly IMessageBoxService _messageBoxService;
+        private readonly IPreferences _preferences;
+        private readonly ModbusAdaptersViewModel _modbusAdapters = new ModbusAdaptersViewModel();
+        private readonly RegisterViewerPreferences _registerViewerPreferences;
 
-        private readonly ObservableCollection<AdapterViewModel> _adapters = new ObservableCollection<AdapterViewModel>();
-        private AdapterViewModel _selectedAdapter;
-
-        private static readonly RegisterTypeViewModel _registerTypeInput = new RegisterTypeViewModel(Model.RegisterType.Input, "Input");
-        private static readonly RegisterTypeViewModel _registerTypeHolding = new RegisterTypeViewModel(Model.RegisterType.Holding, "Holding");
+        private static readonly RegisterTypeViewModel _registerTypeInput = new RegisterTypeViewModel(Common.RegisterType.Input, "Input");
+        private static readonly RegisterTypeViewModel _registerTypeHolding = new RegisterTypeViewModel(Common.RegisterType.Holding, "Holding");
 
         private readonly List<RegisterTypeViewModel> _registerTypes = new List<RegisterTypeViewModel>()
         {
@@ -66,16 +67,18 @@ namespace ModbusRegisterViewer.ViewModel
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public RegisterViewerViewModel(IMessageBoxService messageBoxService)
+        public RegisterViewerViewModel(IMessageBoxService messageBoxService, IPreferences preferences)
         {
             _messageBoxService = messageBoxService;
+            _preferences = preferences;
+
+            _registerViewerPreferences = new RegisterViewerPreferences(preferences);
 
             this.ReadCommand = new RelayCommand(Read, CanRead);
             this.WriteCommand = new RelayCommand(Write, CanWrite);
             this.ExitCommand = new RelayCommand(Exit);
             this.OpenCommand = new RelayCommand(Open, CanOpen);
             this.SaveAsCommand = new RelayCommand(SaveAs, CanSaveAs);
-            this.RefreshAdaptersCommand = new RelayCommand(RefreshAdapters);
             this.ExportToCsvCommand = new RelayCommand(ExportToCsv, CanExportToCsv);
 
             if (IsInDesignMode)
@@ -90,19 +93,17 @@ namespace ModbusRegisterViewer.ViewModel
                 };
             }
 
-            var settings = Properties.Settings.Default;
+            SlaveAddress = _registerViewerPreferences.SlaveAddress;
+            StartingRegister = _registerViewerPreferences.StartingRegister;
+            NumberOfRegisters = _registerViewerPreferences.NumberOfRegisters;
 
-            SlaveAddress = settings.SlaveAddress;
-            StartingRegister = settings.StartingRegister;
-            NumberOfRegisters = settings.NumberOfRegisters;
+            RegisterType = _registerTypes.FirstOrDefault(rt => rt.RegisterType == _registerViewerPreferences.RegisterType);
 
-            RegisterType = _registerTypes.FirstOrDefault(rt => (int)rt.RegisterType == settings.RegisterType);
+            ModbusAdapters.ApplyPreferences(_preferences, RegisterViewerPreferences.Keys.ModbusAdapter);
+            
 
             _autoRefreshTimer.Elapsed += _autoRefreshTimer_Elapsed;
 
-            RefreshAdapters();
-
-            SelectAdapter(settings.AdapterSerialNumber);
         }
 
         void _autoRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -116,8 +117,12 @@ namespace ModbusRegisterViewer.ViewModel
         public ICommand ExitCommand { get; private set; }
         public ICommand ReadCommand { get; private set; }
         public ICommand WriteCommand { get; private set; }
-        public ICommand RefreshAdaptersCommand { get; private set; }
         public ICommand ExportToCsvCommand { get; private set; }
+
+         public ModbusAdaptersViewModel ModbusAdapters
+        {
+            get { return _modbusAdapters; }
+        }
 
         private void FillInRegisters()
         {
@@ -153,43 +158,8 @@ namespace ModbusRegisterViewer.ViewModel
 
                 currentRegisterNumber++;
             }
-            
 
             this.Registers = newRegisters;
-        }
-
-        private void RefreshAdapters()
-        {
-            string selectedSerialNumber = null;
-
-            if (this.SelectedAdapter != null)
-                selectedSerialNumber = this.SelectedAdapter.SerialNumber;
-
-            this.Adapters.Clear();
-
-            var infos = FtdUsbPort.GetDeviceInfos();
-
-            foreach (var info in infos)
-            {
-                this.Adapters.Add(new AdapterViewModel(info));
-            }
-
-            //Attempt to reselect the original adapter.
-            SelectAdapter(selectedSerialNumber);
-        }
-
-        /// <summary>
-        /// Selects an adapter.
-        /// </summary>
-        /// <param name="serialNumber"></param>
-        private void SelectAdapter(string serialNumber)
-        {
-            var initialAdapter = this.Adapters.FirstOrDefault(a => a.SerialNumber == serialNumber);
-
-            if (initialAdapter == null)
-                initialAdapter = this.Adapters.FirstOrDefault();
-
-            this.SelectedAdapter = initialAdapter;
         }
 
         private bool CanOpen()
@@ -274,11 +244,13 @@ namespace ModbusRegisterViewer.ViewModel
 
         private bool CanWrite()
         {
-            return this.RegisterType == _registerTypeHolding && this.Registers != null && this.Registers.Any();
+            return _modbusAdapters.IsItemSelected && this.RegisterType == _registerTypeHolding && this.Registers != null && this.Registers.Any();
         }
 
         private void Write()
         {
+            SavePreferences();
+
             try
             {
                 if (this.WriteIndividually)
@@ -288,11 +260,11 @@ namespace ModbusRegisterViewer.ViewModel
                     if (!changedRegisters.Any())
                         return;
 
-                    ExecuteComm(context =>
+                    ExecuteComm(m =>
                         {
                             foreach (var register in changedRegisters)
                             {
-                                context.Value.Master.WriteSingleRegister(SlaveAddress, (ushort)(register.RegisterNumber - 1), register.Value);
+                                m.WriteSingleRegister(SlaveAddress, (ushort)(register.RegisterNumber - 1), register.Value);
 
                                 register.IsDirty = false;
                             }        
@@ -302,14 +274,14 @@ namespace ModbusRegisterViewer.ViewModel
                 {
                     var data = this.Registers.Select(r => r.Value).ToArray();
 
-                    ExecuteComm(context => context.Value.Master.WriteMultipleRegisters(SlaveAddress, (ushort)(StartingRegister - 1), data, BlockSize));
+                    ExecuteComm(m => m.WriteMultipleRegisters(SlaveAddress, (ushort)(StartingRegister - 1), data, BlockSize));
 
                     MarkRegistersClean();
                 }
             }
             catch (Exception ex)
             {
-                this.Exception.ShowCommand.Execute(ex);
+                _messageBoxService.Show(ex, "Unable to Write");
             }
         }
 
@@ -326,45 +298,49 @@ namespace ModbusRegisterViewer.ViewModel
 
         private bool CanRead()
         {
-            return !this.IsAutoRefresh && this.SelectedAdapter != null;
+            return !IsAutoRefresh && _modbusAdapters.IsItemSelected;
         }
 
         /// <summary>
         /// Executes code against a communication context
         /// </summary>
         /// <param name="action"></param>
-        private void ExecuteComm(Action<Lazy<MasterContext>> action)
+        private void ExecuteComm(Action<IModbusMaster> action)
         {
+            var contextFactory = _modbusAdapters.GetFactory();
+
             lock (_communicationLock)
             {
-                //We don't want to have to create this if we don't have to, so use a lazy loader
-                Lazy<MasterContext> context = new Lazy<MasterContext>(() =>
-                    {
-                        var result = new MasterContext(this.SelectedAdapter.SerialNumber);
-
-                        result.Master.Transport.ReadTimeout = 2000;
-                        result.Master.Transport.WriteTimeout = 2000;
-
-                        return result;
-                    });
-
                 try
                 {
                     _isRunning = true;
 
-                    //Execute the action
-                    action(context);
+                    using (var master = contextFactory.Create())
+                    {
+                        action(master.Master);
+                    }
                 }
                 finally
                 {
-                    _isRunning = false;
-
-                    if (context.IsValueCreated)
-                    {
-                        context.Value.Dispose();
-                    }
+                    _isRunning = false;                
                 }
             }
+        }
+
+        private void SavePreferences()
+        {
+            if (RegisterType == null)
+                return;
+
+
+            _registerViewerPreferences.SlaveAddress = SlaveAddress;
+            _registerViewerPreferences.StartingRegister = StartingRegister;
+            _registerViewerPreferences.NumberOfRegisters = NumberOfRegisters;
+            _registerViewerPreferences.RegisterType = RegisterType.RegisterType;
+
+            _modbusAdapters.GetPreferences(_preferences, RegisterViewerPreferences.Keys.ModbusAdapter);
+
+            _preferences.Save();
         }
 
         private void Read()
@@ -377,39 +353,26 @@ namespace ModbusRegisterViewer.ViewModel
                 if (RegisterType == null)
                     return;
 
-                //Save theese query criteria
-                var settings = Properties.Settings.Default;
-
-                settings.SlaveAddress = SlaveAddress;
-                settings.StartingRegister = StartingRegister;
-                settings.NumberOfRegisters = NumberOfRegisters;
-                settings.RegisterType = (int)RegisterType.RegisterType;
-
-                if (this.SelectedAdapter == null)
-                    settings.AdapterSerialNumber = null;
-                else
-                    settings.AdapterSerialNumber = this.SelectedAdapter.SerialNumber;
-
-                settings.Save();
-
+                SavePreferences();
+                
                 ushort[] results = null;
 
-                ExecuteComm(c =>
+                ExecuteComm(m =>
                     {
                         switch (RegisterType.RegisterType)
                         {
-                            case Model.RegisterType.Input:
+                            case Common.RegisterType.Input:
 
-                                results = c.Value.Master.ReadInputRegisters(SlaveAddress,
+                                results = m.ReadInputRegisters(SlaveAddress,
                                                                         (ushort) (StartingRegister - 1),
                                                                         NumberOfRegisters,
                                                                         BlockSize);
 
                                 break;
 
-                            case Model.RegisterType.Holding:
+                            case Common.RegisterType.Holding:
 
-                                results = c.Value.Master.ReadHoldingRegisters(SlaveAddress,
+                                results = m.ReadHoldingRegisters(SlaveAddress,
                                                                                 (ushort)(StartingRegister - 1),
                                                                                 NumberOfRegisters,
                                                                                 this.BlockSize);
@@ -435,12 +398,14 @@ namespace ModbusRegisterViewer.ViewModel
             }
             catch (Exception ex)
             {
+                _autoRefreshTimer.Enabled = false;
+
                 if (this.IsAutoRefresh)
                 {
                     this.IsAutoRefresh = false;
                 }
 
-                this.Exception.ShowCommand.Execute(ex);
+                _messageBoxService.Show(ex, "Read Failed");
             }
         }
 
@@ -544,31 +509,5 @@ namespace ModbusRegisterViewer.ViewModel
                 FillInRegisters();
             }
         }
-
-        public AdapterViewModel SelectedAdapter
-        {
-            get { return _selectedAdapter; }
-            set
-            {
-                _selectedAdapter = value;
-                RaisePropertyChanged(() => SelectedAdapter);
-             }
-        }
-
-        public ObservableCollection<AdapterViewModel>  Adapters
-        {
-            get { return _adapters; }
-        }
-
-        public AboutViewModel About
-        {
-            get { return _aboutViewModel; }
-        }
-
-        public ExceptionViewModel Exception
-        {
-            get { return _exceptionViewModel; }
-        }
-
     }
 }

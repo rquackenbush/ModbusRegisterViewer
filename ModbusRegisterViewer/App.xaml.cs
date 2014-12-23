@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
-using ModbusRegisterViewer.Services;
 
 namespace ModbusRegisterViewer
 {
