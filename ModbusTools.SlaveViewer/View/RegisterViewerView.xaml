@@ -48,7 +48,7 @@
                         <MenuItem  Header="Export to CSV..." Command="{Binding Path=ExportToCsvCommand}" />
                     </MenuItem>
                     <Separator />
-                    <MenuItem Header="E_xit" Command="{Binding Path=ExitCommand}" />
+                    <MenuItem Header="E_xit" Click="ExitMenuItem_OnClick" />
                 </MenuItem>
                 <MenuItem Header="_View">
                     <MenuItem Header="Refresh" Command="{Binding Path=ReadCommand}" InputGestureText="F5" />
@@ -108,7 +108,7 @@
 
             </Grid>
 
-            <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Registers}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
+            <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Registers}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" CanUserDeleteRows="False">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>

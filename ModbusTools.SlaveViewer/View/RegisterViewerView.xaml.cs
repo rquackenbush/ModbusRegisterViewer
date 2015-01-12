@@ -33,5 +33,10 @@ namespace ModbusTools.SlaveViewer.View
                 viewModel.Closed();
             }
         }
+
+        private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

@@ -39,8 +39,8 @@ namespace ModbusTools.SlaveViewer.ViewModel
         private readonly object _communicationLock = new object();
         private bool _isRunning;
 
-        private RegisterTypeViewModel _registerType;
-        private byte _slaveAddress;
+        //private RegisterTypeViewModel _registerType;
+        //private byte _slaveAddress;
         private ushort _startingRegister;
         private ushort _numberOfregisters;
         private bool _writeIndividually;
@@ -486,25 +486,23 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         public RegisterTypeViewModel RegisterType
         {
-            get { return _registerType; }
+            get { return RegisterTypes.FirstOrDefault(rt => rt.RegisterType == _descriptionStore.RegisterType); }
             set
             {
-                _registerType = value;
-                RaisePropertyChanged(() => RegisterType);
-                DescriptionChanged();
                 if (value != null)
                 {
                     _descriptionStore.RegisterType = value.RegisterType;
                 }
+                RaisePropertyChanged(() => RegisterType);
+                DescriptionChanged();
             }
         }
 
         public byte SlaveAddress
         {
-            get { return _slaveAddress; }
+            get { return _descriptionStore.DeviceAddress; }
             set
             {
-                _slaveAddress = value;
                 _descriptionStore.DeviceAddress = value;
                 RaisePropertyChanged(() => SlaveAddress);
                 DescriptionChanged();
