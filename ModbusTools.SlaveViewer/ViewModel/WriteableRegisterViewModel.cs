@@ -1,18 +1,21 @@
 ﻿using System;
 using GalaSoft.MvvmLight;
+using ModbusTools.SlaveViewer.Model;
 
-namespace ModbusRegisterViewer.ViewModel.RegisterViewer
+namespace ModbusTools.SlaveViewer.ViewModel
 {
     public class WriteableRegisterViewModel : ViewModelBase 
     {
         private readonly ushort _registerNumber;
         private ushort _value;
         private bool _isDirty;
+        private readonly DescriptionStore _descriptionStore;
         
-        public WriteableRegisterViewModel(ushort registerNumber, ushort value)
+        internal WriteableRegisterViewModel(ushort registerNumber, ushort value, DescriptionStore descriptionStore)
         {
             _registerNumber = registerNumber;
             _value = value;
+            _descriptionStore = descriptionStore;
         }
 
         public ushort RegisterNumber
@@ -95,6 +98,21 @@ namespace ModbusRegisterViewer.ViewModel.RegisterViewer
                     RaisePropertyChanged(() => IsDirty);
                 }
             }
+        }
+
+        public string Description
+        {
+            get { return _descriptionStore[_registerNumber]; }
+            set
+            {
+                _descriptionStore[_registerNumber] = value;
+                RaisePropertyChanged(() => Description);
+            }
+        }
+
+        internal void RaiseDescriptionPropertyChanged()
+        {
+            RaisePropertyChanged(() => Description);
         }
     }
 }

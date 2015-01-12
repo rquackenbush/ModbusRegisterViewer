@@ -13,7 +13,6 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Win32;
 using Modbus.Device;
 using ModbusRegisterViewer.Model;
-using ModbusRegisterViewer.ViewModel.RegisterViewer;
 using ModbusTools.Common;
 using ModbusTools.Common.Services;
 using ModbusTools.Common.ViewModel;
@@ -58,6 +57,8 @@ namespace ModbusTools.SlaveViewer.ViewModel
         private static readonly RegisterTypeViewModel _registerTypeInput = new RegisterTypeViewModel(Common.RegisterType.Input, "Input");
         private static readonly RegisterTypeViewModel _registerTypeHolding = new RegisterTypeViewModel(Common.RegisterType.Holding, "Holding");
 
+        private readonly DescriptionStore _descriptionStore = new DescriptionStore();
+
         private readonly List<RegisterTypeViewModel> _registerTypes = new List<RegisterTypeViewModel>()
         {
             _registerTypeInput,
@@ -85,11 +86,11 @@ namespace ModbusTools.SlaveViewer.ViewModel
             {
                 this.Registers = new ObservableCollection<WriteableRegisterViewModel>()
                 {
-                    new WriteableRegisterViewModel(1000, 0),
-                    new WriteableRegisterViewModel(1001, 20),
-                    new WriteableRegisterViewModel(1002, 23),
-                    new WriteableRegisterViewModel(1003, 24),
-                    new WriteableRegisterViewModel(1004, 25),
+                    new WriteableRegisterViewModel(1000, 0, _descriptionStore),
+                    new WriteableRegisterViewModel(1001, 20, _descriptionStore),
+                    new WriteableRegisterViewModel(1002, 23, _descriptionStore),
+                    new WriteableRegisterViewModel(1003, 24, _descriptionStore),
+                    new WriteableRegisterViewModel(1004, 25, _descriptionStore),
                 };
             }
 
@@ -151,7 +152,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
                 if (!existingValues.TryGetValue(currentRegisterNumber, out registerViewModel))
                 {
-                    registerViewModel = new WriteableRegisterViewModel(currentRegisterNumber, 0);
+                    registerViewModel = new WriteableRegisterViewModel(currentRegisterNumber, 0, _descriptionStore);
                 }
                     
                 newRegisters.Add(registerViewModel);
@@ -182,7 +183,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
             var registerNumber = snapshot.StartingRegister;
 
             this.Registers = new ObservableCollection<WriteableRegisterViewModel>(
-                snapshot.Registers.Select(v => new WriteableRegisterViewModel(registerNumber++, v))
+                snapshot.Registers.Select(v => new WriteableRegisterViewModel(registerNumber++, v, _descriptionStore))
             );
         }
 
@@ -301,6 +302,10 @@ namespace ModbusTools.SlaveViewer.ViewModel
             return !IsAutoRefresh && _modbusAdapters.IsItemSelected;
         }
 
+        public void Closed()
+        {
+            _descriptionStore.Save();        }
+
         /// <summary>
         /// Executes code against a communication context
         /// </summary>
@@ -390,7 +395,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
                 if (results != null)
                 {
-                    var rows = results.Select(r => new WriteableRegisterViewModel(registerNumber++, r));
+                    var rows = results.Select(r => new WriteableRegisterViewModel(registerNumber++, r, _descriptionStore));
 
                     Registers = new ObservableCollection<WriteableRegisterViewModel>(rows);
                 }
@@ -412,6 +417,17 @@ namespace ModbusTools.SlaveViewer.ViewModel
         private void Exit()
         {
             Application.Current.Shutdown();
+        }
+
+        private void DescriptionChanged()
+        {
+            if (this.Registers == null)
+                return;
+
+            foreach (var register in this.Registers)
+            {
+                register.RaiseDescriptionPropertyChanged();
+            }
         }
 
         public ObservableCollection<WriteableRegisterViewModel> Registers
@@ -475,6 +491,11 @@ namespace ModbusTools.SlaveViewer.ViewModel
             {
                 _registerType = value;
                 RaisePropertyChanged(() => RegisterType);
+                DescriptionChanged();
+                if (value != null)
+                {
+                    _descriptionStore.RegisterType = value.RegisterType;
+                }
             }
         }
 
@@ -484,7 +505,9 @@ namespace ModbusTools.SlaveViewer.ViewModel
             set
             {
                 _slaveAddress = value;
+                _descriptionStore.DeviceAddress = value;
                 RaisePropertyChanged(() => SlaveAddress);
+                DescriptionChanged();
             }
         }
 

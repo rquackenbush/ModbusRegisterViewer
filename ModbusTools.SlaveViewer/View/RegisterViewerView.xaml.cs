@@ -23,5 +23,15 @@ namespace ModbusTools.SlaveViewer.View
 
             DataContext = new RegisterViewerViewModel(messageBoxService, preferences);
         }
+
+        private void RegisterViewerView_OnClosed(object sender, EventArgs e)
+        {
+            var viewModel = DataContext as RegisterViewerViewModel;
+
+            if (viewModel != null)
+            {
+                viewModel.Closed();
+            }
+        }
     }
 }

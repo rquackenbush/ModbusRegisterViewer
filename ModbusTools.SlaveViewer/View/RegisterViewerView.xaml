@@ -5,6 +5,7 @@
         xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
         Title="Modbus Register Viewer
         " Height="519" Width="865"
+        Closed="RegisterViewerView_OnClosed"
         Background="{StaticResource WindowBackground}"
         Icon="/Images/Connection_Manager.png"
 >
@@ -134,6 +135,7 @@
                     <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
                     <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" IsReadOnly="True" />
                     <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" IsReadOnly="True"  />
+                    <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
 

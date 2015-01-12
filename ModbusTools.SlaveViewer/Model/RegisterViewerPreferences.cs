@@ -13,11 +13,13 @@ namespace ModbusTools.SlaveViewer.Model
 
         internal static class Keys
         {
-            public const string SlaveAddress = "SlaveViewer.SlaveAddress";
-            public const string StartingRegister = "SlaveViewer.StartingRegister";
-            public const string NumberOfRegisters = "SlaveViewer.NumberOfRegisters";
-            public const string RegisterType = "SlaveViewer.RegisterType";
-            public const string ModbusAdapter = "SlaveViewer.ModbusAdapter";
+            private const string Prefix = "SlaveViewer.";
+
+            public const string SlaveAddress = Prefix + "SlaveAddress";
+            public const string StartingRegister = Prefix + "StartingRegister";
+            public const string NumberOfRegisters = Prefix + "NumberOfRegisters";
+            public const string RegisterType = Prefix + "RegisterType";
+            public const string ModbusAdapter = Prefix + "ModbusAdapter";
         }
 
         public RegisterViewerPreferences(IPreferences preferences)
