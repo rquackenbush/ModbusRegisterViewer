@@ -8,9 +8,9 @@ namespace ModbusTools.Common
 {
     public class Preferences : IPreferences
     {
-        private readonly Dictionary<string, string> _values = new Dictionary<string, string>();
+        protected Dictionary<string, string> _values = new Dictionary<string, string>();
 
-        private readonly string _path;
+        protected readonly string _path;
 
         private bool _isDirty;
 
@@ -38,7 +38,55 @@ namespace ModbusTools.Common
             });
         }
 
-        private string Read(string key)
+        protected static IDictionary<string, string> LoadSavedSettings(string path)
+        {
+            var serializer = new XmlSerializer(typeof (SavedSettingsContainer));
+
+            using (var file = File.Open(path, FileMode.Open))
+            {
+                var container = (SavedSettingsContainer) serializer.Deserialize(file);
+
+                var settings = new Dictionary<string, string>();
+
+                if (container != null && container.Settings != null)
+                {
+                    foreach (var setting in container.Settings)
+                    {
+                        settings[setting.Key] = setting.Value;
+                    }
+                }
+
+                return settings;
+            }
+        }
+
+        protected static void SaveSettings(string path, IDictionary<string, string> settings)
+        {
+            FileUtilities.CreateDirectoryForFile(path);
+
+            var container = new SavedSettingsContainer()
+            {
+                Settings = settings.Select(p => new SavedSetting()
+                {
+                    Key = p.Key,
+                    Value = p.Value
+                }).ToArray()
+            };
+
+            var serializer = new XmlSerializer(typeof(SavedSettingsContainer));
+
+            using (var file = File.Open(path, FileMode.Create))
+            {
+                serializer.Serialize(file, container);
+            }    
+        }
+
+        protected virtual bool IsDirty
+        {
+            get { return _isDirty; }
+        }
+
+        protected virtual string Read(string key)
         {
             string value;
 
@@ -48,7 +96,7 @@ namespace ModbusTools.Common
             return null;
         }
 
-        private void Write(string key, string value)
+        protected virtual void Write(string key, string value)
         {
             if (value == null)
             {
@@ -73,30 +121,11 @@ namespace ModbusTools.Common
             }
         }
 
-        public void Save()
+        public virtual void Save()
         {
             if (_isDirty)
             {
-                OperationAttempter.Attempt(() =>
-                {
-                    FileUtilities.CreateDirectoryForFile(_path);
-
-                    var toSave = new SavedSettingsContainer()
-                    {
-                        Settings = _values.Select(p => new SavedSetting()
-                        {
-                            Key = p.Key,
-                            Value = p.Value
-                        }).ToArray()
-                    };
-
-                    var serializer = new XmlSerializer(typeof(SavedSettingsContainer));
-
-                    using (var file = File.Open(_path, FileMode.Create))
-                    {
-                        serializer.Serialize(file, toSave);
-                    }    
-                });
+                OperationAttempter.Attempt(() => SaveSettings(_path, _values));
             }
         }
 

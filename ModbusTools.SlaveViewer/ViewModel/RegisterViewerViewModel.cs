@@ -57,7 +57,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
         private static readonly RegisterTypeViewModel _registerTypeInput = new RegisterTypeViewModel(Common.RegisterType.Input, "Input");
         private static readonly RegisterTypeViewModel _registerTypeHolding = new RegisterTypeViewModel(Common.RegisterType.Holding, "Holding");
 
-        private static readonly DescriptionStore _descriptionStore = new DescriptionStore();
+        private readonly DescriptionStore _descriptionStore = new DescriptionStore();
 
         private readonly List<RegisterTypeViewModel> _registerTypes = new List<RegisterTypeViewModel>()
         {

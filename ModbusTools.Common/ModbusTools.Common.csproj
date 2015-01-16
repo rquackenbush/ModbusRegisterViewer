@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="DataContractConstants.cs" />
     <Compile Include="DataContractUtilities.cs" />
+    <Compile Include="DifferentialPreferences.cs" />
     <Compile Include="FileUtilities.cs" />
     <Compile Include="IMasterContext.cs" />
     <Compile Include="IMasterContextFactory.cs" />

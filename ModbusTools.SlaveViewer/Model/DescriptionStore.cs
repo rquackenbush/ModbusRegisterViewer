@@ -17,7 +17,7 @@ namespace ModbusTools.SlaveViewer.Model
         {
             var preferencesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ModbusTools", "registerViewerDescriptions.xml");
 
-            _preferences = new Preferences(preferencesPath);
+            _preferences = new DifferentialPreferences(preferencesPath);
         }
 
         public void Save()
@@ -30,19 +30,9 @@ namespace ModbusTools.SlaveViewer.Model
             return string.Format("{0}_{1}_{2}", this.DeviceAddress, this.RegisterType, registerNumber);
         }
 
-        private byte _deviceAddress;
-        public byte DeviceAddress
-        {
-            get { return _deviceAddress; }
-            set { _deviceAddress = value; }
-        }
+        public byte DeviceAddress { get; set; }
 
-        private RegisterType _registerType;
-        public RegisterType RegisterType
-        {
-            get { return _registerType; }
-            set { _registerType = value; }
-        }
+        public RegisterType RegisterType { get; set; }
 
         public string this[ushort registerNumber]
         {
