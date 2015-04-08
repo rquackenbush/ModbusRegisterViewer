@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FtdAdapter;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
+using Modbus.IO;
 using ModbusRegisterViewer.Model;
 using ModbusRegisterViewer.ViewModel.RegisterViewer;
+using ModbusTools.Common.ViewModel;
 using Unme.Common;
 using System.Windows;
 using System.Diagnostics;
@@ -23,7 +26,7 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
         public event EventHandler SelectionChanged;
 
         private Task _task;
-        private FtdUsbPort _port;
+        private IStreamResource _port;
         private ObservableCollection<PacketViewModel> _packets = new ObservableCollection<PacketViewModel>();
 
         private PromiscuousListener _listener;
@@ -31,6 +34,8 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
 
         private string _capturePath;
         private CaptureFileWriter _writer;
+
+        private readonly ModbusAdaptersViewModel _modbusAdapters = new ModbusAdaptersViewModel();
 
         public SnifferViewModel()
         {
@@ -164,8 +169,21 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
             return _task == null;
         }
 
+        private IStreamResource GetStreamResource(ModbusTransport modbusTransport)
+        {
+            var property = modbusTransport.GetType().GetProperty("StreamResource", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (property == null)
+                throw new InvalidOperationException("Unable to find StreamResource");
+
+            return property.GetValue(modbusTransport) as IStreamResource;
+        }
+
         private void Start()
         {
+            if (!ModbusAdapters.IsItemSelected)
+                return;
+
             var dialog = new SaveFileDialog()
                 {
                     Filter = CaptureFilter
@@ -180,27 +198,34 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
             //Try to create the file first
             _writer = new CaptureFileWriter(dialog.FileName);
 
-            _port = new FtdUsbPort();
+            //_port = new FtdUsbPort();
 
-            // configure serial port
-            _port.BaudRate = 19200;
-            _port.DataBits = 8;
-            _port.Parity = FtdParity.Even;
-            _port.StopBits = FtdStopBits.One;
-            _port.OpenByIndex(0);
+            //// configure serial port
+            //_port.BaudRate = 19200;
+            //_port.DataBits = 8;
+            //_port.Parity = FtdParity.Even;
+            //_port.StopBits = FtdStopBits.One;
+            //_port.OpenByIndex(0);
 
-            _port.ReadTimeout = 3000;
-
-            _listener = new PromiscuousListener(_port);
-
-            _listener.Sample += OnSample;
+            //_port.ReadTimeout = 3000;
+            
+           
 
             //Spin up the listener in its own thread
             _task = new Task(() =>
             {
                 try
                 {
-                    _listener.Listen();
+                    using (var master = ModbusAdapters.GetFactory().Create())
+                    {
+                        _port = GetStreamResource(master.Master.Transport);
+
+                        _listener = new PromiscuousListener(_port);
+
+                        _listener.Sample += OnSample;
+
+                        _listener.Listen();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -210,6 +235,10 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
                 finally
                 {
                     _task = null;
+
+                    _listener.Sample -= OnSample;
+
+                    _listener = null;
                 }
             });
 
@@ -218,7 +247,7 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
 
         private bool CanStart()
         {
-            return _task == null;
+            return _task == null && ModbusAdapters.IsItemSelected;
         }
 
         private void Stop()
@@ -240,10 +269,10 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
 
                 if (_port != null)
                 {
-                    if (_port.IsOpen)
-                    {
+                    //if (_port.IsOpen)
+                    //{
                         _port.DiscardInBuffer();
-                    }
+                    //}
 
                     DisposableUtility.Dispose(ref _port);
                 }
@@ -324,6 +353,11 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
                     RaisePropertyChanged(() => Packets);
                 }
             }
+        }
+
+        public ModbusAdaptersViewModel ModbusAdapters
+        {
+            get { return _modbusAdapters; }
         }
     }
 }
