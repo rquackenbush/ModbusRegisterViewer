@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ModbusTools.Common;
-using Xceed.Wpf.DataGrid.Converters;
 
 namespace ModbusTools.SlaveViewer.Model
 {

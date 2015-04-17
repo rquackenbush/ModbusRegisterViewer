@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Windows.Input;
-using FtdAdapter;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -35,14 +34,6 @@ namespace ModbusTools.Common.ViewModel
             foreach (var serialPortName in serialPortNames)
             {
                 _adapters.Add(new SerialPortModbusAdapterFactory(serialPortName));
-            }
-
-            //Get the USB devices
-            var deviceInfos = FtdUsbPort.GetDeviceInfos();
-
-            foreach (var deviceInfo in deviceInfos)
-            {
-                _adapters.Add(new FtdModbusAdapterFactory(deviceInfo));
             }
 
             var adapterToSelect = _adapters.FirstOrDefault(a => string.Compare(selectedDisplayName, a.DisplayName, true) == 0);

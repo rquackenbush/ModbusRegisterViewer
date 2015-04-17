@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using Modbus.Utility;
 using ModbusRegisterViewer.Model;
-using ModbusRegisterViewer.ViewModel;
 using ModbusRegisterViewer.ViewModel.Sniffer;
 using ModbusRegisterViewer.Views.GenericPacketViewers;
-using Unme.Common;
 
 namespace ModbusRegisterViewer.Views
 {
@@ -73,7 +67,7 @@ namespace ModbusRegisterViewer.Views
                             startingAddress++;
 
                             //Get the payload
-                            var registerBytes = packet.Message.Slice(7, packet.Message.Length - 9).ToArray();
+                            var registerBytes = packet.Message.Skip(7).Take(packet.Message.Length - 9).ToArray();
 
                             //Convert it to uint16
                             var registers = ModbusUtility.NetworkBytesToHostUInt16(registerBytes);

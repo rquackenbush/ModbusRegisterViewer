@@ -4,15 +4,12 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using FtdAdapter;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using Modbus.IO;
 using ModbusRegisterViewer.Model;
-using ModbusRegisterViewer.ViewModel.RegisterViewer;
 using ModbusTools.Common.ViewModel;
-using Unme.Common;
 using System.Windows;
 using System.Diagnostics;
 
@@ -254,17 +251,11 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
         {
             try
             {
-                if (_writer != null)
-                {
-                    //Console.WriteLine("Samples: {0}", _writer.SampleCount);
-                }
-
                 if (_listener != null)
                 {
                     //When a message is received
                     _listener.Sample -= OnSample;
-
-                    DisposableUtility.Dispose(ref _listener);
+                    _listener.Dispose();
                 }
 
                 if (_port != null)
@@ -274,14 +265,14 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
                         _port.DiscardInBuffer();
                     //}
 
-                    DisposableUtility.Dispose(ref _port);
+                    _port.Dispose();
                 }
 
-                //Ditch the writer
-                DisposableUtility.Dispose(ref _writer);
+                if (_writer != null)
+                {
+                    _writer.Dispose();
+                }
 
-                //Console.WriteLine("Close Completed");
-                
                 if (!string.IsNullOrWhiteSpace(_capturePath))
                 {
                     Open(_capturePath);

@@ -1,10 +1,7 @@
-﻿using Modbus.Utility;
-using ModbusRegisterViewer.ViewModel.Sniffer;
+﻿using ModbusRegisterViewer.ViewModel.Sniffer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ModbusRegisterViewer.Model.Sniffer;
 
 namespace ModbusRegisterViewer.Model

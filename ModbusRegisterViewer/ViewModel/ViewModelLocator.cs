@@ -12,7 +12,6 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using ModbusRegisterViewer.ViewModel.SlaveSimulator;
@@ -59,14 +58,6 @@ namespace ModbusRegisterViewer.ViewModel
             if (!SimpleIoc.Default.IsRegistered<IMessageBoxService>())
             {
                 SimpleIoc.Default.Register<IMessageBoxService>(() => new MessageBoxService());
-            }
-        }
-
-        public RegisterViewerViewModel RegisterViewer
-        {
-            get
-            {
-                return new RegisterViewerViewModel(new MessageBoxService());
             }
         }
 

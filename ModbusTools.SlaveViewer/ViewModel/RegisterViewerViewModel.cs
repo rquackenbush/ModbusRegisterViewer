@@ -6,7 +6,6 @@ using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
-using FtdAdapter;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;

@@ -34,26 +34,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FtdAdapter">
-      <HintPath>..\packages\NModbus.1.11.0.0\lib\FtdAdapter.dll</HintPath>
-    </Reference>
     <Reference Include="GalaSoft.MvvmLight.Extras.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="Modbus">
-      <HintPath>..\packages\NModbus.1.11.0.0\lib\Modbus.dll</HintPath>
-    </Reference>
-    <Reference Include="Modbus.Extensions">
-      <HintPath>..\packages\NModbus.1.11.0.0\lib\Modbus.Extensions.dll</HintPath>
+    <Reference Include="NModbus4">
+      <HintPath>..\packages\NModbus4.2.0.5548.32383\lib\net40\NModbus4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,9 +59,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="Unme.Common">
-      <HintPath>..\packages\NModbus.1.11.0.0\lib\Unme.Common.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -107,8 +95,6 @@
     <Compile Include="IPreferencesExtensions.cs" />
     <Compile Include="ModbusAdapatersViewModelExtensions.cs" />
     <Compile Include="ModbusMasterExtensions.cs" />
-    <Compile Include="Model\RtuMasterContext.cs" />
-    <Compile Include="Model\RtuMasterContextFactory.cs" />
     <Compile Include="Model\SerialMasterContext.cs" />
     <Compile Include="Model\SerialMasterContextFactory.cs" />
     <Compile Include="OperationAttempter.cs" />
@@ -130,7 +116,6 @@
     <Compile Include="Services\IMessageBoxServiceExtensions.cs" />
     <Compile Include="Services\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
-    <Compile Include="ViewModel\FtdModbusAdapterFactory.cs" />
     <Compile Include="ViewModel\ModbusAdaptersViewModel.cs" />
     <Compile Include="ViewModel\SerialPortModbusAdapterFactory.cs" />
     <Compile Include="View\ModbusAdapterSelector.xaml.cs">

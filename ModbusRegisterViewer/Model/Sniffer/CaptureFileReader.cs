@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unme.Common;
 
 namespace ModbusRegisterViewer.Model
 {
@@ -74,8 +69,11 @@ namespace ModbusRegisterViewer.Model
 
         public void Dispose()
         {
-            DisposableUtility.Dispose(ref _file);
-            DisposableUtility.Dispose(ref _reader);
+            if (_file != null)
+                _file.Dispose();
+
+            if (_reader != null)
+                _reader.Dispose();
         }
     }
 }

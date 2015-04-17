@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Modbus.IO;
-using Modbus.Device;
-using Unme.Common;
 
 namespace ModbusRegisterViewer.Model
 {
@@ -24,7 +18,7 @@ namespace ModbusRegisterViewer.Model
     {
         public event EventHandler<SampleEventArgs> Sample;
 
-        private IStreamResource _streamResource;
+        private readonly IStreamResource _streamResource;
 
         public PromiscuousListener(IStreamResource streamResource)
         {
@@ -46,7 +40,7 @@ namespace ModbusRegisterViewer.Model
                         byte sample = _streamResource.ReadSingleByte();
 
                         //Raise the event
-                        this.Sample.Raise(this, new SampleEventArgs(sample));
+                        RaiseSampleEvent(sample);
                     }
 
                     catch (IOException)
@@ -71,10 +65,23 @@ namespace ModbusRegisterViewer.Model
                 }
             }
         }
+
+        private void RaiseSampleEvent(byte data)
+        {
+            var sample = Sample;
+
+            if (sample == null)
+                return;
+
+            sample(this, new SampleEventArgs(data));
+        }
         
         public void Dispose()
         {
-            DisposableUtility.Dispose(ref _streamResource);
+            if (_streamResource != null)
+            {
+                _streamResource.Dispose();
+            }
         }
     }
 }

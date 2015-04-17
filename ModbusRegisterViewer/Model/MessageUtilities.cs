@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Modbus.Utility;
-using Unme.Common;
+using System.Linq;
 
 namespace ModbusRegisterViewer.Model
 {
@@ -62,7 +58,7 @@ namespace ModbusRegisterViewer.Model
 
         public static ushort NetworkBytesToUInt16(byte[] message, int bufferPosition)
         {
-            var bytes = message.Slice(bufferPosition, 2).ToArray();
+            var bytes = message.Skip(bufferPosition).Take(2).ToArray();
 
             return ModbusUtility.NetworkBytesToHostUInt16(bytes)[0];
         }
