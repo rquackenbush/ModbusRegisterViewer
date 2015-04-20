@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using GalaSoft.MvvmLight;
 using ModbusTools.SlaveViewer.Model;
 
@@ -75,11 +76,44 @@ namespace ModbusTools.SlaveViewer.ViewModel
         public string Hex
         {
             get { return string.Format("0x{0:x4}", _value); }
+            set
+            {
+                ushort converted;
+
+                if (value != null)
+                {
+                    value = value.Replace("0x", "");
+                }
+
+                if (ushort.TryParse(value, NumberStyles.AllowHexSpecifier | NumberStyles.HexNumber, null, out converted))
+                {
+                    Value = converted;
+                }
+                else
+                {
+                    RaisePropertyChanged();
+                }
+            }
         }
 
         public string Binary
         {
             get { return Convert.ToString(_value, 2).PadLeft(16, '0').Insert(8, " "); }
+            set
+            {
+                try
+                {
+                    if (value != null)
+                        value = value.Replace(" ", "");
+
+                    Value = Convert.ToUInt16(value, 2);
+                }
+                catch (Exception)
+                {
+                    RaisePropertyChanged();
+                }
+                
+            }
         }
 
         public short Signed

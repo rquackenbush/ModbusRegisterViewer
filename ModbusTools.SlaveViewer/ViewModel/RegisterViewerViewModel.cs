@@ -7,7 +7,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Win32;
 using Modbus.Device;
@@ -38,8 +38,6 @@ namespace ModbusTools.SlaveViewer.ViewModel
         private readonly object _communicationLock = new object();
         private bool _isRunning;
 
-        //private RegisterTypeViewModel _registerType;
-        //private byte _slaveAddress;
         private ushort _startingRegister;
         private ushort _numberOfregisters;
         private bool _writeIndividually;
