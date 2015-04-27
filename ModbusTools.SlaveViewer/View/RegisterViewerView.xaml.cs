@@ -21,12 +21,12 @@ namespace ModbusTools.SlaveViewer.View
             var messageBoxService = new MessageBoxService(this);
             var preferences = new Preferences(preferencesPath);
 
-            DataContext = new RegisterViewerViewModel(messageBoxService, preferences);
+            DataContext = new SlaveExplorerViewModel(messageBoxService, preferences);
         }
 
         private void RegisterViewerView_OnClosed(object sender, EventArgs e)
         {
-            var viewModel = DataContext as RegisterViewerViewModel;
+            var viewModel = DataContext as SlaveExplorerViewModel;
 
             if (viewModel != null)
             {

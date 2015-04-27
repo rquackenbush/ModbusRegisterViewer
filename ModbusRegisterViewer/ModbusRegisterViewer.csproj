@@ -170,7 +170,7 @@
     <Compile Include="ViewModel\SlaveSimulator\ActivityLogViewModel.cs" />
     <Compile Include="ViewModel\AdapterViewModel.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
-    <Compile Include="ViewModel\SlaveSimulator\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\SlaveSimulator\SlaveSimulatorRegisterViewModel.cs" />
     <Compile Include="ViewModel\Sniffer\PacketsExporter.cs" />
     <Compile Include="ViewModel\Sniffer\PacketViewModel.cs" />
     <Compile Include="ViewModel\ReadWrite.cs" />
@@ -180,7 +180,6 @@
     <Compile Include="ViewModel\SlaveSimulator\SlaveSimulatorViewModel.cs" />
     <Compile Include="ViewModel\Sniffer\SnifferViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="ViewModel\RegisterViewer\WriteableRegisterViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>

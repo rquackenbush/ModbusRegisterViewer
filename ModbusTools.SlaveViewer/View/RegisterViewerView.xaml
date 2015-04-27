@@ -82,7 +82,7 @@
                 <xctk:IntegerUpDown Minimum="0" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveAddress}"/>
 
                 <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="0" Grid.Row="1">Starting Address</TextBlock>
-                <xctk:IntegerUpDown Minimum="1" Maximum="65536"  Grid.Column="1" Grid.Row="1" MinWidth="60" Value="{Binding Path=StartingRegister}" />
+                <xctk:IntegerUpDown Minimum="1" Maximum="65536"  Grid.Column="1" Grid.Row="1" MinWidth="60" Value="{Binding Path=StartingRegisterNumber}" />
 
                 <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="0">Block Size</TextBlock>
                 <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="5" Grid.Row="0" MinWidth="60" Value="{Binding Path=BlockSize}" />

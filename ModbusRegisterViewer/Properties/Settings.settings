@@ -17,7 +17,7 @@
     <Setting Name="AdapterSerialNumber" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SlaveSimulatorAdapterSerialNumber" Type="System.String" Scope="User">
+    <Setting Name="SlaveSimulatorSerialPortName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SlaveSimulatorSlaveAddress" Type="System.Int32" Scope="User">

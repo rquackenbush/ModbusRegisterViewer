@@ -5,7 +5,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Background="{StaticResource WindowBackground}"
         DataContext="{Binding Source={StaticResource Locator}, Path=SlaveSimulator}"
-        Title="Modbus Slave Device Simulator" Height="388" Width="720">
+        Title="Modbus Slave Device Simulator" Height="388" Width="720" Icon="/ModbusRegisterViewer;component/Images/Gear.ico">
     <Window.Resources>
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
@@ -34,6 +34,9 @@
             <Separator/>
             <TextBlock VerticalAlignment="Center" Margin="2">Modbus Slave Id:</TextBlock>
             <xctk:IntegerUpDown Minimum="1" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveAddress}"/>
+            <Grid>
+                <CheckBox IsChecked="{Binding Path=OnlyShowTouched}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display only registers that have been requested / written to.">Active Only?</CheckBox>
+            </Grid>
         </ToolBar>
         
         <Grid Grid.Row="1">
@@ -43,11 +46,12 @@
                     <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=HoldingRegisters}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
-                            <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
                             <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
                             <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
                             <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
-                            <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
+                            <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
@@ -56,11 +60,12 @@
                     <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=InputRegisters}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
-                            <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
                             <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
                             <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
                             <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
-                            <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
+                            <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
@@ -89,8 +94,8 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Style="{StaticResource LabelStyle}">Adapter:</TextBlock>
-            <ComboBox Grid.Column="1" Margin="4" MinWidth="200" ItemsSource="{Binding Path=Adapters}" SelectedItem="{Binding Path=SelectedAdapter}" DisplayMemberPath="Description"  VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
-            <Button Grid.Column="2" Command="{Binding Path=RefreshAdaptersCommand}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ComboBox Grid.Column="1" Margin="4" MinWidth="200" ItemsSource="{Binding Path=PortNames}" SelectedItem="{Binding Path=PortName}"  VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+            <Button Grid.Column="2" Command="{Binding Path=RefreshPortNamesCommand}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="/Images/Refresh.png" Width="16" ></Image>
             </Button>
         </Grid>

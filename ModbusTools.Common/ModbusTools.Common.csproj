@@ -91,6 +91,7 @@
     <Compile Include="DataContractUtilities.cs" />
     <Compile Include="DifferentialPreferences.cs" />
     <Compile Include="FileUtilities.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="IMasterContext.cs" />
     <Compile Include="IMasterContextFactory.cs" />
     <Compile Include="IModbusAdapterFactory.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="IPreferencesExtensions.cs" />
     <Compile Include="ModbusAdapatersViewModelExtensions.cs" />
     <Compile Include="ModbusMasterExtensions.cs" />
+    <Compile Include="Model\DescriptionStore.cs" />
     <Compile Include="Model\SerialMasterContext.cs" />
     <Compile Include="Model\SerialMasterContextFactory.cs" />
     <Compile Include="OperationAttempter.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="ViewModel\ModbusAdaptersViewModel.cs" />
     <Compile Include="ViewModel\SerialPortModbusAdapterFactory.cs" />
+    <Compile Include="ViewModel\WriteableRegisterViewModel.cs" />
     <Compile Include="View\ModbusAdapterSelector.xaml.cs">
       <DependentUpon>ModbusAdapterSelector.xaml</DependentUpon>
     </Compile>

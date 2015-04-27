@@ -51,7 +51,7 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
         {
             get
             {
-                switch (this.Type)
+                switch (Type)
                 {
                     case ModbusDataType.Coil:
                         return "Coil Data";

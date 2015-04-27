@@ -13,6 +13,7 @@ using Microsoft.Win32;
 using Modbus.Device;
 using ModbusRegisterViewer.Model;
 using ModbusTools.Common;
+using ModbusTools.Common.Model;
 using ModbusTools.Common.Services;
 using ModbusTools.Common.ViewModel;
 using ModbusTools.SlaveViewer.Model;
@@ -22,27 +23,18 @@ namespace ModbusTools.SlaveViewer.ViewModel
     /// <summary>
     /// This class contains properties that the main View can data bind to.
     /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
     /// </summary>
-    public class RegisterViewerViewModel : ViewModelBase
+    public class SlaveExplorerViewModel : ViewModelBase
     {
         private const byte DefaultBlockSize = 125;
 
         private readonly object _communicationLock = new object();
         private bool _isRunning;
 
-        private ushort _startingRegister;
         private ushort _numberOfregisters;
         private bool _writeIndividually;
         private byte _blockSize = DefaultBlockSize;
-        private ObservableCollection<WriteableRegisterViewModel> _registers;
+        private ObservableCollection<SlaveExplorerRegisterViewModel> _registers;
 
         private readonly Timer _autoRefreshTimer = new Timer(2000);
 
@@ -65,7 +57,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public RegisterViewerViewModel(IMessageBoxService messageBoxService, IPreferences preferences)
+        public SlaveExplorerViewModel(IMessageBoxService messageBoxService, IPreferences preferences)
         {
             _messageBoxService = messageBoxService;
             _preferences = preferences;
@@ -81,18 +73,18 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
             if (IsInDesignMode)
             {
-                this.Registers = new ObservableCollection<WriteableRegisterViewModel>()
+                this.Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>()
                 {
-                    new WriteableRegisterViewModel(1000, 0, _descriptionStore),
-                    new WriteableRegisterViewModel(1001, 20, _descriptionStore),
-                    new WriteableRegisterViewModel(1002, 23, _descriptionStore),
-                    new WriteableRegisterViewModel(1003, 24, _descriptionStore),
-                    new WriteableRegisterViewModel(1004, 25, _descriptionStore),
+                    new SlaveExplorerRegisterViewModel(1000, 0, _descriptionStore),
+                    new SlaveExplorerRegisterViewModel(1001, 20, _descriptionStore),
+                    new SlaveExplorerRegisterViewModel(1002, 23, _descriptionStore),
+                    new SlaveExplorerRegisterViewModel(1003, 24, _descriptionStore),
+                    new SlaveExplorerRegisterViewModel(1004, 25, _descriptionStore),
                 };
             }
 
             SlaveAddress = _registerViewerPreferences.SlaveAddress;
-            StartingRegister = _registerViewerPreferences.StartingRegister;
+            StartingRegisterNumber = _registerViewerPreferences.StartingRegister;
             NumberOfRegisters = _registerViewerPreferences.NumberOfRegisters;
 
             RegisterType = _registerTypes.FirstOrDefault(rt => rt.RegisterType == _registerViewerPreferences.RegisterType);
@@ -124,40 +116,41 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         private void FillInRegisters()
         {
-            Dictionary<ushort, WriteableRegisterViewModel> existingValues;
+            Dictionary<ushort, SlaveExplorerRegisterViewModel> existingValues;
 
             if (this.Registers == null)
             {
-                existingValues = new Dictionary<ushort, WriteableRegisterViewModel>();
+                existingValues = new Dictionary<ushort, SlaveExplorerRegisterViewModel>();
             }
             else
             {
-                existingValues = this.Registers.ToDictionary(r => r.RegisterNumber, r => r);
+                existingValues = this.Registers.ToDictionary(r => r.RegisterIndex, r => r);
             }
 
             //This is where the new reigsters will be
-            var newRegisters = new ObservableCollection<WriteableRegisterViewModel>();
+            var newRegisters = new ObservableCollection<SlaveExplorerRegisterViewModel>();
 
             
             //This is the register number for each iteration
-            var currentRegisterNumber = StartingRegister;
+            //var currentRegisterIndex = StartingRegisterIndex;
 
             //Iterate through the new number of registers
-            for (int registerIndex = 0; registerIndex < NumberOfRegisters; registerIndex++)
+            for (int index = 0; index < NumberOfRegisters; index++)
             {
-                WriteableRegisterViewModel registerViewModel;
+                SlaveExplorerRegisterViewModel registerViewModel;
 
-                if (!existingValues.TryGetValue(currentRegisterNumber, out registerViewModel))
+                var registerIndex = (ushort)(index + StartingRegisterIndex);
+
+                if (!existingValues.TryGetValue(registerIndex, out registerViewModel))
                 {
-                    registerViewModel = new WriteableRegisterViewModel(currentRegisterNumber, 0, _descriptionStore);
+                    registerViewModel = new SlaveExplorerRegisterViewModel(registerIndex, 0, _descriptionStore);
                 }
                     
                 newRegisters.Add(registerViewModel);
 
-                currentRegisterNumber++;
             }
 
-            this.Registers = newRegisters;
+            Registers = newRegisters;
         }
 
         private bool CanOpen()
@@ -179,8 +172,8 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
             var registerNumber = snapshot.StartingRegister;
 
-            this.Registers = new ObservableCollection<WriteableRegisterViewModel>(
-                snapshot.Registers.Select(v => new WriteableRegisterViewModel(registerNumber++, v, _descriptionStore))
+            this.Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>(
+                snapshot.Registers.Select(v => new SlaveExplorerRegisterViewModel(registerNumber++, v, _descriptionStore))
             );
         }
 
@@ -207,7 +200,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
                 {
                     RegisterType = RegisterType.RegisterType,
                     SlaveId = SlaveAddress,
-                    StartingRegister = (ushort) StartingRegister,
+                    StartingRegister = (ushort) StartingRegisterNumber,
                     Registers = Registers.Select(r => r.Value).ToArray()
                 };
 
@@ -262,7 +255,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
                         {
                             foreach (var register in changedRegisters)
                             {
-                                m.WriteSingleRegister(SlaveAddress, (ushort)(register.RegisterNumber - 1), register.Value);
+                                m.WriteSingleRegister(SlaveAddress, (ushort)(register.RegisterIndex), register.Value);
 
                                 register.IsDirty = false;
                             }        
@@ -272,7 +265,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
                 {
                     var data = this.Registers.Select(r => r.Value).ToArray();
 
-                    ExecuteComm(m => m.WriteMultipleRegisters(SlaveAddress, (ushort)(StartingRegister - 1), data, BlockSize));
+                    ExecuteComm(m => m.WriteMultipleRegisters(SlaveAddress, StartingRegisterIndex, data, BlockSize));
 
                     MarkRegistersClean();
                 }
@@ -301,7 +294,8 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         public void Closed()
         {
-            _descriptionStore.Save();        }
+            _descriptionStore.Save();        
+        }
 
         /// <summary>
         /// Executes code against a communication context
@@ -334,9 +328,8 @@ namespace ModbusTools.SlaveViewer.ViewModel
             if (RegisterType == null)
                 return;
 
-
             _registerViewerPreferences.SlaveAddress = SlaveAddress;
-            _registerViewerPreferences.StartingRegister = StartingRegister;
+            _registerViewerPreferences.StartingRegister = StartingRegisterNumber;
             _registerViewerPreferences.NumberOfRegisters = NumberOfRegisters;
             _registerViewerPreferences.RegisterType = RegisterType.RegisterType;
 
@@ -366,7 +359,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
                             case Common.RegisterType.Input:
 
                                 results = m.ReadInputRegisters(SlaveAddress,
-                                                                        (ushort) (StartingRegister - 1),
+                                                                        StartingRegisterIndex,
                                                                         NumberOfRegisters,
                                                                         BlockSize);
 
@@ -375,7 +368,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
                             case Common.RegisterType.Holding:
 
                                 results = m.ReadHoldingRegisters(SlaveAddress,
-                                                                                (ushort)(StartingRegister - 1),
+                                                                                StartingRegisterIndex,
                                                                                 NumberOfRegisters,
                                                                                 this.BlockSize);
                                 
@@ -388,13 +381,13 @@ namespace ModbusTools.SlaveViewer.ViewModel
                         }
                     });
 
-                ushort registerNumber = StartingRegister;
+                ushort registerIndex = StartingRegisterIndex;
 
                 if (results != null)
                 {
-                    var rows = results.Select(r => new WriteableRegisterViewModel(registerNumber++, r, _descriptionStore));
+                    var rows = results.Select(r => new SlaveExplorerRegisterViewModel(registerIndex++, r, _descriptionStore));
 
-                    Registers = new ObservableCollection<WriteableRegisterViewModel>(rows);
+                    Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>(rows);
                 }
 
             }
@@ -427,7 +420,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
             }
         }
 
-        public ObservableCollection<WriteableRegisterViewModel> Registers
+        public ObservableCollection<SlaveExplorerRegisterViewModel> Registers
         {
             get { return _registers; }
             private set
@@ -506,14 +499,26 @@ namespace ModbusTools.SlaveViewer.ViewModel
             }
         }
 
-        public ushort StartingRegister
+
+        private ushort _startingRegisterIndex;
+        public ushort StartingRegisterIndex
         {
-            get { return _startingRegister; }
+            get { return _startingRegisterIndex; }
             set
             {
-                _startingRegister = value;
-                RaisePropertyChanged(() => StartingRegister);
+                _startingRegisterIndex = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(() => StartingRegisterNumber);
                 FillInRegisters();
+            }
+        }
+
+        public ushort StartingRegisterNumber
+        {
+            get { return (ushort)(StartingRegisterIndex + 1); }
+            set
+            {
+                StartingRegisterIndex = (ushort)(value - 1);
             }
         }
 
@@ -523,7 +528,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
             set
             {
                 _numberOfregisters = value;
-                RaisePropertyChanged(() => NumberOfRegisters);
+                RaisePropertyChanged();
                 FillInRegisters();
             }
         }

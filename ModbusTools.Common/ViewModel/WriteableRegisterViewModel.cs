@@ -1,30 +1,43 @@
 ﻿using System;
 using System.Globalization;
 using GalaSoft.MvvmLight;
-using ModbusTools.SlaveViewer.Model;
 
-namespace ModbusTools.SlaveViewer.ViewModel
+namespace ModbusTools.Common.ViewModel
 {
     public class WriteableRegisterViewModel : ViewModelBase 
     {
-        private readonly ushort _registerNumber;
+        private readonly ushort _registerIndex;
         private ushort _value;
         private bool _isDirty;
-        private readonly DescriptionStore _descriptionStore;
-        
-        internal WriteableRegisterViewModel(ushort registerNumber, ushort value, DescriptionStore descriptionStore)
+
+        public WriteableRegisterViewModel(ushort registerIndex)
         {
-            _registerNumber = registerNumber;
+            _registerIndex = registerIndex;
+        }
+        
+        public WriteableRegisterViewModel(ushort registerIndex, ushort value) 
+            : this(registerIndex)
+        {
             _value = value;
-            _descriptionStore = descriptionStore;
         }
 
+        /// <summary>
+        /// Gets the 0 based index of the register.
+        /// </summary>
+        public ushort RegisterIndex
+        {
+            get { return _registerIndex; }
+        }
+
+        /// <summary>
+        /// Gets the 0 or 1 based register number based on preferences.
+        /// </summary>
         public ushort RegisterNumber
         {
-            get { return _registerNumber; }
+            get { return (ushort)(_registerIndex + 1); }
         }
 
-        public ushort Value
+        public virtual ushort Value
         {
             get { return _value; }
             set
@@ -33,21 +46,26 @@ namespace ModbusTools.SlaveViewer.ViewModel
                 {
                     _value = value;
 
-                    RaisePropertyChanged(() => Value);
-                    RaisePropertyChanged(() => MSB);
-                    RaisePropertyChanged(() => LSB);
-                    RaisePropertyChanged(() => Hex);
-                    RaisePropertyChanged(() => Binary);
-                    RaisePropertyChanged(() => Signed);
+                    OnValueUpdated();
 
-                    this.IsDirty = true;
+                    IsDirty = true;
                 }
             }
         }
 
+        protected void OnValueUpdated()
+        {
+            RaisePropertyChanged(() => Value);
+            RaisePropertyChanged(() => MSB);
+            RaisePropertyChanged(() => LSB);
+            RaisePropertyChanged(() => Hex);
+            RaisePropertyChanged(() => Binary);
+            RaisePropertyChanged(() => Signed);
+        }
+
         public byte MSB
         {
-            get { return (byte) (_value >> 8); }
+            get { return (byte) (Value >> 8); }
             set
             {
                 ushort temp = value;
@@ -56,26 +74,26 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
                 temp += LSB;
 
-                this.Value = temp;
+                Value = temp;
             }
         }
 
         public byte LSB
         {
-            get { return (byte) _value; }
+            get { return (byte) Value; }
             set
             {
                 ushort temp = value;
 
                 temp += MSB;
                 
-                this.Value = temp;
+                Value = temp;
             }
         }
 
         public string Hex
         {
-            get { return string.Format("0x{0:x4}", _value); }
+            get { return string.Format("0x{0:x4}", Value); }
             set
             {
                 ushort converted;
@@ -98,7 +116,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         public string Binary
         {
-            get { return Convert.ToString(_value, 2).PadLeft(16, '0').Insert(8, " "); }
+            get { return Convert.ToString(Value, 2).PadLeft(16, '0').Insert(8, " "); }
             set
             {
                 try
@@ -118,7 +136,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         public short Signed
         {
-            get { return (short) this.Value; }
+            get { return (short) Value; }
         }
 
         public bool IsDirty
@@ -134,19 +152,6 @@ namespace ModbusTools.SlaveViewer.ViewModel
             }
         }
 
-        public string Description
-        {
-            get { return _descriptionStore[_registerNumber]; }
-            set
-            {
-                _descriptionStore[_registerNumber] = value;
-                RaisePropertyChanged(() => Description);
-            }
-        }
-
-        internal void RaiseDescriptionPropertyChanged()
-        {
-            RaisePropertyChanged(() => Description);
-        }
+       
     }
 }

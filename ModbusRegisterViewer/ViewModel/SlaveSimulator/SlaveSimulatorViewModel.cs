@@ -1,287 +1,357 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Threading;
 using Modbus.Data;
 using Modbus.Device;
+using ModbusRegisterViewer.Properties;
 using ModbusTools.Common;
-using ModbusTools.Common.ViewModel;
+using System.Windows.Data;
 
 namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 {
     public class SlaveSimulatorViewModel : ViewModelBase
     {
-        //private readonly ModbusAdaptersViewModel _adapters = new ModbusAdaptersViewModel();
-        //private IModbusAdapterFactory _selectedAdapter;
-        ////private FtdUsbPort _port;
-        //private ModbusSerialSlave _slave;
-        //private int? _slaveAddress;
-        //private readonly ObservableCollection<ActivityLogViewModel>  _activityLog = new ObservableCollection<ActivityLogViewModel>();
+        private SerialPort _port;
+        private ModbusSerialSlave _slave;
+        private int? _slaveAddress;
+        private readonly ObservableCollection<ActivityLogViewModel> _activityLog = new ObservableCollection<ActivityLogViewModel>();
 
-        //private readonly DataStore _dataStore;
-        //private List<RegisterViewModel> _holdingRegisters;
-        //private List<RegisterViewModel> _inputRegisters;
+        private readonly DataStore _dataStore;
 
-        //public SlaveSimulatorViewModel()
-        //{
-        //    this.StartCommand = new RelayCommand(Start, CanStart);
-        //    this.StopCommand = new RelayCommand(Stop, CanStop);
-        //    this.ClearCommand = new RelayCommand(Clear, CanClear);
+        private readonly ObservableCollection<SlaveSimulatorRegisterViewModel> _holdingRegisters;
+        private readonly ObservableCollection<SlaveSimulatorRegisterViewModel> _inputRegisters;
 
-        //    var settings = Properties.Settings.Default;
+        private readonly ICollectionView _holdingView;
+        private readonly ICollectionView _inputView;
 
-        //    this.SlaveAddress = settings.SlaveSimulatorSlaveAddress;
-        //    SelectAdapter(settings.SlaveSimulatorAdapterSerialNumber);
+        public SlaveSimulatorViewModel()
+        {
+            StartCommand = new RelayCommand(Start, CanStart);
+            StopCommand = new RelayCommand(Stop, CanStop);
+            ClearCommand = new RelayCommand(Clear, CanClear);
 
-        //    //Create the data store
-        //    _dataStore = DataStoreFactory.CreateDefaultDataStore();
+            var settings = Settings.Default;
 
-        //    //Here are the listeners
-        //    _dataStore.DataStoreReadFrom += DataStoreOnDataStoreReadFrom;
-        //    _dataStore.DataStoreWrittenTo += DataStoreOnDataStoreWrittenTo;
+            SlaveAddress = settings.SlaveSimulatorSlaveAddress;
 
-        //    //Set up the holding registers
-        //    {
-        //        ushort registerNumber = 0;
+            //Create the data store
+            _dataStore = DataStoreFactory.CreateDefaultDataStore();
 
-        //        this.HoldingRegisters =
-        //            _dataStore.HoldingRegisters.Select(
-        //                r => new RegisterViewModel(_dataStore.HoldingRegisters, registerNumber++)).ToList();
-        //    }
+            //Here are the listeners
+            _dataStore.DataStoreReadFrom += DataStoreOnDataStoreReadFrom;
+            _dataStore.DataStoreWrittenTo += DataStoreOnDataStoreWrittenTo;
 
-        //    //Set up the input registers
-        //    {
-        //        ushort registerNumber = 0;
+            //Set up the holding registers
+            {
+                ushort registerNumber = 0;
 
-        //        this.InputRegisters =
-        //            _dataStore.InputRegisters.Select(
-        //                r => new RegisterViewModel(_dataStore.InputRegisters, registerNumber++)).ToList();
-        //    }
-        //}
+                _holdingRegisters =
+                    _dataStore.HoldingRegisters.Select(
+                        r => new SlaveSimulatorRegisterViewModel(_dataStore.HoldingRegisters, registerNumber++)).ToObservableCollection();
+            }
 
-        //public ICommand StartCommand { get; private set; }
-        //public ICommand StopCommand { get; private set; }
-        //public ICommand RefreshAdaptersCommand { get; private set; }
-        //public ICommand ClearCommand { get; private set; }
+            //Set up the input registers
+            {
+                ushort registerNumber = 0;
 
-        //private void Clear()
-        //{
-        //    this.ActivityLog.Clear();
-        //}
+                _inputRegisters =
+                    _dataStore.InputRegisters.Select(
+                        r => new SlaveSimulatorRegisterViewModel(_dataStore.InputRegisters, registerNumber++)).ToObservableCollection();
+            }
 
-        //private bool CanClear()
-        //{
-        //    return this.ActivityLog.Count > 0;
-        //}
+            _holdingView = CollectionViewSource.GetDefaultView(_holdingRegisters);
+            _inputView = CollectionViewSource.GetDefaultView(_inputRegisters);
 
-        //private void Start()
-        //{
-        //    var settings = Properties.Settings.Default;
+            _holdingView.Filter = RegisterFilter;
+            _inputView.Filter = RegisterFilter;
 
-        //    settings.SlaveSimulatorSlaveAddress = this.SlaveAddress ?? 0;
-        //    settings.SlaveSimulatorAdapterSerialNumber = this.SelectedAdapter == null
-        //        ? ""
-        //        : this.SelectedAdapter.DisplayName;
+            RefreshPortNamesCommand = new RelayCommand(RefreshPortNames, CanRefreshPortNames);
 
-        //    settings.Save();
+            RefreshPortNames();
 
-        //    var factory = _adapters.GetFactory();
+            if (PortNames != null)
+            {
+                var existing = PortNames.FirstOrDefault(p => p == settings.SlaveSimulatorSerialPortName);
 
+                if (existing == null)
+                {
+                    PortName = PortNames.FirstOrDefault();
+                }
+                else
+                {
+                    PortName = existing;
+                }
+            }
+        }
 
-        //    IMasterContext context = factory.Create();
+        private bool RegisterFilter(object item)
+        {
+            var register = item as SlaveSimulatorRegisterViewModel;
 
+            if (register == null)
+                return true;
 
+            if (!OnlyShowTouched)
+                return true;
 
-        //    ModbusSerialSlave.CreateRtu(SlaveAddress, context.Master.Transport.)
+            return register.HasBeenTouched;
+        }
 
-        //    _port = new FtdUsbPort();
+        public ICommand StartCommand { get; private set; }
+        public ICommand StopCommand { get; private set; }
+        public ICommand RefreshPortNamesCommand { get; private set; }
+        public ICommand ClearCommand { get; private set; }
 
-        //    // configure serial port
-        //    _port.BaudRate = 19200;
-        //    _port.DataBits = 8;
-        //    _port.Parity = FtdParity.Even;
-        //    _port.StopBits = FtdStopBits.One;
+        private void Clear()
+        {
+            ActivityLog.Clear();
+        }
 
-        //    _port.OpenBySerialNumber(this.SelectedAdapter.SerialNumber);
+        private bool CanClear()
+        {
+            return ActivityLog.Count > 0;
+        }
 
-        //    _port.ReadTimeout = 2000;
-        //    _port.WriteTimeout = 2000;
+        private void Start()
+        {
+            var settings = Settings.Default;
 
-        //    var slaveAddresss = (byte) this.SlaveAddress;
+            if (!SlaveAddress.HasValue)
+                return;
 
-        //    _slave = ModbusSerialSlave.CreateRtu(slaveAddresss, _port);
+            settings.SlaveSimulatorSlaveAddress = SlaveAddress ?? 0;
+            settings.SlaveSimulatorSerialPortName = PortName;
 
-        //    _slave.DataStore = _dataStore;
+            settings.Save();
 
-        //    var task = new Task(() =>
-        //    {
-        //        try
-        //        {
-        //            _slave.Listen();
-        //        }
-        //        catch (IOException)
-        //        {
-        //            //We'll just ignore this.
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex.ToString());
-        //        }
+            _port = new SerialPort(PortName);
 
-        //        Stop();
+            // configure serial port
+            _port.BaudRate = 19200;
+            _port.DataBits = 8;
+            _port.Parity = Parity.Even;
+            _port.StopBits = StopBits.One;
 
-        //        DispatcherHelper.CheckBeginInvokeOnUI(CommandManager.InvalidateRequerySuggested);
+            _port.Open();
+
+            //_port.ReadTimeout = 2000;
+            //_port.WriteTimeout = 2000;
+
+            var slaveAddresss = (byte) SlaveAddress;
+
+            _slave = ModbusSerialSlave.CreateRtu(slaveAddresss, _port);
+
+            _slave.DataStore = _dataStore;
+
+            var task = new Task(() =>
+            {
+                try
+                {
+                    _slave.Listen();
+                }
+                catch (IOException)
+                {
+                    //We'll just ignore this.
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+                Stop();
+
+                DispatcherHelper.CheckBeginInvokeOnUI(CommandManager.InvalidateRequerySuggested);
                    
-        //    });
+            });
 
-        //    task.Start();
-        // }
+            task.Start();
+         }
 
-        //private bool CanStart()
-        //{
-        //    return _port == null && this.SelectedAdapter != null && this.SlaveAddress.HasValue;
-        //}
+        void RefreshPortNames()
+        {
+            this.PortNames = SerialPort.GetPortNames();
+        }
 
-        //private void Stop()
-        //{
-        //    if (_port != null)
-        //    {
-        //        _port.ReadTimeout = 1;
-        //        _port.WriteTimeout = 1;
-        //        _port.Dispose();
+        bool CanRefreshPortNames()
+        {
+            return _port == null;
+        }
 
-        //        _port = null;
-        //    }
+        private bool CanStart()
+        {
+            return _port == null && !string.IsNullOrWhiteSpace(PortName ) && SlaveAddress.HasValue;
+        }
 
-        //    if (_slave != null)
-        //    {
-        //        _slave.Dispose();
+        private void Stop()
+        {
+            if (_port != null)
+            {
+                _port.ReadTimeout = 1;
+                _port.WriteTimeout = 1;
+                _port.Dispose();
 
-        //        _slave = null;
-        //    }
-        //}
+                _port = null;
+            }
 
-        //public int? SlaveAddress
-        //{
-        //    get { return _slaveAddress; }
-        //    set
-        //    {
-        //        _slaveAddress = value;
-        //        RaisePropertyChanged(() => SlaveAddress);
-        //    }
-        //}
+            if (_slave != null)
+            {
+                _slave.Dispose();
 
-        //private bool CanStop()
-        //{
-        //    return _port != null;
-        //}
+                _slave = null;
+            }
+        }
 
-        //private static ActivityLogViewModel CreateLog(DataStoreEventArgs args, ReadWrite readWrite)
-        //{
-        //    return new ActivityLogViewModel(DateTime.Now, args.ModbusDataType, args.StartAddress, args.Data, readWrite);
-        //}
+        public int? SlaveAddress
+        {
+            get { return _slaveAddress; }
+            set
+            {
+                _slaveAddress = value;
+                RaisePropertyChanged(() => SlaveAddress);
+            }
+        }
 
-        //private void DataStoreOnDataStoreWrittenTo(object sender, DataStoreEventArgs args)
-        //{
-        //    DispatcherHelper.CheckBeginInvokeOnUI(() =>
-        //    {
-        //        //Add it to the event log
-        //        this.ActivityLog.Add(CreateLog(args, ReadWrite.Write));
+        private bool CanStop()
+        {
+            return _port != null;
+        }
 
-        //        switch (args.ModbusDataType)
-        //        {
-        //            case ModbusDataType.InputRegister:
+        private static ActivityLogViewModel CreateLog(DataStoreEventArgs args, ReadWrite readWrite)
+        {
+            return new ActivityLogViewModel(DateTime.Now, args.ModbusDataType, args.StartAddress, args.Data, readWrite);
+        }
 
-        //                for (ushort registerIndex = args.StartAddress;
-        //                    registerIndex < args.StartAddress + args.Data.B.Count;
-        //                    registerIndex++)
-        //                {
-        //                    this.InputRegisters[registerIndex].OnValueUpdated();
-        //                }
+        private void DataStoreOnDataStoreWrittenTo(object sender, DataStoreEventArgs args)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                //Add it to the event log
+                ActivityLog.Add(CreateLog(args, ReadWrite.Write));
 
-        //                break;
+                switch (args.ModbusDataType)
+                {
+                    case ModbusDataType.InputRegister:
 
-        //            case ModbusDataType.HoldingRegister:
+                        for (ushort registerIndex = args.StartAddress;
+                            registerIndex < args.StartAddress + args.Data.B.Count;
+                            registerIndex++)
+                        {
+                            _inputRegisters[registerIndex].OnValueUpdated();
+                        }
 
-        //                for (ushort registerIndex = args.StartAddress;
-        //                    registerIndex < args.StartAddress + args.Data.B.Count;
-        //                    registerIndex++)
-        //                {
-        //                    this.HoldingRegisters[registerIndex].OnValueUpdated();
-        //                }
+                        DispatcherHelper.CheckBeginInvokeOnUI(() => _inputView.Refresh());
 
-        //                break;
-        //        }
+                        break;
 
-        //    });
-        //}
+                    case ModbusDataType.HoldingRegister:
 
-        //private void DataStoreOnDataStoreReadFrom(object sender, DataStoreEventArgs args)
-        //{
-        //    DispatcherHelper.CheckBeginInvokeOnUI(() => this.ActivityLog.Add(CreateLog(args, ReadWrite.Read)));
-        //}
+                        for (ushort registerIndex = args.StartAddress;
+                            registerIndex < args.StartAddress + args.Data.B.Count;
+                            registerIndex++)
+                        {
+                            _holdingRegisters[registerIndex].OnValueUpdated();
+                        }
 
+                        DispatcherHelper.CheckBeginInvokeOnUI(() => _holdingView.Refresh());
 
-        ///// <summary>
-        ///// Selects an adapter.
-        ///// </summary>
-        ///// <param name="name"></param>
-        //private void SelectAdapter(string name)
-        //{
-        //    var initialAdapter = this.Adapters.Adapters.FirstOrDefault(a => a.DisplayName == name);
+                        break;
+                }
 
-        //    if (initialAdapter == null)
-        //        initialAdapter = this.Adapters.Adapters.FirstOrDefault();
+            });
+        }
 
-        //    this.SelectedAdapter = initialAdapter;
-        //}
+        private void DataStoreOnDataStoreReadFrom(object sender, DataStoreEventArgs args)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() => ActivityLog.Add(CreateLog(args, ReadWrite.Read)));
 
-        //public ModbusAdaptersViewModel Adapters
-        //{
-        //    get { return _adapters; }
-        //}
+            switch (args.ModbusDataType)
+            {
+                case ModbusDataType.InputRegister:
 
-        //public ObservableCollection<ActivityLogViewModel> ActivityLog
-        //{
-        //    get { return _activityLog; }
-        //}
+                    for (ushort registerIndex = args.StartAddress;
+                           registerIndex < args.StartAddress + args.Data.B.Count;
+                           registerIndex++)
+                    {
+                        _inputRegisters[registerIndex].HasBeenTouched = true;
+                    }
 
-        //public List<RegisterViewModel> HoldingRegisters
-        //{
-        //    get { return _holdingRegisters; }
-        //    private set
-        //    {
-        //        _holdingRegisters = value;
-        //        RaisePropertyChanged(() => HoldingRegisters);
-        //    }
-        //}
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => _inputView.Refresh());
 
-        //public List<RegisterViewModel> InputRegisters
-        //{
-        //    get { return _inputRegisters; }
-        //    private set
-        //    {
-        //        _inputRegisters = value;
-        //        RaisePropertyChanged(() => InputRegisters);
-        //    }
-        //}
+                    break;
 
+                case ModbusDataType.HoldingRegister:
 
-        //public IModbusAdapterFactory SelectedAdapter
-        //{
-        //    get { return _selectedAdapter; }
-        //    set
-        //    {
-        //        _selectedAdapter = value;
-        //        RaisePropertyChanged(() => SelectedAdapter);
-        //    }
-        //}
+                    for (ushort registerIndex = args.StartAddress;
+                           registerIndex < args.StartAddress + args.Data.B.Count;
+                           registerIndex++)
+                    {
+                        _holdingRegisters[registerIndex].HasBeenTouched = true;
+                    }
 
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => _holdingView.Refresh());
+
+                    break;
+            }
+        }
+
+        public ObservableCollection<ActivityLogViewModel> ActivityLog
+        {
+            get { return _activityLog; }
+        }
+
+        public ICollectionView HoldingRegisters
+        {
+            get { return _holdingView; }
+        }
+
+        public ICollectionView InputRegisters
+        {
+            get { return _inputView; }
+        }
+
+        private string[] _portNames;
+        public string[] PortNames
+        {
+            get { return _portNames; }
+            private set
+            {
+                _portNames = value; 
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _portName;
+        public string PortName
+        {
+            get { return _portName; }
+            set
+            {
+                _portName = value; 
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool _onlyShowTouched;
+        public bool OnlyShowTouched
+        {
+            get { return _onlyShowTouched; }
+            set
+            {
+                _onlyShowTouched = value; 
+                RaisePropertyChanged();
+
+                _holdingView.Refresh();
+                _inputView.Refresh();
+            }
+        }
     }
 }

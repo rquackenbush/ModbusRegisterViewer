@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using ModbusTools.Common;
 
-namespace ModbusTools.SlaveViewer.Model
+namespace ModbusTools.Common.Model
 {
-    internal class DescriptionStore
+    public class DescriptionStore
     {
         private readonly IPreferences _preferences;
 
@@ -20,19 +19,19 @@ namespace ModbusTools.SlaveViewer.Model
             _preferences.Save();
         }
 
-        private string GetKey(ushort registerNumber)
+        private string GetKey(ushort registerIndex)
         {
-            return string.Format("{0}_{1}_{2}", this.DeviceAddress, this.RegisterType, registerNumber);
+            return string.Format("{0}_{1}_{2}", this.DeviceAddress, this.RegisterType, registerIndex);
         }
 
         public byte DeviceAddress { get; set; }
 
         public RegisterType RegisterType { get; set; }
 
-        public string this[ushort registerNumber]
+        public string this[ushort registerIndex]
         {
-            get { return _preferences[GetKey(registerNumber)]; }
-            set { _preferences[GetKey(registerNumber)] = value; }
+            get { return _preferences[GetKey(registerIndex)]; }
+            set { _preferences[GetKey(registerIndex)] = value; }
         }
     }
 }

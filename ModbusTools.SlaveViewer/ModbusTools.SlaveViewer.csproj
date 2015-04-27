@@ -87,7 +87,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\DescriptionStore.cs" />
     <Compile Include="Model\RegisterViewerPreferences.cs" />
     <Compile Include="Model\Snapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -104,8 +103,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModel\RegisterTypeViewModel.cs" />
-    <Compile Include="ViewModel\RegisterViewerViewModel.cs" />
-    <Compile Include="ViewModel\WriteableRegisterViewModel.cs" />
+    <Compile Include="ViewModel\SlaveExplorerViewModel.cs" />
+    <Compile Include="ViewModel\SlaveExplorerRegisterViewModel.cs" />
     <Compile Include="View\RegisterViewerView.xaml.cs">
       <DependentUpon>RegisterViewerView.xaml</DependentUpon>
     </Compile>
