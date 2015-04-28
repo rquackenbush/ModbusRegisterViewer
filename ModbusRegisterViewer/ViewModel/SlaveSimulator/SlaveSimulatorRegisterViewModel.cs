@@ -8,8 +8,8 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
     {
         private readonly ModbusDataCollection<ushort> _registers;
 
-        public SlaveSimulatorRegisterViewModel(ModbusDataCollection<ushort> registers, ushort registerNumber)
-            : base(registerNumber)
+        public SlaveSimulatorRegisterViewModel(ModbusDataCollection<ushort> registers, ushort registerIndex)
+            : base(registerIndex)
         {
             if (registers == null) throw new ArgumentNullException("registers");
 
@@ -18,12 +18,12 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 
         public override ushort Value
         {
-            get { return _registers[RegisterIndex]; }
+            get { return _registers[RegisterIndex + 1]; }
             set
             {
-                if (_registers[RegisterIndex] != value)
+                if (_registers[RegisterIndex + 1] != value)
                 {
-                    _registers[RegisterIndex] = value;
+                    _registers[RegisterIndex + 1] = value;
 
                     OnValueUpdated();
                 }

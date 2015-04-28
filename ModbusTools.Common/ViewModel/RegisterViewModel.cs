@@ -32,14 +32,14 @@ namespace ModbusTools.Common.ViewModel
         /// <summary>
         /// Gets the 0 or 1 based register number based on preferences.
         /// </summary>
-        public ushort RegisterNumber
+        public int RegisterNumber
         {
             get
             {
                 if (IsZeroBased)
                     return _registerIndex;
 
-                return (ushort)(_registerIndex + 1);
+                return _registerIndex + 1;
             }
         }
 
@@ -87,14 +87,7 @@ namespace ModbusTools.Common.ViewModel
         public byte LSB
         {
             get { return (byte) Value; }
-            set
-            {
-                ushort temp = value;
-
-                temp += MSB;
-                
-                Value = temp;
-            }
+            set { Value = (ushort) ((ushort) value + (ushort) (Value & 0xff00)); }
         }
 
         public string Hex

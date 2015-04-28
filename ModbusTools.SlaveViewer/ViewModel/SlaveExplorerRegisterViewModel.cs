@@ -1,7 +1,6 @@
 ﻿using System;
 using ModbusTools.Common.Model;
 using ModbusTools.Common.ViewModel;
-using ModbusTools.SlaveViewer.Model;
 
 namespace ModbusTools.SlaveViewer.ViewModel
 {
@@ -19,10 +18,10 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         public string Description
         {
-            get { return _descriptionStore[RegisterNumber]; }
+            get { return _descriptionStore[RegisterIndex]; }
             set
             {
-                _descriptionStore[RegisterNumber] = value;
+                _descriptionStore[RegisterIndex] = value;
                 RaisePropertyChanged(() => Description);
             }
         }

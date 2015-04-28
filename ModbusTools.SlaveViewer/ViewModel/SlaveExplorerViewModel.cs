@@ -357,18 +357,18 @@ namespace ModbusTools.SlaveViewer.ViewModel
                             case Common.RegisterType.Input:
 
                                 results = m.ReadInputRegisters(SlaveAddress,
-                                                                        StartingRegisterIndex,
-                                                                        NumberOfRegisters,
-                                                                        BlockSize);
+                                                        StartingRegisterIndex,
+                                                        NumberOfRegisters,
+                                                        BlockSize);
 
                                 break;
 
                             case Common.RegisterType.Holding:
 
                                 results = m.ReadHoldingRegisters(SlaveAddress,
-                                                                                StartingRegisterIndex,
-                                                                                NumberOfRegisters,
-                                                                                BlockSize);
+                                                        StartingRegisterIndex,
+                                                        NumberOfRegisters,
+                                                        BlockSize);
                                 
 
                                 break;

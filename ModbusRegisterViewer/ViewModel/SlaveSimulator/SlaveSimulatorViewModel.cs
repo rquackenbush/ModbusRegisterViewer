@@ -245,18 +245,18 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 
                 switch (args.ModbusDataType)
                 {
-                    case ModbusDataType.InputRegister:
+                    //case ModbusDataType.InputRegister:
 
-                        for (ushort registerIndex = args.StartAddress;
-                            registerIndex < args.StartAddress + args.Data.B.Count;
-                            registerIndex++)
-                        {
-                            _inputRegisters[registerIndex].OnValueUpdated();
-                        }
+                    //    for (ushort registerIndex = args.StartAddress;
+                    //        registerIndex < args.StartAddress + args.Data.B.Count;
+                    //        registerIndex++)
+                    //    {
+                    //        _inputRegisters[registerIndex].OnValueUpdated();
+                    //    }
 
-                        DispatcherHelper.CheckBeginInvokeOnUI(() => _inputView.Refresh());
+                    //    DispatcherHelper.CheckBeginInvokeOnUI(() => _inputView.Refresh());
 
-                        break;
+                    //    break;
 
                     case ModbusDataType.HoldingRegister:
 
