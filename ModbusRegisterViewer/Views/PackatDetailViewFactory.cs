@@ -21,17 +21,14 @@ namespace ModbusRegisterViewer.Views
 
                     if (packet.Direction == MessageDirection.Response)
                     {
-                        ushort startingAddress = 0;
+                        ushort startingIndex = 0;
 
                         //To display the correct register numbers, we need to look at the request packet
                         // to see which register was asked for.
                         if (packet.AssociatedRequestPacket != null && packet.AssociatedRequestPacket.Message.Length > 3)
                         {
                             // Get the starting address bytes
-                            startingAddress = MessageUtilities.NetworkBytesToUInt16(packet.Message, 2);
-
-                            //Increase this by one (modbus standard)
-                            startingAddress++;
+                            startingIndex = MessageUtilities.NetworkBytesToUInt16(packet.Message, 2);
                         }
 
                         //Get the length of the payload
@@ -43,7 +40,7 @@ namespace ModbusRegisterViewer.Views
                         //And now get the uint16 values for the registers
                         var registers = ModbusUtility.NetworkBytesToHostUInt16(registerBytes);
 
-                        return new RegistersView(packet, startingAddress, registers);
+                        return new RegistersView(packet, startingIndex, registers);
                     }
 
                     break;
@@ -55,7 +52,7 @@ namespace ModbusRegisterViewer.Views
                         if (packet.Message.Length > 6)
                         {
                             //Get the starting address bytes
-                            var startingAddress = MessageUtilities.NetworkBytesToUInt16(packet.Message, 2);
+                            var startingIndex = MessageUtilities.NetworkBytesToUInt16(packet.Message, 2);
 
                             // Get the number of registers
                             var numberOfRegisters = MessageUtilities.NetworkBytesToUInt16(packet.Message, 4);
@@ -63,16 +60,13 @@ namespace ModbusRegisterViewer.Views
                             //Get the number of bytes to expect
                             var byteCount = packet.Message[6];
 
-                            //Increase this by one (modbus standard)
-                            startingAddress++;
-
                             //Get the payload
                             var registerBytes = packet.Message.Skip(7).Take(packet.Message.Length - 9).ToArray();
 
                             //Convert it to uint16
                             var registers = ModbusUtility.NetworkBytesToHostUInt16(registerBytes);
 
-                            return new RegistersView(packet, startingAddress, registers);
+                            return new RegistersView(packet, startingIndex, registers);
                         }
                     }
 

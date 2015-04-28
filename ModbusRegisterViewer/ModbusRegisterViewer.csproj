@@ -175,7 +175,6 @@
     <Compile Include="ViewModel\Sniffer\PacketViewModel.cs" />
     <Compile Include="ViewModel\ReadWrite.cs" />
     <Compile Include="ViewModel\RegisterViewer\RegisterTypeViewModel.cs" />
-    <Compile Include="ViewModel\RegisterViewer\RegisterViewModel.cs" />
     <Compile Include="ViewModel\Sniffer\SampleViewModel.cs" />
     <Compile Include="ViewModel\SlaveSimulator\SlaveSimulatorViewModel.cs" />
     <Compile Include="ViewModel\Sniffer\SnifferViewModel.cs" />

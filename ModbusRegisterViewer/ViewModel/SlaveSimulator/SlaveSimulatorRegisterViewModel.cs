@@ -4,7 +4,7 @@ using ModbusTools.Common.ViewModel;
 
 namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 {
-    public class SlaveSimulatorRegisterViewModel : WriteableRegisterViewModel
+    public class SlaveSimulatorRegisterViewModel : RegisterViewModel
     {
         private readonly ModbusDataCollection<ushort> _registers;
 

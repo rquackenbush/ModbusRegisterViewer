@@ -5,7 +5,7 @@ using ModbusTools.SlaveViewer.Model;
 
 namespace ModbusTools.SlaveViewer.ViewModel
 {
-    public class SlaveExplorerRegisterViewModel : WriteableRegisterViewModel
+    public class SlaveExplorerRegisterViewModel : RegisterViewModel
     {
         private readonly DescriptionStore _descriptionStore;
 

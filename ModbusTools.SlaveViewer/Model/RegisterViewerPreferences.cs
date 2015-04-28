@@ -16,6 +16,7 @@ namespace ModbusTools.SlaveViewer.Model
             public const string NumberOfRegisters = Prefix + "NumberOfRegisters";
             public const string RegisterType = Prefix + "RegisterType";
             public const string ModbusAdapter = Prefix + "ModbusAdapter";
+            public const string IsZeroBased = Prefix + "IsZeroBased";
         }
 
         public RegisterViewerPreferences(IPreferences preferences)
@@ -45,6 +46,12 @@ namespace ModbusTools.SlaveViewer.Model
         {
             get { return (RegisterType)_preferences.GetInt32(Keys.RegisterType); }
             set { _preferences.WriteSetting(Keys.RegisterType, (Int32)value); }
+        }
+
+        public bool IsZeroBased
+        {
+            get { return _preferences.GetBoolean(Keys.IsZeroBased); }
+            set { _preferences.SetBoolean(Keys.IsZeroBased, value);}
         }
     }
 }

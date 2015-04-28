@@ -124,7 +124,7 @@
     <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="ViewModel\ModbusAdaptersViewModel.cs" />
     <Compile Include="ViewModel\SerialPortModbusAdapterFactory.cs" />
-    <Compile Include="ViewModel\WriteableRegisterViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewModel.cs" />
     <Compile Include="View\ModbusAdapterSelector.xaml.cs">
       <DependentUpon>ModbusAdapterSelector.xaml</DependentUpon>
     </Compile>

@@ -52,20 +52,26 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 
             //Set up the holding registers
             {
-                ushort registerNumber = 0;
+                ushort registerIndex = 0;
 
                 _holdingRegisters =
                     _dataStore.HoldingRegisters.Select(
-                        r => new SlaveSimulatorRegisterViewModel(_dataStore.HoldingRegisters, registerNumber++)).ToObservableCollection();
+                        r => new SlaveSimulatorRegisterViewModel(_dataStore.HoldingRegisters, registerIndex++)
+                        {
+                            IsZeroBased = IsZeroBased
+                        }).ToObservableCollection();
             }
 
             //Set up the input registers
             {
-                ushort registerNumber = 0;
+                ushort registerIndex = 0;
 
                 _inputRegisters =
                     _dataStore.InputRegisters.Select(
-                        r => new SlaveSimulatorRegisterViewModel(_dataStore.InputRegisters, registerNumber++)).ToObservableCollection();
+                        r => new SlaveSimulatorRegisterViewModel(_dataStore.InputRegisters, registerIndex++)
+                        {
+                            IsZeroBased = IsZeroBased
+                        }).ToObservableCollection();
             }
 
             _holdingView = CollectionViewSource.GetDefaultView(_holdingRegisters);
@@ -225,9 +231,9 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
             return _port != null;
         }
 
-        private static ActivityLogViewModel CreateLog(DataStoreEventArgs args, ReadWrite readWrite)
+        private static ActivityLogViewModel CreateLog(DataStoreEventArgs args, ReadWrite readWrite, bool isZeroBased)
         {
-            return new ActivityLogViewModel(DateTime.Now, args.ModbusDataType, args.StartAddress, args.Data, readWrite);
+            return new ActivityLogViewModel(DateTime.Now, args.ModbusDataType, args.StartAddress, args.Data, readWrite, isZeroBased);
         }
 
         private void DataStoreOnDataStoreWrittenTo(object sender, DataStoreEventArgs args)
@@ -235,7 +241,7 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
                 //Add it to the event log
-                ActivityLog.Add(CreateLog(args, ReadWrite.Write));
+                ActivityLog.Add(CreateLog(args, ReadWrite.Write, IsZeroBased));
 
                 switch (args.ModbusDataType)
                 {
@@ -271,7 +277,7 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 
         private void DataStoreOnDataStoreReadFrom(object sender, DataStoreEventArgs args)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(() => ActivityLog.Add(CreateLog(args, ReadWrite.Read)));
+            DispatcherHelper.CheckBeginInvokeOnUI(() => ActivityLog.Add(CreateLog(args, ReadWrite.Read, IsZeroBased)));
 
             switch (args.ModbusDataType)
             {
@@ -351,6 +357,32 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 
                 _holdingView.Refresh();
                 _inputView.Refresh();
+            }
+        }
+
+        private bool _isZeroBased;
+        public bool IsZeroBased
+        {
+            get { return _isZeroBased; }
+            set
+            {
+                _isZeroBased = value;
+                RaisePropertyChanged();
+
+                foreach (var register in _holdingRegisters)
+                {
+                    register.IsZeroBased = value;
+                }
+
+                foreach (var register in _inputRegisters)
+                {
+                    register.IsZeroBased = value;
+                }
+
+                foreach (var activityLogItem in _activityLog)
+                {
+                    activityLogItem.IsZeroBased = value;
+                }
             }
         }
     }

@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using GalaSoft.MvvmLight;
 using Modbus.Data;
 using Modbus.Utility;
 
 namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 {
-    public class ActivityLogViewModel
+    public class ActivityLogViewModel : ViewModelBase
     {
         private readonly DateTime _timestamp;
         private readonly DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>> _data;
         private readonly ModbusDataType _dataType;
         private readonly ReadWrite _readWrite;
-        private readonly int _startingAddress;
+        private readonly int _startingIndex;
 
-        public ActivityLogViewModel(DateTime timestamp, ModbusDataType dataType, int startingAddress,  DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>> data, ReadWrite readWrite)
+        public ActivityLogViewModel(DateTime timestamp, ModbusDataType dataType, int startingIndex,  DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>> data, ReadWrite readWrite, bool isZeroBased)
         {
             if (data == null)
                 throw new ArgumentNullException("data");
@@ -24,7 +25,8 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
             _dataType = dataType;
             _readWrite = readWrite;
             _data = data;
-            _startingAddress = startingAddress;
+            _startingIndex = startingIndex;
+            _isZeroBased = isZeroBased;
         }
 
         public DateTime Timestamp
@@ -39,7 +41,13 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
 
         public int StartingAddress
         {
-            get { return _startingAddress + 1; }
+            get
+            {
+                if (IsZeroBased)
+                    return _startingIndex;
+
+                return _startingIndex + 1;
+            }
         }
 
         public int Count
@@ -76,6 +84,18 @@ namespace ModbusRegisterViewer.ViewModel.SlaveSimulator
         public ReadWrite ReadWrite
         {
             get { return _readWrite; }
+        }
+
+        private bool _isZeroBased;
+        public bool IsZeroBased
+        {
+            get { return _isZeroBased; }
+            set
+            {
+                _isZeroBased = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(() => StartingAddress);
+            }
         }
     }
 }

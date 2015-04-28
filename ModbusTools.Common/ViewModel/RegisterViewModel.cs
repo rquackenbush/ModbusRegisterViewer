@@ -4,18 +4,18 @@ using GalaSoft.MvvmLight;
 
 namespace ModbusTools.Common.ViewModel
 {
-    public class WriteableRegisterViewModel : ViewModelBase 
+    public class RegisterViewModel : ViewModelBase 
     {
         private readonly ushort _registerIndex;
         private ushort _value;
         private bool _isDirty;
 
-        public WriteableRegisterViewModel(ushort registerIndex)
+        public RegisterViewModel(ushort registerIndex)
         {
             _registerIndex = registerIndex;
         }
         
-        public WriteableRegisterViewModel(ushort registerIndex, ushort value) 
+        public RegisterViewModel(ushort registerIndex, ushort value) 
             : this(registerIndex)
         {
             _value = value;
@@ -34,7 +34,13 @@ namespace ModbusTools.Common.ViewModel
         /// </summary>
         public ushort RegisterNumber
         {
-            get { return (ushort)(_registerIndex + 1); }
+            get
+            {
+                if (IsZeroBased)
+                    return _registerIndex;
+
+                return (ushort)(_registerIndex + 1);
+            }
         }
 
         public virtual ushort Value
@@ -149,6 +155,18 @@ namespace ModbusTools.Common.ViewModel
                     _isDirty = value;
                     RaisePropertyChanged(() => IsDirty);
                 }
+            }
+        }
+
+        private bool _isZeroBased;
+        public bool IsZeroBased
+        {
+            get { return _isZeroBased; }
+            set
+            {
+                _isZeroBased = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(() => RegisterNumber);
             }
         }
 

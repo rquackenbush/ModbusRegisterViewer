@@ -22,7 +22,6 @@ namespace ModbusTools.SlaveViewer.ViewModel
 {
     /// <summary>
     /// This class contains properties that the main View can data bind to.
-    /// <para>
     /// </summary>
     public class SlaveExplorerViewModel : ViewModelBase
     {
@@ -64,22 +63,22 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
             _registerViewerPreferences = new RegisterViewerPreferences(preferences);
 
-            this.ReadCommand = new RelayCommand(Read, CanRead);
-            this.WriteCommand = new RelayCommand(Write, CanWrite);
-            this.ExitCommand = new RelayCommand(Exit);
-            this.OpenCommand = new RelayCommand(Open, CanOpen);
-            this.SaveAsCommand = new RelayCommand(SaveAs, CanSaveAs);
-            this.ExportToCsvCommand = new RelayCommand(ExportToCsv, CanExportToCsv);
+            ReadCommand = new RelayCommand(Read, CanRead);
+            WriteCommand = new RelayCommand(Write, CanWrite);
+            ExitCommand = new RelayCommand(Exit);
+            OpenCommand = new RelayCommand(Open, CanOpen);
+            SaveAsCommand = new RelayCommand(SaveAs, CanSaveAs);
+            ExportToCsvCommand = new RelayCommand(ExportToCsv, CanExportToCsv);
 
             if (IsInDesignMode)
             {
-                this.Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>()
+                Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>()
                 {
-                    new SlaveExplorerRegisterViewModel(1000, 0, _descriptionStore),
-                    new SlaveExplorerRegisterViewModel(1001, 20, _descriptionStore),
-                    new SlaveExplorerRegisterViewModel(1002, 23, _descriptionStore),
-                    new SlaveExplorerRegisterViewModel(1003, 24, _descriptionStore),
-                    new SlaveExplorerRegisterViewModel(1004, 25, _descriptionStore),
+                    new SlaveExplorerRegisterViewModel(1000, 0, _descriptionStore) { IsZeroBased = IsZeroBased },
+                    new SlaveExplorerRegisterViewModel(1001, 20, _descriptionStore) { IsZeroBased = IsZeroBased },
+                    new SlaveExplorerRegisterViewModel(1002, 23, _descriptionStore) { IsZeroBased = IsZeroBased },
+                    new SlaveExplorerRegisterViewModel(1003, 24, _descriptionStore) { IsZeroBased = IsZeroBased },
+                    new SlaveExplorerRegisterViewModel(1004, 25, _descriptionStore) { IsZeroBased = IsZeroBased },
                 };
             }
 
@@ -90,6 +89,8 @@ namespace ModbusTools.SlaveViewer.ViewModel
             RegisterType = _registerTypes.FirstOrDefault(rt => rt.RegisterType == _registerViewerPreferences.RegisterType);
 
             ModbusAdapters.ApplyPreferences(_preferences, RegisterViewerPreferences.Keys.ModbusAdapter);
+
+            IsZeroBased = _registerViewerPreferences.IsZeroBased;
             
 
             _autoRefreshTimer.Elapsed += _autoRefreshTimer_Elapsed;
@@ -118,22 +119,18 @@ namespace ModbusTools.SlaveViewer.ViewModel
         {
             Dictionary<ushort, SlaveExplorerRegisterViewModel> existingValues;
 
-            if (this.Registers == null)
+            if (Registers == null)
             {
                 existingValues = new Dictionary<ushort, SlaveExplorerRegisterViewModel>();
             }
             else
             {
-                existingValues = this.Registers.ToDictionary(r => r.RegisterIndex, r => r);
+                existingValues = Registers.ToDictionary(r => r.RegisterIndex, r => r);
             }
 
             //This is where the new reigsters will be
             var newRegisters = new ObservableCollection<SlaveExplorerRegisterViewModel>();
-
-            
-            //This is the register number for each iteration
-            //var currentRegisterIndex = StartingRegisterIndex;
-
+         
             //Iterate through the new number of registers
             for (int index = 0; index < NumberOfRegisters; index++)
             {
@@ -155,7 +152,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         private bool CanOpen()
         {
-            return !this.IsAutoRefresh;
+            return !IsAutoRefresh;
         }
 
         private void Open()
@@ -172,17 +169,17 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
             var registerNumber = snapshot.StartingRegister;
 
-            this.Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>(
+            Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>(
                 snapshot.Registers.Select(v => new SlaveExplorerRegisterViewModel(registerNumber++, v, _descriptionStore))
             );
         }
 
         private bool CanSaveAs()
         {
-            return !this.IsAutoRefresh
-                   && this.Registers != null
-                   && this.Registers.Any()
-                   && this.RegisterType != null;
+            return !IsAutoRefresh
+                   && Registers != null
+                   && Registers.Any()
+                   && RegisterType != null;
         }
 
         private void SaveAs()
@@ -226,7 +223,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
             {
                 writer.WriteLine("Register,Value");
 
-                foreach (var register in this.Registers)
+                foreach (var register in Registers)
                 {
                     writer.WriteLine("{0},{1}", register.RegisterNumber, register.Value);
                 }
@@ -235,7 +232,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         private bool CanWrite()
         {
-            return _modbusAdapters.IsItemSelected && this.RegisterType == _registerTypeHolding && this.Registers != null && this.Registers.Any();
+            return _modbusAdapters.IsItemSelected && RegisterType == _registerTypeHolding && Registers != null && Registers.Any();
         }
 
         private void Write()
@@ -244,9 +241,9 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
             try
             {
-                if (this.WriteIndividually)
+                if (WriteIndividually)
                 {
-                    var changedRegisters = this.Registers.Where(r => r.IsDirty).ToArray();
+                    var changedRegisters = Registers.Where(r => r.IsDirty).ToArray();
 
                     if (!changedRegisters.Any())
                         return;
@@ -263,7 +260,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
                 }
                 else
                 {
-                    var data = this.Registers.Select(r => r.Value).ToArray();
+                    var data = Registers.Select(r => r.Value).ToArray();
 
                     ExecuteComm(m => m.WriteMultipleRegisters(SlaveAddress, StartingRegisterIndex, data, BlockSize));
 
@@ -278,10 +275,10 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         private void MarkRegistersClean()
         {
-            if (this.Registers == null)
+            if (Registers == null)
                 return;
 
-            foreach (var register in this.Registers)
+            foreach (var register in Registers)
             {
                 register.IsDirty = false;
             }
@@ -332,6 +329,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
             _registerViewerPreferences.StartingRegister = StartingRegisterNumber;
             _registerViewerPreferences.NumberOfRegisters = NumberOfRegisters;
             _registerViewerPreferences.RegisterType = RegisterType.RegisterType;
+            _registerViewerPreferences.IsZeroBased = IsZeroBased;
 
             _modbusAdapters.GetPreferences(_preferences, RegisterViewerPreferences.Keys.ModbusAdapter);
 
@@ -370,7 +368,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
                                 results = m.ReadHoldingRegisters(SlaveAddress,
                                                                                 StartingRegisterIndex,
                                                                                 NumberOfRegisters,
-                                                                                this.BlockSize);
+                                                                                BlockSize);
                                 
 
                                 break;
@@ -385,7 +383,10 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
                 if (results != null)
                 {
-                    var rows = results.Select(r => new SlaveExplorerRegisterViewModel(registerIndex++, r, _descriptionStore));
+                    var rows = results.Select(r => new SlaveExplorerRegisterViewModel(registerIndex++, r, _descriptionStore)
+                    {
+                        IsZeroBased = IsZeroBased
+                    });
 
                     Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>(rows);
                 }
@@ -395,9 +396,9 @@ namespace ModbusTools.SlaveViewer.ViewModel
             {
                 _autoRefreshTimer.Enabled = false;
 
-                if (this.IsAutoRefresh)
+                if (IsAutoRefresh)
                 {
-                    this.IsAutoRefresh = false;
+                    IsAutoRefresh = false;
                 }
 
                 _messageBoxService.Show(ex, "Read Failed");
@@ -411,10 +412,10 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         private void DescriptionChanged()
         {
-            if (this.Registers == null)
+            if (Registers == null)
                 return;
 
-            foreach (var register in this.Registers)
+            foreach (var register in Registers)
             {
                 register.RaiseDescriptionPropertyChanged();
             }
@@ -515,10 +516,34 @@ namespace ModbusTools.SlaveViewer.ViewModel
 
         public ushort StartingRegisterNumber
         {
-            get { return (ushort)(StartingRegisterIndex + 1); }
+            get
+            {
+                if (IsZeroBased)
+                    return StartingRegisterIndex;
+
+                return (ushort)(StartingRegisterIndex + 1);
+            }
             set
             {
-                StartingRegisterIndex = (ushort)(value - 1);
+                if (IsZeroBased)
+                {
+                    StartingRegisterIndex = value;
+                }
+                else
+                {
+                    StartingRegisterIndex = (ushort)(value - 1);
+                }
+            }
+        }
+
+        public ushort StartingRegisterNumberMin
+        {
+            get
+            {
+                if (IsZeroBased)
+                    return 0;
+
+                return 1;
             }
         }
 
@@ -532,5 +557,24 @@ namespace ModbusTools.SlaveViewer.ViewModel
                 FillInRegisters();
             }
         }
+
+        private bool _isZeroBased;
+        public bool IsZeroBased
+        {
+            get { return _isZeroBased; }
+            set
+            {
+                _isZeroBased = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(() => StartingRegisterNumber);
+                RaisePropertyChanged(() => StartingRegisterNumberMin);
+
+                foreach (var register in Registers)
+                {
+                    register.IsZeroBased = value;
+                }
+            }
+        }
+
     }
 }

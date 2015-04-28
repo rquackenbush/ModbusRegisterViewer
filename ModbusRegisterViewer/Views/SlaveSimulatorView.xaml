@@ -37,6 +37,9 @@
             <Grid>
                 <CheckBox IsChecked="{Binding Path=OnlyShowTouched}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display only registers that have been requested / written to.">Active Only?</CheckBox>
             </Grid>
+            <Grid>
+                <CheckBox IsChecked="{Binding Path=IsZeroBased}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display registers with zero based numbering.">Is Zero Based?</CheckBox>
+            </Grid>
         </ToolBar>
         
         <Grid Grid.Row="1">

@@ -1,10 +1,9 @@
-﻿using ModbusRegisterViewer.ViewModel.Sniffer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ModbusRegisterViewer.Model.Sniffer;
+using ModbusRegisterViewer.ViewModel.Sniffer;
 
-namespace ModbusRegisterViewer.Model
+namespace ModbusRegisterViewer.Model.Sniffer
 {
     public class ParallelPacketHandler : IPacketSnifferStateMachine
     {
@@ -14,10 +13,8 @@ namespace ModbusRegisterViewer.Model
         private readonly double _interMessageTimeout;
 
         private PacketViewModel _previousPacket;
-         
-        private readonly PacketHandlerSharedState _sharedState;
 
-        private PacketHandlerStrategy[] _packetHandlerStrategies;
+        private readonly PacketHandlerStrategy[] _packetHandlerStrategies;
 
         private readonly List<Sample> _buffer = new List<Sample>(MaxBufferSize);
 
@@ -33,12 +30,12 @@ namespace ModbusRegisterViewer.Model
 
             _captureTimerInfo = new CaptureTimerInfo(startTime, ticksPerSecond);
 
-            _sharedState = new PacketHandlerSharedState(_captureTimerInfo);
+            PacketHandlerSharedState sharedState = new PacketHandlerSharedState(_captureTimerInfo);
 
             _packetHandlerStrategies = new PacketHandlerStrategy[] 
             {
-                new RequestPacketHandlerStrategy(_sharedState),
-                new ResponsePacketHandlerStrategy(_sharedState)
+                new RequestPacketHandlerStrategy(sharedState),
+                new ResponsePacketHandlerStrategy(sharedState)
             };
         }
 

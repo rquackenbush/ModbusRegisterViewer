@@ -1,30 +1,26 @@
-﻿using System.Linq;
-using System.Windows.Controls;
-using ModbusRegisterViewer.ViewModel.RegisterViewer;
+﻿using System.Collections.Generic;
+using System.Linq;
 using ModbusRegisterViewer.ViewModel.Sniffer;
+using ModbusTools.Common.ViewModel;
 
 namespace ModbusRegisterViewer.Views.GenericPacketViewers
 {
     /// <summary>
     /// Interaction logic for ReadRegistersResponseView.xaml
     /// </summary>
-    public partial class RegistersView : UserControl
+    public partial class RegistersView
     {
         private readonly PacketViewModel _packet;
 
-        public RegistersView(PacketViewModel packet, ushort startingRegister, ushort[] values)
+        public RegistersView(PacketViewModel packet, ushort startingRegisterIndex, IEnumerable<ushort> values)
         {
             InitializeComponent();
 
             _packet = packet;
             
-            byte length = packet.Message[2];
+            ushort registerIndex = startingRegisterIndex;
 
-            
-
-            ushort registerNumber = startingRegister;
-
-            var registers = values.Select(v => new RegisterViewModel(registerNumber++, v));
+            var registers = values.Select(v => new RegisterViewModel(registerIndex++, v));
 
             this.RegistersDataGrid.ItemsSource = registers;
         }

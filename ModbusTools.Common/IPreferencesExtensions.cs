@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml;
 
 namespace ModbusTools.Common
 {
@@ -64,6 +65,19 @@ namespace ModbusTools.Common
             settings[key] = value.ToString();
         }
 
+        public static bool GetBoolean(this IPreferences settings, string key, bool defaultValue = false)
+        {
+            bool parsed;
 
+            if (bool.TryParse(settings[key], out parsed))
+                return parsed;
+
+            return defaultValue;
+        }
+
+        public static void SetBoolean(this IPreferences settings, string key, bool value)
+        {
+            settings[key] = value.ToString();
+        }
     }
 }
