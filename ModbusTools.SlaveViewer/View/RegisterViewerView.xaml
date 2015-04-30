@@ -131,13 +131,13 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
-                    <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" IsReadOnly="False" />
+                    <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
                     <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
                     <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
                     <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
-                    <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" IsReadOnly="False" />
-                    <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" IsReadOnly="True"  />
-                    <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
+                    <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
+                    <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}"/>
                 </DataGrid.Columns>
             </DataGrid>
 

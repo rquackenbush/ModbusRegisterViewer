@@ -136,6 +136,7 @@ namespace ModbusTools.Common.ViewModel
         public short Signed
         {
             get { return (short) Value; }
+            set { Value = (ushort) value; }
         }
 
         public bool IsDirty
