@@ -1,6 +1,6 @@
 ﻿using Modbus.IO;
 
-namespace ModbusRegisterViewer.Model
+namespace ModbusTools.Common
 {
     public static class IStreamReaderExtensions
     {

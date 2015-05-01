@@ -136,11 +136,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AssemblyExtensions.cs" />
-    <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="MasterContext.cs" />
     <Compile Include="Model\BufferRender.cs" />
     <Compile Include="Model\CaptureFileRawExporter.cs" />
-    <Compile Include="Model\IStreamReaderExtensions.cs" />
     <Compile Include="Model\ModbusExtensions.cs" />
     <Compile Include="Model\Sniffer\CaptureFileReader.cs" />
     <Compile Include="Model\Sniffer\CaptureFileWriter.cs" />
@@ -161,7 +159,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\Sniffer\ParallelPacketSnifferStateMachine.cs" />
-    <Compile Include="Model\PromiscuousListener.cs" />
     <Compile Include="Model\RegisterType.cs" />
     <Compile Include="Model\MessageSizeCalculator.cs" />
     <Compile Include="Model\Sample.cs" />

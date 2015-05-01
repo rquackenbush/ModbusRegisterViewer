@@ -86,6 +86,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\CaptureFileReader.cs" />
+    <Compile Include="Model\CaptureFileWriter.cs" />
+    <Compile Include="Model\CaptureTimerInfo.cs" />
+    <Compile Include="Model\CaptureTimerInfoExtensions.cs" />
+    <Compile Include="Model\CaptureViewerFactory.cs" />
+    <Compile Include="Model\CaptureViewerFactoryExtensions.cs" />
+    <Compile Include="Model\Sample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -99,8 +106,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\CaptureViewModel.cs" />
+    <Compile Include="ViewModel\Locator.cs" />
+    <Compile Include="ViewModel\OpenActionViewModel.cs" />
+    <Compile Include="ViewModel\CaptureCompletedActionViewModel.cs" />
+    <Compile Include="ViewModel\SimpleTextCaptureViewModel.cs" />
+    <Compile Include="View\CaptureView.xaml.cs">
+      <DependentUpon>CaptureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SimpleTextCaptureView.xaml.cs">
+      <DependentUpon>SimpleTextCaptureView.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -118,6 +134,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\CaptureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SimpleTextCaptureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ModbusTools.Common\ModbusTools.Common.csproj">
@@ -126,7 +150,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
+    <Resource Include="Images\Play32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Stop32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Network_Map.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Refresh.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

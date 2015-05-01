@@ -59,6 +59,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 
                 <Label Style="{StaticResource TitleLabel}"> Modbus Tools</Label>
@@ -97,6 +98,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 
                 <Grid.ColumnDefinitions>
@@ -131,15 +133,30 @@
                         <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
                         <TextBlock FontWeight="Bold" FontFamily="Arial">Modbus Spy - Beta</TextBlock>
                         <LineBreak/>
-                        <TextBlock>Captures and decodes modbus packets.</TextBlock>
+                        <TextBlock>Old spy program.</TextBlock>
                     </TextBlock>
                         
                         </Button>
                 </Grid>
 
-                <Image Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"  Grid.Row="2"/>
+                <Image Margin="5" Source="/ModbusRegisterViewer;component/Images/Network_Map.png"  Grid.Row="2"/>
 
                 <Grid Grid.Column="1" Style="{StaticResource ToolDescription}" Grid.Row="2">
+
+                    <Button Click="LaunchCapture" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
+
+                        <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                        <TextBlock FontWeight="Bold" FontFamily="Arial">Modbus Capture - Alpha</TextBlock>
+                        <LineBreak/>
+                        <TextBlock>Captures and displays modbus packets.</TextBlock>
+                    </TextBlock>
+
+                    </Button>
+                </Grid>
+
+                <Image Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"  Grid.Row="3"/>
+
+                <Grid Grid.Column="1" Style="{StaticResource ToolDescription}" Grid.Row="3">
 
                     <Button Click="LaunchSlaveSimulator" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
 

@@ -10,6 +10,7 @@ using Microsoft.Win32;
 using Modbus.IO;
 using ModbusRegisterViewer.Model;
 using ModbusRegisterViewer.Model.Sniffer;
+using ModbusTools.Common;
 using ModbusTools.Common.ViewModel;
 using System.Windows;
 using System.Diagnostics;

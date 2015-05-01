@@ -87,6 +87,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="DataContractConstants.cs" />
     <Compile Include="DataContractUtilities.cs" />
     <Compile Include="DifferentialPreferences.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="IModbusAdapterProvider.cs" />
     <Compile Include="IPreferences.cs" />
     <Compile Include="IPreferencesExtensions.cs" />
+    <Compile Include="IStreamReaderExtensions.cs" />
     <Compile Include="ModbusAdapatersViewModelExtensions.cs" />
     <Compile Include="ModbusMasterExtensions.cs" />
     <Compile Include="Model\DescriptionStore.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="Model\SerialMasterContextFactory.cs" />
     <Compile Include="OperationAttempter.cs" />
     <Compile Include="Preferences.cs" />
+    <Compile Include="PromiscuousListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -140,6 +143,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\ModbusAdapterSelector.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

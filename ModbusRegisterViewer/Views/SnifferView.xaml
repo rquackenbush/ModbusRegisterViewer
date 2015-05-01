@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:modbusRegisterViewer="clr-namespace:ModbusRegisterViewer"
         xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
+        xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
 
         Background="{StaticResource WindowBackground}"
         DataContext="{Binding Source={StaticResource Locator}, Path=Sniffer}"
@@ -77,14 +78,14 @@
         <ToolBarTray Grid.Row="1">
             <ToolBar>
                 <Button Command="{Binding Path=StartCommand}" ToolTip="Start Capture">
-                    <modbusRegisterViewer:AutoGreyableImage Source="/Images/Record.png" Width="16" />
+                    <common:AutoGreyableImage Source="/Images/Record.png" Width="16" />
                 </Button>
                 <Button Command="{Binding Path=StopCommand}" ToolTip="Stop Capture">
-                    <modbusRegisterViewer:AutoGreyableImage Source="/Images/Stop.png" Width="16" />
+                    <common:AutoGreyableImage Source="/Images/Stop.png" Width="16" />
                 </Button>
                 <Separator/>
                 <Button Command="{Binding Path=ClearCommand}" ToolTip="Clear">
-                    <modbusRegisterViewer:AutoGreyableImage Source="/Images/Erase.png" Width="16" />
+                    <common:AutoGreyableImage Source="/Images/Erase.png" Width="16" />
                 </Button>
             </ToolBar>
         </ToolBarTray>

@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using ModbusTools.Capture.View;
 
 namespace ModbusRegisterViewer.Views
 {
@@ -59,6 +60,11 @@ namespace ModbusRegisterViewer.Views
         private void LaunchSlaveSimulator(object sender, RoutedEventArgs e)
         {
             LaunchView<SlaveSimulatorView>();
+        }
+
+        private void LaunchCapture(object sender, RoutedEventArgs e)
+        {
+            LaunchView<CaptureView>();
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.IO;
 using Modbus.IO;
 
-namespace ModbusRegisterViewer.Model
+namespace ModbusTools.Common
 {
     public class SampleEventArgs : EventArgs
     {
@@ -47,7 +47,7 @@ namespace ModbusRegisterViewer.Model
                     {
                         if (_streamResource != null)
                         {
-                            _streamResource.DiscardInBuffer();
+                            //_streamResource.DiscardInBuffer();
                         }
                     }
                     catch (TimeoutException)

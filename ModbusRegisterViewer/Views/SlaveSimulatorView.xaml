@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:modbusRegisterViewer="clr-namespace:ModbusRegisterViewer"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         Background="{StaticResource WindowBackground}"
         DataContext="{Binding Source={StaticResource Locator}, Path=SlaveSimulator}"
         Title="Modbus Slave Device Simulator" Height="388" Width="720" Icon="/ModbusRegisterViewer;component/Images/Gear.ico">
@@ -22,14 +23,14 @@
         
         <ToolBar>
             <Button Command="{Binding Path=StartCommand}" ToolTip="Start simulating the slave device.">
-                <modbusRegisterViewer:AutoGreyableImage Source="/Images/Play.png" Width="16" />
+                <common:AutoGreyableImage Source="/Images/Play.png" Width="16" />
             </Button>
             <Button Command="{Binding Path=StopCommand}" ToolTip="Stop simulating the slave device.">
-                <modbusRegisterViewer:AutoGreyableImage Source="/Images/Stop.png" Width="16" />
+                <common:AutoGreyableImage Source="/Images/Stop.png" Width="16" />
             </Button>
             <Separator/>
             <Button Command="{Binding Path=ClearCommand}" ToolTip="Clears the Activity Log">
-                <modbusRegisterViewer:AutoGreyableImage Source="/Images/Erase.png" Width="16" />
+                <common:AutoGreyableImage Source="/Images/Erase.png" Width="16" />
             </Button>
             <Separator/>
             <TextBlock VerticalAlignment="Center" Margin="2">Modbus Slave Id:</TextBlock>
