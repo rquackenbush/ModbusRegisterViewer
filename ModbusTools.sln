@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveSimulator"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveViewer", "ModbusTools.SlaveViewer\ModbusTools.SlaveViewer.csproj", "{2A3328D7-9854-44C3-9F42-865D2F0F075E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveSimulator.Model", "ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj", "{292371A9-2553-4FC2-8763-A496AB143CE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{292371A9-2553-4FC2-8763-A496AB143CE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{292371A9-2553-4FC2-8763-A496AB143CE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{292371A9-2553-4FC2-8763-A496AB143CE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{292371A9-2553-4FC2-8763-A496AB143CE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

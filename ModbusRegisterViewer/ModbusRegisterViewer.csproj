@@ -149,12 +149,9 @@
     <Compile Include="Model\FieldType.cs" />
     <Compile Include="Model\FieldTypeFactory.cs" />
     <Compile Include="Model\FieldTypeUnsigned16.cs" />
-    <Compile Include="Model\FunctionCodes.cs" />
     <Compile Include="Model\FunctionDescriptionFactory.cs" />
-    <Compile Include="Model\Sniffer\CrcComparer.cs" />
     <Compile Include="Model\Sniffer\IPacketSnifferStateMachine.cs" />
     <Compile Include="Model\MessageDirection.cs" />
-    <Compile Include="Model\MessageUtilities.cs" />
     <Compile Include="Model\Sniffer\PacketSnifferStateMachine.cs">
       <SubType>Code</SubType>
     </Compile>

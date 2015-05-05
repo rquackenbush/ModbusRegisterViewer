@@ -143,18 +143,6 @@ namespace ModbusTools.Capture.ViewModel
             //Try to create the file first
             _writer = new CaptureFileWriter(dialog.FileName);
 
-            //_port = new FtdUsbPort();
-
-            //// configure serial port
-            //_port.BaudRate = 19200;
-            //_port.DataBits = 8;
-            //_port.Parity = FtdParity.Even;
-            //_port.StopBits = FtdStopBits.One;
-            //_port.OpenByIndex(0);
-
-            //_port.ReadTimeout = 3000;
-
-
             Status = "Capturing...";
 
             //Spin up the listener in its own thread
@@ -164,7 +152,7 @@ namespace ModbusTools.Capture.ViewModel
                 {
                     using (var master = ModbusAdapters.GetFactory().Create())
                     {
-                        _port = GetStreamResource(master.Master.Transport);
+                        _port = master.Master.Transport.GetStreamResource();
 
                         _listener = new PromiscuousListener(_port);
 
@@ -240,16 +228,6 @@ namespace ModbusTools.Capture.ViewModel
             }
 
             
-        }
-
-        private IStreamResource GetStreamResource(ModbusTransport modbusTransport)
-        {
-            var property = modbusTransport.GetType().GetProperty("StreamResource", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            if (property == null)
-                throw new InvalidOperationException("Unable to find StreamResource");
-
-            return property.GetValue(modbusTransport) as IStreamResource;
         }
 
         void OnSample(object sender, SampleEventArgs e)

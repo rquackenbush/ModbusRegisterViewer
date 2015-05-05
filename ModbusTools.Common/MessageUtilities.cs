@@ -1,8 +1,8 @@
 ﻿using System;
-using Modbus.Utility;
 using System.Linq;
+using Modbus.Utility;
 
-namespace ModbusRegisterViewer.Model
+namespace ModbusTools.Common
 {
     public static class MessageUtilities
     {
@@ -28,7 +28,7 @@ namespace ModbusRegisterViewer.Model
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static byte GetFunction(byte[] message)
+        public static FunctionCode GetFunction(byte[] message)
         {
             if (message == null)
                 throw new ArgumentNullException("message");
@@ -37,7 +37,7 @@ namespace ModbusRegisterViewer.Model
                 throw new ArgumentException("message must be at least two bytes long");
 
             //Return the second byte
-            return message[1];
+            return (FunctionCode)message[1];
         }
 
         /// <summary>

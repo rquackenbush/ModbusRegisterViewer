@@ -66,5 +66,10 @@ namespace ModbusRegisterViewer.Views
         {
             LaunchView<CaptureView>();
         }
+
+        private void LaunchMultipleSlaveSimulator(object sender, RoutedEventArgs e)
+        {
+            LaunchView<ModbusTools.SlaveSimulator.View.SlaveSimulatorView>();
+        }
     }
 }

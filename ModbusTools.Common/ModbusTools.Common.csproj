@@ -88,10 +88,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoGreyableImage.cs" />
+    <Compile Include="CrcExtensions.cs" />
     <Compile Include="DataContractConstants.cs" />
     <Compile Include="DataContractUtilities.cs" />
     <Compile Include="DifferentialPreferences.cs" />
     <Compile Include="FileUtilities.cs" />
+    <Compile Include="FtdiLatencyConfigurator.cs" />
+    <Compile Include="FunctionCode.cs" />
     <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="IMasterContext.cs" />
     <Compile Include="IMasterContextFactory.cs" />
@@ -100,8 +103,11 @@
     <Compile Include="IPreferences.cs" />
     <Compile Include="IPreferencesExtensions.cs" />
     <Compile Include="IStreamReaderExtensions.cs" />
+    <Compile Include="MessageUtilities.cs" />
     <Compile Include="ModbusAdapatersViewModelExtensions.cs" />
+    <Compile Include="ModbusExceptionCodes.cs" />
     <Compile Include="ModbusMasterExtensions.cs" />
+    <Compile Include="ModbusTransportExtensions.cs" />
     <Compile Include="Model\DescriptionStore.cs" />
     <Compile Include="Model\SerialMasterContext.cs" />
     <Compile Include="Model\SerialMasterContextFactory.cs" />

@@ -43,6 +43,9 @@ namespace ModbusTools.Capture.Model
 
         public void Dispose()
         {
+            if (_stopWatch.IsRunning)
+                _stopWatch.Stop();
+
             if (_file != null)
                 _file.Dispose();
             

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ModbusRegisterViewer.Model;
+using ModbusTools.Common;
 
 namespace ModbusRegisterViewer.ViewModel.Sniffer
 {
@@ -83,14 +84,14 @@ namespace ModbusRegisterViewer.ViewModel.Sniffer
             }
         }
 
-        public byte? Function
+        public FunctionCode? Function
         {
             get 
             {
                 if (_samples == null || _samples.Length < 2)
                     return null;
 
-                return _samples[1].Value; 
+                return (FunctionCode )_samples[1].Value; 
             }
         }
 

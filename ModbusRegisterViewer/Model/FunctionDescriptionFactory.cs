@@ -1,63 +1,65 @@
-﻿namespace ModbusRegisterViewer.Model
+﻿using ModbusTools.Common;
+
+namespace ModbusRegisterViewer.Model
 {
     public static class FunctionDescriptionFactory
     {
-        public static string GetFunctionDescription(byte function)
+        public static string GetFunctionDescription(FunctionCode function)
         {
             switch (function)
             {
-                case FunctionCodes.Diagnostic:
+                case FunctionCode.Diagnostic:
                     return "Diagnostic";
 
-                case FunctionCodes.GetComEventCounter:
+                case FunctionCode.GetComEventCounter:
                     return "Get Com Event Counter";
 
-                case FunctionCodes.GetComEventLog:
+                case FunctionCode.GetComEventLog:
                     return "Get Com Event Log";
 
-                case FunctionCodes.MaskWriteRegsiter:
+                case FunctionCode.MaskWriteRegsiter:
                     return "Mask Write Register";
 
-                case FunctionCodes.ReadCoils:
+                case FunctionCode.ReadCoils:
                     return "Read Coils";
 
-                case FunctionCodes.ReadDeviceIdentification:
+                case FunctionCode.ReadDeviceIdentification:
                     return "Read Device Identification";
 
-                case FunctionCodes.ReadDiscreteInputs:
+                case FunctionCode.ReadDiscreteInputs:
                     return "Read Discrete Inputs";
 
-                case FunctionCodes.ReadExceptionStatus:
+                case FunctionCode.ReadExceptionStatus:
                     return "Read Exception Status";
 
-                case FunctionCodes.ReadFIFOQueue:
+                case FunctionCode.ReadFIFOQueue:
                     return "Read FIFO Queue";
 
-                case FunctionCodes.ReadFileRecord:
+                case FunctionCode.ReadFileRecord:
                     return "Read File Record";
 
-                case FunctionCodes.ReadHoldingRegisters:
+                case FunctionCode.ReadHoldingRegisters:
                     return "Read Holding Registers";
 
-                case FunctionCodes.ReportSlaveId:
+                case FunctionCode.ReportSlaveId:
                     return "Report Slave Id";
 
-                case FunctionCodes.WriteFileRecord:
+                case FunctionCode.WriteFileRecord:
                     return "Write File Record";
 
-                case FunctionCodes.WriteMultipleCoils:
+                case FunctionCode.WriteMultipleCoils:
                     return "Write Multiple Coils";
 
-                case FunctionCodes.WriteMultipleRegisters:
+                case FunctionCode.WriteMultipleRegisters:
                     return "Write Multiple Registers";
 
-                case FunctionCodes.WriteSingleCoil:
+                case FunctionCode.WriteSingleCoil:
                     return "Write Single Coil";
 
-                case FunctionCodes.WriteSingleRegister:
+                case FunctionCode.WriteSingleRegister:
                     return "Write Single Register";
 
-                case FunctionCodes.ReadInputRegisters:
+                case FunctionCode.ReadInputRegisters:
                     return "Read Input Registers";
                
                 default:

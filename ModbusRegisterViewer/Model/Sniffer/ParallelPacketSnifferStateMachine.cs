@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ModbusRegisterViewer.ViewModel.Sniffer;
+using ModbusTools.Common;
 
 namespace ModbusRegisterViewer.Model.Sniffer
 {
@@ -228,7 +229,7 @@ namespace ModbusRegisterViewer.Model.Sniffer
                 else if (message.Length >= messageLength)
                 {
                     ///Check to see if the crc's match
-                    if (CrcComparer.DoesCrcMatch(message))
+                    if (CrcExtensions.DoesCrcMatch(message))
                     {
                         //They did, so we're good to go.
                         return PacketViewModel.CreateValidPacket(this.SharedState.CaptureTimerInfo, buffer, this.MessageDirection);

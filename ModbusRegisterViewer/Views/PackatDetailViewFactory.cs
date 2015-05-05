@@ -4,6 +4,7 @@ using Modbus.Utility;
 using ModbusRegisterViewer.Model;
 using ModbusRegisterViewer.ViewModel.Sniffer;
 using ModbusRegisterViewer.Views.GenericPacketViewers;
+using ModbusTools.Common;
 
 namespace ModbusRegisterViewer.Views
 {
@@ -16,8 +17,8 @@ namespace ModbusRegisterViewer.Views
 
             switch (packet.Function)
             {
-                case FunctionCodes.ReadHoldingRegisters:
-                case FunctionCodes.ReadInputRegisters:
+                case FunctionCode.ReadHoldingRegisters:
+                case FunctionCode.ReadInputRegisters:
 
                     if (packet.Direction == MessageDirection.Response)
                     {
@@ -45,7 +46,7 @@ namespace ModbusRegisterViewer.Views
 
                     break;
 
-                case FunctionCodes.WriteMultipleRegisters:
+                case FunctionCode.WriteMultipleRegisters:
 
                     if (packet.Direction == MessageDirection.Request)
                     {
