@@ -7,6 +7,7 @@
         Title="Modbus Capture" SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         DataContext="{x:Static viewModel:Locator.Capture}" 
+        Loaded="CaptureView_OnLoaded"
         Icon="/ModbusTools.Capture;component/Images/Network_Map.png">
     <Grid>
         

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using ModbusTools.Common;
 using ModbusTools.SlaveSimulator.ViewModel;
 using Xceed.Wpf.AvalonDock.Layout;
 
@@ -101,6 +102,9 @@ namespace ModbusTools.SlaveSimulator.View
                     AddSlave(slave);
                 }
             }
+
+            if (!FtdiLatencyConfigurator.CheckForLatency(this))
+                Close();
         }
     }
 }

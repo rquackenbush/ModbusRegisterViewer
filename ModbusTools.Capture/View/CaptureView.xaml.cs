@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ModbusTools.Common;
 
 namespace ModbusTools.Capture.View
 {
@@ -10,8 +11,12 @@ namespace ModbusTools.Capture.View
         public CaptureView()
         {
             InitializeComponent();
+        }
 
-            
+        private void CaptureView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!FtdiLatencyConfigurator.CheckForLatency(this))
+                Close();
         }
     }
 }
