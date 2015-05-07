@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ModbusTools.SlaveSimulator.ViewModel;
+using Xceed.Wpf.AvalonDock.Layout;
 
 namespace ModbusTools.SlaveSimulator.View
 {
@@ -22,6 +13,94 @@ namespace ModbusTools.SlaveSimulator.View
         public SlaveSimulatorView()
         {
             InitializeComponent();
+        }
+
+        private void AddSlave(SlaveViewModel slave)
+        {
+            var view = new SlaveView()
+            {
+                DataContext = slave
+            };
+
+            var layoutDocument = new LayoutDocument()
+            {
+                Content = view,
+                Title = "Slave"
+            };
+
+            layoutDocument.Closing += SlaveClosing;
+            layoutDocument.Closed += SlaveClosed;
+
+            //Add it to the UI
+            SlaveDocumentPane.Children.Add(layoutDocument);
+
+            //Select it
+            SlaveDocumentPane.SelectedContentIndex = SlaveDocumentPane.ChildrenCount - 1;
+        }
+
+        private void PerformViewModelAction(Action<SlaveSimulatorViewModel> action)
+        {
+            var viewModel = DataContext as SlaveSimulatorViewModel;
+
+            if (viewModel == null)
+                throw new Exception("Unable to find view model");
+
+            action(viewModel);
+        }
+
+        private void SlaveClosed(object sender, EventArgs eventArgs)
+        {
+            PerformViewModelAction(viewModel =>
+            {
+                var slaveContainer = sender as LayoutDocument;
+
+                if (slaveContainer == null)
+                    return;
+
+                var slaveView = slaveContainer.Content as SlaveView;
+
+                if (slaveView == null)
+                    return;
+
+                var slave = slaveView.DataContext as SlaveViewModel;
+
+                if (slave == null)
+                    return;
+
+                viewModel.OnSlaveClosed(slave);
+
+            });
+        }
+
+        private void SlaveClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            PerformViewModelAction(viewModel =>
+            {
+                if (!viewModel.CanCloseSlave())
+                {
+                    e.Cancel = true;
+                }    
+            });
+        }
+
+        private void OnSlaveCreated(object sender, SlaveEvent slaveEvent)
+        {
+            AddSlave(slaveEvent.Slave);            
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var viewModel = DataContext as SlaveSimulatorViewModel;
+
+            if (viewModel != null)
+            {
+                viewModel.SlaveCreated += OnSlaveCreated;
+
+                foreach (var slave in viewModel.Slaves)
+                {
+                    AddSlave(slave);
+                }
+            }
         }
     }
 }

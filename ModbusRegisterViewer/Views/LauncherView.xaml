@@ -115,9 +115,9 @@
                     <Button Click="LaunchRegisterViewer" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
 
                         <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  Margin="4">
-                                    <TextBlock FontWeight="Bold" FontFamily="Arial">Register Viewer</TextBlock>
+                                    <TextBlock FontWeight="Bold" FontFamily="Arial">Slave Explorer</TextBlock>
                                     <LineBreak/>
-                                    <TextBlock>Tool to view input and holding registers on modbus devices.</TextBlock>
+                                    <TextBlock>Query and set values on connected slave devices.</TextBlock>
                             </TextBlock>
                         
                     </Button>
@@ -150,13 +150,13 @@
                         <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
                         <TextBlock FontWeight="Bold" FontFamily="Arial">Modbus Capture - Alpha</TextBlock>
                         <LineBreak/>
-                        <TextBlock>Captures and displays modbus traffic.</TextBlock>
+                        <TextBlock>Captures and display Modbus traffic.</TextBlock>
                     </TextBlock>
 
                     </Button>
                 </Grid>
 
-                <Image Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"  Grid.Row="3"/>
+                <!--<Image Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"  Grid.Row="3"/>
 
                 <Grid Grid.Column="1" Style="{StaticResource ToolDescription}" Grid.Row="3">
 
@@ -169,22 +169,22 @@
                     </TextBlock>
 
                     </Button>
-                </Grid>
+                </Grid>-->
 
-                <!--<Image Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"  Grid.Row="4"/>
+                <Image Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"  Grid.Row="4"/>
 
                 <Grid Grid.Column="1" Style="{StaticResource ToolDescription}" Grid.Row="4">
 
                     <Button Click="LaunchMultipleSlaveSimulator" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
 
                         <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  Margin="4">
-                        <TextBlock FontWeight="Bold" FontFamily="Arial">Multiple Modbus Slave Device Simulator</TextBlock>
+                        <TextBlock FontWeight="Bold" FontFamily="Arial">Slave Simulator</TextBlock>
                         <LineBreak/>
-                        <TextBlock>This is written from scratch to simulate more than one slave device.</TextBlock>
+                        <TextBlock>Simulate one or more Modbus slave devices.</TextBlock>
                     </TextBlock>
 
                     </Button>
-                </Grid>-->
+                </Grid>
 
 
             </Grid>

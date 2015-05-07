@@ -1,31 +1,93 @@
-﻿using System.Linq;
+﻿using System;
+using GalaSoft.MvvmLight;
 using ModbusTools.Common;
-using ModbusTools.Common.ViewModel;
 
 namespace ModbusTools.SlaveSimulator.ViewModel
 {
-    /// <summary>
-    /// Represents some sort of activity.
-    /// </summary>
-    public class ActivityViewModel
+    public abstract class ActivityViewModel : ViewModelBase
     {
-        public ActivityViewModel(FunctionCode functionCode, string summary, ushort? startingAddress = null, ushort[] registers = null)
-        {
-            FunctionCode = functionCode;
-            Summary = summary;
-            
-            if (startingAddress != null && registers != null)
-            {
-                ushort currentAddress = startingAddress.Value;
+        private readonly DateTime _timestamp;
+        private readonly string _operation;
+        private readonly int? _startingIndex;
 
-                Registers = registers.Select(r => new RegisterViewModel(currentAddress++, r)).ToArray();
+        protected ActivityViewModel(DateTime timestamp, string operation, int? startingIndex = null, bool isZeroBased = false)
+        {
+            _timestamp = timestamp;
+            _operation = operation;
+            _startingIndex = startingIndex;
+        }
+
+        public string Operation
+        {
+            get { return _operation; }
+        }
+
+        public DateTime Timestamp
+        {
+            get { return _timestamp; }
+        }
+
+        public int? StartingAddress
+        {
+            get
+            {
+                if (_startingIndex == null)
+                    return null;
+
+                if (IsZeroBased)
+                    return _startingIndex;
+
+                return _startingIndex + 1;
             }
         }
 
-        public FunctionCode FunctionCode { get; private set; }
+        public virtual int? Count
+        {
+            get { return null; }
+        }
 
-        public string Summary { get; private set; }
+        public abstract string Summary { get; }
 
-        public RegisterViewModel[] Registers { get; private set; }
+        private bool _isZeroBased;
+        public bool IsZeroBased
+        {
+            get { return _isZeroBased; }
+            set
+            {
+                _isZeroBased = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(() => StartingAddress);
+            }
+        }
+    }
+
+    public abstract class ActivityViewModel<TData> : ActivityViewModel
+        where TData : struct
+    {
+        
+        private readonly TData[] _data;
+
+        protected ActivityViewModel(DateTime timestamp, string operation,  int startingIndex, TData[] data, bool isZeroBased)
+            : base(timestamp, operation, startingIndex, isZeroBased)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            _data = data;
+        }
+
+        public TData[] Data
+        {
+            get { return _data; }
+        }
+
+        public override int? Count
+        {
+            get { return _data.Length; }
+        }
+
+        
+
+        
     }
 }

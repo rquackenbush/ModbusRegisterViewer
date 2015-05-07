@@ -21,6 +21,8 @@ namespace ModbusTools.Common
             //Get the crc that is stored in the message
             var messageCrc = MessageUtilities.GetCRC(message);
 
+            Console.WriteLine("CRC {0} vs {1}", calculatedCrc, messageCrc);
+
             //Determine if they match
             return calculatedCrc == messageCrc;
         }

@@ -43,6 +43,9 @@ namespace ModbusTools.SlaveSimulator.Model
             if (request == null) throw new ArgumentNullException("request");
             if (request.Length < 5) throw new ArgumentException("The request must be at least 5 bytes long", "request");
 
+            var isBroadcast = MessageUtilities.GetSlaveId(request) == 0;
+
+
             //Get the function code
             var functionCode = MessageUtilities.GetFunction(request);
 
@@ -53,7 +56,7 @@ namespace ModbusTools.SlaveSimulator.Model
             if (functionHandler == null)
             {
                 //Don't return anything if this was a broadcast
-                if (_slaveId == 0)
+                if (isBroadcast)
                     return null;
 
                 //This wasn't a broadcast, so return an error.
@@ -61,14 +64,11 @@ namespace ModbusTools.SlaveSimulator.Model
             }
 
             //Verify that we can actually support a broadcast message
-            if (!functionHandler.SupportsBroadcast)
+            if (isBroadcast && !functionHandler.SupportsBroadcast)
                 return null;
 
             //Let the function handler deal with it.
             return functionHandler.ProcessRequest(SlaveId, request);
-
         }
-
-       
     }
 }

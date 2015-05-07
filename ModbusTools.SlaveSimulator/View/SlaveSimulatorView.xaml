@@ -5,8 +5,10 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
         xmlns:viewModel="clr-namespace:ModbusTools.SlaveSimulator.ViewModel"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         Background="LightGray"
         DataContext="{x:Static viewModel:Locator.SlaveSimulator}"
+        Loaded="OnLoaded"
         Title="Multiple Slave Simulator" Height="393" Width="577" Icon="/ModbusTools.SlaveSimulator;component/Images/Gear.png">
 
     <Window.Resources>
@@ -33,13 +35,37 @@
             </Button>
             <Separator/>
 
-            <Grid>
+            <!--<Grid>
                 <CheckBox IsChecked="{Binding Path=OnlyShowTouched}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display only registers that have been requested / written to.">Active Only?</CheckBox>
-            </Grid>
-            <Grid>
+            </Grid>-->
+            <!--<Grid>
                 <CheckBox IsChecked="{Binding Path=IsZeroBased}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display registers with zero based numbering.">Is Zero Based?</CheckBox>
-            </Grid>
+            </Grid>-->
+            
+            <Button Command="{Binding Path=AddSlaveCommand}">
+                Add Slave
+            </Button>
         </ToolBar>
+
+        <xcad:DockingManager x:Name="dockManager" Grid.Row="1">
+
+            <xcad:LayoutRoot x:Name="_layoutRoot">
+
+                <xcad:LayoutPanel Orientation="Horizontal" >
+
+                    <xcad:LayoutPanel Orientation="Vertical" DockWidth="*">
+
+                        <xcad:LayoutDocumentPaneGroup  >
+                            <xcad:LayoutDocumentPane x:Name="SlaveDocumentPane" >
+                            </xcad:LayoutDocumentPane>
+                        </xcad:LayoutDocumentPaneGroup >
+                        
+                    </xcad:LayoutPanel>
+                </xcad:LayoutPanel>
+                
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
+
 
         <!--<Grid Grid.Row="1">
                 <TabControl Margin="5">

@@ -45,16 +45,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ByteArrayExtensions.cs" />
+    <Compile Include="FunctionHandlers\ReadHoldingRegisterFunctionHandler.cs" />
     <Compile Include="FunctionHandlers\ReadHoldingRegistersFunctionHandler.cs" />
+    <Compile Include="FunctionHandlers\ReadInputRegisterFunctionHandler.cs" />
+    <Compile Include="FunctionHandlers\ReadInputRegistersFunctionHandler.cs" />
+    <Compile Include="FunctionHandlers\WriteHoldingRegisterFunctionHandler.cs" />
     <Compile Include="FunctionHandlers\WriteHoldingRegistersFunctionHandler.cs" />
     <Compile Include="HexFormatter.cs" />
     <Compile Include="IModbusFunctionHandler.cs" />
     <Compile Include="IRegisterStorage.cs" />
+    <Compile Include="IRegisterStorageExtensions.cs" />
     <Compile Include="ISlave.cs" />
     <Compile Include="MessageFactories\ExceptionResponseFactory.cs" />
     <Compile Include="MessageFactories\MessageExtensions.cs" />
     <Compile Include="MessageFactories\ReadHoldingRegistersResponseFactory.cs" />
+    <Compile Include="MessageFactories\ReadInputRegistersResponseFactory.cs" />
     <Compile Include="MessageFactories\WriteHoldingRegistersResponseFactory.cs" />
+    <Compile Include="RegisterStorageNotifier.cs" />
+    <Compile Include="RegisterStorageEventArgs.cs" />
     <Compile Include="SlaveSimulatorHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparseRegisterStorage.cs" />

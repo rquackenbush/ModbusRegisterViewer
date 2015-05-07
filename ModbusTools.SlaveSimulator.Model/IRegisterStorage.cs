@@ -2,6 +2,8 @@
 {
     public interface IRegisterStorage
     {
-        ushort this[ushort registerIndex] { get; set; }
+        ushort[] Read(ushort startingIndex, ushort numberOfRegisters);
+
+        void Write(ushort startingIndex, ushort[] values);
     }
 }

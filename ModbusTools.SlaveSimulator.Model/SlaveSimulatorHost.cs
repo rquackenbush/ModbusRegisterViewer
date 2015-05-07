@@ -86,65 +86,86 @@ namespace ModbusTools.SlaveSimulator.Model
 
         void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            switch (_state)
+            try
             {
-                case SlaveSimulatorState.Idle:
+                switch (_state)
+                {
+                    case SlaveSimulatorState.Idle:
 
-                    StopTimer();
-                    break;
+                        StopTimer();
+                        break;
 
-                case SlaveSimulatorState.ListeningToRequest:
+                    case SlaveSimulatorState.ListeningToRequest:
 
-                    StopTimer();
+                        StopTimer();
 
-                    var request = _sampleBuffer.ToArray();
+                        var request = _sampleBuffer.ToArray();
 
-                    //Make sure there actually is a sample.
-                    if (request.Length > 0)
-                    {
-                        //Get the slave id
-                        var slaveId = request[0];
-
-                        //Try to find the slave
-                        var slave = GetSlave(slaveId);
-
-                        //Make sure we found it (would be weird if we didn't)
-                        if (slave != null)
+                        //Make sure there actually is a sample.
+                        if (request.Length > 0)
                         {
-                            if (CrcExtensions.DoesCrcMatch(request))
+                            //Get the slave id
+                            var slaveId = request[0];
+
+                            //Try to find the slave
+                            var slave = GetSlave(slaveId);
+
+                            //Make sure we found it (would be weird if we didn't)
+                            if (slave != null)
                             {
-                                //Create the response
-                                var response = slave.ProcessRequest(request);
-
-                                //Only write a response if this isn't a broadcast message
-                                if (slaveId > 0 && response != null)
+                                if (CrcExtensions.DoesCrcMatch(request))
                                 {
-                                    //Write the response
-                                    _port.Write(response, 0, response.Length);
+                                    //Create the response
+                                    var response = slave.ProcessRequest(request);
 
-                                    Console.WriteLine("Response: {0}", HexFormatter.FormatHex(response));
+                                    //Only write a response if this isn't a broadcast message
+                                    if (slaveId == 0)
+                                    {
+                                        Console.WriteLine("This is a brodcast so we don't write anything back.");
+                                    }
+                                    else if (response == null)
+                                    {
+                                        Console.WriteLine("The response from the slave was null.");
+                                    }
+                                    else
+                                    {
+                                        //Write the response
+                                        _port.Write(response, 0, response.Length);
+
+                                        Console.WriteLine("Response: {0}", HexFormatter.FormatHex(response));
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("CRC doesn't match.");
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("CRC doesn't match.");
+                                Console.WriteLine("Couldn't find slave {0}", slaveId);
                             }
                         }
-                    }
 
-                    TransitionToIdle();
+                        TransitionToIdle();
 
-                    break;
+                        break;
 
-                case SlaveSimulatorState.ListeningToOtherSlave:
+                    case SlaveSimulatorState.ListeningToOtherSlave:
 
-                    TransitionToIdle();
+                        TransitionToIdle();
 
-                    break;
+                        break;
 
 
-                default:
-                    throw new InvalidOperationException(string.Format("Unexpected state '{0}'", _state));
+                    default:
+                        throw new InvalidOperationException(string.Format("Unexpected state '{0}'", _state));
+                }
+            }
+            catch (Exception ex)
+            {
+                TransitionToIdle();
+                Console.WriteLine(ex.ToString());                
+                
             }
         }
 

@@ -4,11 +4,13 @@ using ModbusTools.SlaveSimulator.Model.MessageFactories;
 
 namespace ModbusTools.SlaveSimulator.Model.FunctionHandlers
 {
-    public class ReadHoldingRegistersFunctionHandler : IModbusFunctionHandler
+    public class ReadInputRegistersFunctionHandler : IModbusFunctionHandler
     {
         private readonly IRegisterStorage _registerStorage;
 
-        public ReadHoldingRegistersFunctionHandler(IRegisterStorage registerStorage)
+       
+
+        public ReadInputRegistersFunctionHandler(IRegisterStorage registerStorage)
         {
             if (registerStorage == null) throw new ArgumentNullException("registerStorage");
 
@@ -17,7 +19,7 @@ namespace ModbusTools.SlaveSimulator.Model.FunctionHandlers
 
         public FunctionCode FunctionCode
         {
-            get { return FunctionCode.ReadHoldingRegisters; }
+            get { return FunctionCode.ReadInputRegisters; }
         }
 
         public byte[] ProcessRequest(byte slaveId, byte[] request)
@@ -27,9 +29,8 @@ namespace ModbusTools.SlaveSimulator.Model.FunctionHandlers
 
             var registers = _registerStorage.Read(dataAddress, numberOfRegisters);
 
-            return ReadHoldingRegistersResponseFactory.Create(slaveId, registers);
+            return ReadInputRegistersResponseFactory.Create(slaveId, registers);
         }
-
         public bool SupportsBroadcast
         {
             get { return false; }

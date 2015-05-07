@@ -9,7 +9,7 @@ namespace ModbusTools.SlaveSimulator.Model
     {
         private readonly Dictionary<ushort, ushort> _values = new Dictionary<ushort, ushort>(); 
 
-        public ushort this[ushort registerIndex]
+        private ushort this[ushort registerIndex]
         {
             get
             {
@@ -21,6 +21,27 @@ namespace ModbusTools.SlaveSimulator.Model
                 return 0;
             }
             set { _values[registerIndex] = value; }
+        }
+
+
+        public ushort[] Read(ushort startingIndex, ushort numberOfRegisters)
+        {
+            var registers = new ushort[numberOfRegisters];
+
+            for (ushort index = 0; index < numberOfRegisters; index++)
+            {
+                registers[index] = this[(ushort)(index + startingIndex)];
+            }
+
+            return registers;
+        }
+
+        public void Write(ushort startingIndex, ushort[] values)
+        {
+            for (ushort index = 0; index < values.Length; index++)
+            {
+                this[(ushort)(index + startingIndex)] = values[index];
+            }
         }
     }
 }

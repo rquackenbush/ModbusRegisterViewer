@@ -26,6 +26,7 @@ namespace ModbusTools.Common.Model
             _master = ModbusSerialMaster.CreateRtu(_serialPort);
             _master.Transport.ReadTimeout = readTimeout;
             _master.Transport.WriteTimeout = writeTimeout;
+            _master.Transport.Retries = 0;
         }
 
         public void Dispose()

@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="ModbusTools.SlaveSimulator.View.SlaveView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:viewModel="clr-namespace:ModbusTools.SlaveSimulator.ViewModel"
+             DataContext="{x:Static viewModel:Locator.Slave}"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <Style x:Key="RowStyle" TargetType="DataGridRow">
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="FontFamily" Value="Consolas"></Setter>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="4"></Setter>
+        </Style>
+
+        <Style TargetType="DataGridCell" x:Key="RegisterDataGridlCellStyle">
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+        </Style>
+    </UserControl.Resources>
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <ToolBar>
+            <TextBlock VerticalAlignment="Center" Margin="4">Slave Id</TextBlock>
+            <xctk:ByteUpDown VerticalAlignment="Center" Minimum="{Binding Path=SlaveIdMin}" Value="{Binding Path=SlaveId}" Maximum="{Binding Path=SlaveIdMax}" Margin="2" />
+            <Separator/>
+            <Grid>
+                <CheckBox IsChecked="{Binding Path=IsZeroBased}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display registers with zero based numbering.">Is Zero Based?</CheckBox>
+            </Grid>
+        </ToolBar>
+        
+        <TabControl Grid.Row="1">
+            <TabItem Header="Holding">
+                <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=HoldingRegisters}"  HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" RowStyle="{StaticResource RowStyle}" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
+                        <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
+                        <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
+                        <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
+                        <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
+                        <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem Header="Input">
+                <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=InputRegisters}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"  RowStyle="{StaticResource RowStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True"  />
+                        <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
+                        <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
+                        <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
+                        <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
+                        <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
+                        <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem Header="Activity">
+                <DataGrid ItemsSource="{Binding Path=Activities}" IsReadOnly="True" AutoGenerateColumns="False"  RowStyle="{StaticResource RowStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Timestamp" Binding="{Binding Path=Timestamp}"  />
+                        <DataGridTextColumn Header="Operation" Binding="{Binding Path=Operation}" />
+                        <DataGridTextColumn Header="Starting Address" Binding="{Binding Path=StartingAddress}" />
+                        <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" />
+                        <DataGridTextColumn Header="Summary" Binding="{Binding Path=Summary}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

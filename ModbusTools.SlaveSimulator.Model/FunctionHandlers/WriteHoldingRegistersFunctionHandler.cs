@@ -32,13 +32,18 @@ namespace ModbusTools.SlaveSimulator.Model.FunctionHandlers
             var startingAddress = request.ReadUInt16(RequestOffsets.StartingAddress);
             var numberOfRegisters = request.ReadUInt16(RequestOffsets.NumberOfRegisters);
 
+            //Create a place to put the registers
+            var registers = new ushort[numberOfRegisters];
+
             for (int index = 0; index < numberOfRegisters; index++)
             {
                 var registerOffsetInRequest = RequestOffsets.Registers + (2*index);
-                var registerIndex = (ushort)(index + startingAddress);
 
-                _registerStorage[registerIndex] = request.ReadUInt16(registerOffsetInRequest, true);
+                registers[index] = request.ReadUInt16(registerOffsetInRequest, false);
             }
+
+            //Write to storage
+            _registerStorage.Write(startingAddress, registers);
 
             return WriteHoldingRegistersResponseFactory.Create(slaveId, startingAddress, numberOfRegisters);
         }
