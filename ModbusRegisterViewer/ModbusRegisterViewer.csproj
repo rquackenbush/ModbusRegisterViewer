@@ -337,6 +337,10 @@
       <Project>{12696174-c514-4e69-abda-0e926a52ba57}</Project>
       <Name>ModbusTools.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.Configuration\ModbusTools.Configuration.csproj">
+      <Project>{9d86e144-e2b1-47d5-9db5-30a23ab5ce2a}</Project>
+      <Name>ModbusTools.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ModbusTools.SlaveSimulator\ModbusTools.SlaveSimulator.csproj">
       <Project>{4563f1da-9e71-4c2e-a6a3-67aa57414afa}</Project>
       <Name>ModbusTools.SlaveSimulator</Name>

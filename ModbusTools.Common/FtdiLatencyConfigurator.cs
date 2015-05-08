@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace ModbusTools.Common
 {
@@ -97,13 +98,26 @@ namespace ModbusTools.Common
             return hasChanged;
         }
 
+        public static void LaunchConfigurationTool()
+        {
+            const string executable = "ModbusTools.Configuration.exe";
+
+            var process = Process.Start(executable);
+
+            if (process == null)
+            {
+                MessageBox.Show(string.Format("Unable to find or launch '{0}'", executable));
+            }
+            else
+            {
+                process.WaitForExit();    
+            }
+        }
+
         public static bool CheckForLatency(Window window)
         {
             try
             {
-
-            
-
                 if (RequiresLatencyChanges())
                 {
                     const string message = "One or more FTDI ports are configured incorrectly on this computer.\n\n. Attempt to auto correct?";
@@ -114,7 +128,9 @@ namespace ModbusTools.Common
                     {
                         case MessageBoxResult.Yes:
 
-                            SetLatency();
+                            LaunchConfigurationTool();
+
+                            //SetLatency();
                             break;
 
                         case MessageBoxResult.No:
@@ -122,8 +138,6 @@ namespace ModbusTools.Common
 
                         case MessageBoxResult.Cancel:
                             return false;
-                            break;
-
                     }
                 }
 
