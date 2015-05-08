@@ -9,6 +9,8 @@ using Microsoft.Win32;
 using Modbus.IO;
 using ModbusTools.Capture.Model;
 using ModbusTools.Capture.View;
+using ModbusTools.CaptureViewer.Simple.View;
+using ModbusTools.CaptureViewer.Simple.ViewModel;
 using ModbusTools.Common;
 using ModbusTools.Common.ViewModel;
 
@@ -21,13 +23,9 @@ namespace ModbusTools.Capture.ViewModel
 
         private readonly ModbusAdaptersViewModel _modbusAdapters = new ModbusAdaptersViewModel();
 
-        private PromiscuousListener _listener;
         private string _capturePath;
-        private CaptureFileWriter _writer;
-        private IStreamResource _port;
-
-        private Task _task;
-
+        private CaptureHost _captureHost;
+        
         private const string CaptureFilter = "Modbus Capture Files(*.mbcap)|*.mbcap";
 
         public CaptureViewModel()
@@ -104,7 +102,7 @@ namespace ModbusTools.Capture.ViewModel
 
         private bool CanOpen()
         {
-            return _task == null;
+            return _captureHost == null;
         }
 
         private void Close()
@@ -114,12 +112,12 @@ namespace ModbusTools.Capture.ViewModel
 
         private bool CanClose()
         {
-            return _task == null;
+            return _captureHost == null;
         }
 
         private bool CanStop()
         {
-            return _task != null;
+            return _captureHost != null;
         }
 
         private void Start()
@@ -140,48 +138,16 @@ namespace ModbusTools.Capture.ViewModel
             //Save the filename
             _capturePath = dialog.FileName;
 
-            //Try to create the file first
-            _writer = new CaptureFileWriter(dialog.FileName);
+            _captureHost = new CaptureHost(dialog.FileName, ModbusAdapters.GetFactory().Create());
+
+            _captureHost.SampleReceived += OnSampleReceived;
 
             Status = "Capturing...";
-
-            //Spin up the listener in its own thread
-            _task = new Task(() =>
-            {
-                try
-                {
-                    using (var master = ModbusAdapters.GetFactory().Create())
-                    {
-                        _port = master.Master.Transport.GetStreamResource();
-
-                        _listener = new PromiscuousListener(_port);
-
-                        _listener.Sample += OnSample;
-
-                        _listener.Listen();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //This will exception out when the port is killed
-                    Console.WriteLine(ex.ToString());
-                }
-                finally
-                {
-                    _task = null;
-
-                    _listener.Sample -= OnSample;
-
-                    _listener = null;
-                }
-            });
-
-            _task.Start();
         }
 
         private bool CanStart()
         {
-            return _task == null && ModbusAdapters.IsItemSelected;
+            return _captureHost == null && ModbusAdapters.IsItemSelected;
         }
 
         private void Stop()
@@ -190,26 +156,10 @@ namespace ModbusTools.Capture.ViewModel
             {
                 Status = "Idle";
 
-                if (_listener != null)
+                if (_captureHost != null)
                 {
-                    //When a message is received
-                    _listener.Sample -= OnSample;
-                    _listener.Dispose();
-                }
-
-                if (_port != null)
-                {
-                    //if (_port.IsOpen)
-                    //{
-                    //_port.DiscardInBuffer();
-                    //}
-
-                    _port.Dispose();
-                }
-
-                if (_writer != null)
-                {
-                    _writer.Dispose();
+                    _captureHost.SampleReceived -= OnSampleReceived;
+                    _captureHost.Dispose();
                 }
 
                 if (!string.IsNullOrWhiteSpace(_capturePath))
@@ -219,24 +169,15 @@ namespace ModbusTools.Capture.ViewModel
                         CaptureCompletedAction.Factory.ShowCapture(_capturePath);
                     }
                 }
-
-                
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
-
-            
         }
 
-        void OnSample(object sender, SampleEventArgs e)
+        void OnSampleReceived(object sender, EventArgs e)
         {
-            if (_writer != null)
-            {
-                _writer.WriteSample(e.Sample);
-            }
-
             BytesReceived++;
         }
 

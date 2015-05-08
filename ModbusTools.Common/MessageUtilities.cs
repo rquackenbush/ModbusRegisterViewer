@@ -37,7 +37,7 @@ namespace ModbusTools.Common
                 throw new ArgumentException("message must be at least two bytes long");
 
             //Return the second byte
-            return (FunctionCode)message[1];
+            return (FunctionCode)(message[1] & 0x7f);
         }
 
         /// <summary>

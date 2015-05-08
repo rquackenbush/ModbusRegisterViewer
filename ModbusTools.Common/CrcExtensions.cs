@@ -11,7 +11,7 @@ namespace ModbusTools.Common
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static bool DoesCrcMatch(byte[] message)
+        public static bool DoesCrcMatch(this byte[] message)
         {
             var messageFrame = message.Take(message.Length - 2).ToArray();
 

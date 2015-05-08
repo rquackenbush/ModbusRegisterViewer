@@ -86,13 +86,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\CaptureFileReader.cs" />
-    <Compile Include="Model\CaptureFileWriter.cs" />
-    <Compile Include="Model\CaptureTimerInfo.cs" />
-    <Compile Include="Model\CaptureTimerInfoExtensions.cs" />
     <Compile Include="Model\CaptureViewerFactory.cs" />
     <Compile Include="Model\CaptureViewerFactoryExtensions.cs" />
-    <Compile Include="Model\Sample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -110,12 +105,8 @@
     <Compile Include="ViewModel\Locator.cs" />
     <Compile Include="ViewModel\OpenActionViewModel.cs" />
     <Compile Include="ViewModel\CaptureCompletedActionViewModel.cs" />
-    <Compile Include="ViewModel\SimpleTextCaptureViewModel.cs" />
     <Compile Include="View\CaptureView.xaml.cs">
       <DependentUpon>CaptureView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\SimpleTextCaptureView.xaml.cs">
-      <DependentUpon>SimpleTextCaptureView.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -138,12 +129,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SimpleTextCaptureView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ModbusTools.Capture.Model\ModbusTools.Capture.Model.csproj">
+      <Project>{f5343276-d294-43fc-954d-66ee6413bd29}</Project>
+      <Name>ModbusTools.Capture.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.CaptureViewer.Simple\ModbusTools.CaptureViewer.Simple.csproj">
+      <Project>{eb096034-f10d-48c7-be3d-ece13b34f04e}</Project>
+      <Name>ModbusTools.CaptureViewer.Simple</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ModbusTools.Common\ModbusTools.Common.csproj">
       <Project>{12696174-c514-4e69-abda-0e926a52ba57}</Project>
       <Name>ModbusTools.Common</Name>

@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{66DD80BC-CBA9-422B-AE71-712AE52F9CF4}"
-	ProjectSection(SolutionItems) = preProject
-		ThirdParty\MiscUtil.dll = ThirdParty\MiscUtil.dll
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7D407AAD-1B3A-496E-B7CE-3DD7FAF9C4D1}"
 	ProjectSection(SolutionItems) = preProject
@@ -26,6 +23,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveViewer", "ModbusTools.SlaveViewer\ModbusTools.SlaveViewer.csproj", "{2A3328D7-9854-44C3-9F42-865D2F0F075E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveSimulator.Model", "ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj", "{292371A9-2553-4FC2-8763-A496AB143CE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.CaptureViewer.Simple", "ModbusTools.CaptureViewer.Simple\ModbusTools.CaptureViewer.Simple.csproj", "{EB096034-F10D-48C7-BE3D-ECE13B34F04E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Capture.Model", "ModbusTools.Capture.Model\ModbusTools.Capture.Model.csproj", "{F5343276-D294-43FC-954D-66EE6413BD29}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Capture", "Capture", "{C288D7B0-F717-49B1-9174-889F38FC8EF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SlaveSimulator", "SlaveSimulator", "{58985A5A-8ABC-48BB-9C6D-6A819A121E64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,8 +62,23 @@ Global
 		{292371A9-2553-4FC2-8763-A496AB143CE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{292371A9-2553-4FC2-8763-A496AB143CE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{292371A9-2553-4FC2-8763-A496AB143CE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB096034-F10D-48C7-BE3D-ECE13B34F04E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB096034-F10D-48C7-BE3D-ECE13B34F04E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB096034-F10D-48C7-BE3D-ECE13B34F04E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB096034-F10D-48C7-BE3D-ECE13B34F04E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5343276-D294-43FC-954D-66EE6413BD29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5343276-D294-43FC-954D-66EE6413BD29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5343276-D294-43FC-954D-66EE6413BD29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5343276-D294-43FC-954D-66EE6413BD29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{56814616-A273-4427-8164-EC5533D8B5BB} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
+		{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA} = {58985A5A-8ABC-48BB-9C6D-6A819A121E64}
+		{292371A9-2553-4FC2-8763-A496AB143CE7} = {58985A5A-8ABC-48BB-9C6D-6A819A121E64}
+		{EB096034-F10D-48C7-BE3D-ECE13B34F04E} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
+		{F5343276-D294-43FC-954D-66EE6413BD29} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
 	EndGlobalSection
 EndGlobal

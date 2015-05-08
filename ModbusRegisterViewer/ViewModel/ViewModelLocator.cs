@@ -1,21 +1,5 @@
-/*
-  In App.xaml:
-  <Application.Resources>
-      <vm:ViewModelLocator xmlns:vm="clr-namespace:ModbusRegisterViewer"
-                           x:Key="Locator" />
-  </Application.Resources>
-  
-  In the View:
-  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
-
-  You can also use Blend to do all this with the tool's support.
-  See http://www.galasoft.ch/mvvm
-*/
-
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
-using ModbusRegisterViewer.ViewModel.SlaveSimulator;
-using ModbusRegisterViewer.ViewModel.Sniffer;
 using ModbusTools.Common.Services;
 
 namespace ModbusRegisterViewer.ViewModel
@@ -34,9 +18,7 @@ namespace ModbusRegisterViewer.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             SimpleIoc.Default.Register<AboutViewModel>();
-            SimpleIoc.Default.Register<SnifferViewModel>();
-            SimpleIoc.Default.Register<SlaveSimulatorViewModel>();
-
+        
             if (!SimpleIoc.Default.IsRegistered<IMessageBoxService>())
             {
                 SimpleIoc.Default.Register<IMessageBoxService>(() => new MessageBoxService());
@@ -48,16 +30,6 @@ namespace ModbusRegisterViewer.ViewModel
             get { return ServiceLocator.Current.GetInstance<AboutViewModel>(); }
         }
 
-        public SnifferViewModel Sniffer
-        {
-            get { return new SnifferViewModel(); }
-        }
-
-        public SlaveSimulatorViewModel SlaveSimulator
-        {
-            get { return new SlaveSimulatorViewModel(); }
-        }
-        
         public static void Cleanup()
         {
         }

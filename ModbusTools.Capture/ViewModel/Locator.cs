@@ -4,7 +4,7 @@
     {
         public static CaptureViewModel Capture
         {
-            get {  return new CaptureViewModel(); }
+            get { return new CaptureViewModel(); }
         }
     }
 }
