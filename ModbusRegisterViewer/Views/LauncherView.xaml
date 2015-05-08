@@ -6,7 +6,7 @@
         ResizeMode="NoResize"
         SizeToContent="Height"
         WindowStartupLocation="CenterScreen"
-        Title="LauncherView"  Width="580" Background="#FF0C3455" Icon="/ModbusRegisterViewer;component/Images/equipment_zoom_48.png">
+        Title="LauncherView"  Width="580" Background="{StaticResource WindowBackground}" Icon="/ModbusRegisterViewer;component/Images/equipment_zoom_48.png">
     
     <Window.Resources>
         <Style TargetType="Label" x:Key="TitleLabel">
@@ -147,8 +147,8 @@
 
                     <Button Click="LaunchCapture" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
 
-                        <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
-                        <TextBlock FontWeight="Bold" FontFamily="Arial">Modbus Capture - Alpha</TextBlock>
+                        <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="4">
+                        <TextBlock FontWeight="Bold" FontFamily="Arial">Modbus Capture</TextBlock>
                         <LineBreak/>
                         <TextBlock>Captures and display Modbus traffic.</TextBlock>
                     </TextBlock>

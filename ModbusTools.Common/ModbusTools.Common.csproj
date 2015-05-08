@@ -93,7 +93,7 @@
     <Compile Include="DataContractUtilities.cs" />
     <Compile Include="DifferentialPreferences.cs" />
     <Compile Include="FileUtilities.cs" />
-    <Compile Include="FtdiLatencyConfigurator.cs" />
+    <Compile Include="FtdiConfiguration.cs" />
     <Compile Include="FunctionCode.cs" />
     <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="IMasterContext.cs" />

@@ -15,7 +15,7 @@ namespace ModbusTools.Capture.View
 
         private void CaptureView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!FtdiLatencyConfigurator.CheckForLatency(this))
+            if (!FtdiConfiguration.CheckForLatency(this))
                 Close();
         }
     }

@@ -9,11 +9,13 @@
             
             <viewModel:ViewModelLocator x:Key="Locator" />
 
-            <LinearGradientBrush p4:Key="WindowBackground" EndPoint="0.5,1" StartPoint="0.5,0" xmlns:p4="http://schemas.microsoft.com/winfx/2006/xaml">
+            <!--<LinearGradientBrush p4:Key="WindowBackground" EndPoint="0.5,1" StartPoint="0.5,0" xmlns:p4="http://schemas.microsoft.com/winfx/2006/xaml">
                 <GradientStop Color="#FF0C3455" Offset="0" />
                 <GradientStop Color="#649FD0" Offset="0.418" />
                 <GradientStop Color="#FF0C3455" Offset="0.987" />
-            </LinearGradientBrush>
+            </LinearGradientBrush>-->
+
+            <SolidColorBrush x:Key="WindowBackground" Color="#EAEAEA"  />
 
             <SolidColorBrush Color="#7EC7C6C6" p4:Key="ModalBackground" xmlns:p4="http://schemas.microsoft.com/winfx/2006/xaml" />
 

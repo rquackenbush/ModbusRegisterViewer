@@ -103,7 +103,7 @@ namespace ModbusTools.SlaveSimulator.View
                 }
             }
 
-            if (!FtdiLatencyConfigurator.CheckForLatency(this))
+            if (!FtdiConfiguration.CheckForLatency(this))
                 Close();
         }
     }

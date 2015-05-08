@@ -1,23 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using Microsoft.Win32;
 using System.Diagnostics;
 
 namespace ModbusTools.Common
 {
-    public static class FtdiLatencyConfigurator
+    public static class FtdiConfiguration
     {
         private const string FtdiRootKey = @"SYSTEM\CurrentControlSet\Enum\FTDIBUS";
         private const string LatencyTimerKey = "latencyTimer";
 
         public const int LatencyMs = 1;
 
-        public static bool RequiresLatencyChanges()
+        private static IEnumerable<string> GetRegistryPathsForLatencyThatNeedChanging()
         {
             var ftdiRootKey = Registry.LocalMachine.OpenSubKey(FtdiRootKey);
 
             if (ftdiRootKey == null)
-                return false;
+                yield break;
 
             //Get the key for each device
             var deviceNames = ftdiRootKey.GetSubKeyNames();
@@ -40,13 +45,34 @@ namespace ModbusTools.Common
                     //Check to see if we need to change the value
                     if (existingValue == null || ((int)existingValue) != LatencyMs)
                     {
-                        return true;
+                        yield return latencyPath;
                     }
                 }
             }
-
-            return false;
         }
+
+        public static bool RequiresLatencyChanges()
+        {
+            return GetRegistryPathsForLatencyThatNeedChanging().Any();
+        }
+
+        //private static void SetLatencyCommandLine(string registryKey)
+        //{
+        //    var args = string.Format("add \"HKLM\\{0}\" /f /v \"{1}\" /t REG_DWORD /d {2}", registryKey, LatencyTimerKey, LatencyMs);
+
+        //    var process = Process.Start("reg", args);
+
+        //    if (process == null)
+        //    {
+        //        MessageBox.Show("Unable to start command line process");
+                                
+        //    }
+        //    else
+        //    {
+
+        //        process.WaitForExit();
+        //    }
+        //}
 
         /// <summary>
         /// Sets the latency of the FTDI cables.
@@ -54,64 +80,59 @@ namespace ModbusTools.Common
         /// <param name="latencyMs"></param>
         /// <remarks>http://www.ftdichip.com/Support/Documents/AppNotes/AN_107_AdvancedDriverOptions_AN_000073.pdf</remarks>
         /// <returns></returns>
-        public static bool SetLatency()
+        public static void SetLatency()
         {
-            var ftdiRootKey = Registry.LocalMachine.OpenSubKey(FtdiRootKey);
+            var keys = GetRegistryPathsForLatencyThatNeedChanging();
 
-            if (ftdiRootKey == null)
-                return false;
+            var regFile = new StringBuilder();
 
-            //Get the key for each device
-            var deviceNames = ftdiRootKey.GetSubKeyNames();
+            regFile.AppendLine("Windows Registry Editor Version 5.00");
+            regFile.AppendLine();
 
-            bool hasChanged = false;
-
-            //Iterate through each FTDI configuration
-            foreach (var deviceName in deviceNames)
+            foreach (var key in keys)
             {
-                //Get the path to the latency parameter
-                var latencyPath = string.Format("{0}\\{1}\\0000\\Device Parameters", FtdiRootKey, deviceName);
+                regFile.AppendFormat("[HKEY_LOCAL_MACHINE\\{0}]", key);
+                regFile.AppendLine();
 
-                //Try to load up the sub key
-                var deviceParamtersKey = Registry.LocalMachine.OpenSubKey(latencyPath, true);
+                regFile.AppendFormat("\"LatencyTimer\"=dword:0000000{0}", LatencyMs);
+                regFile.AppendLine();
+                regFile.AppendLine();
 
-                //Make sure that we found something
-                if (deviceParamtersKey != null)
-                {
-                    //Get the existing values
-                    var existingValue = deviceParamtersKey.GetValue(LatencyTimerKey);
+                //SetLatencyCommandLine(key);
 
-                    //Check to see if we need to change the value
-                    if (existingValue == null || ((int)existingValue) != LatencyMs)
-                    {
-                        Console.WriteLine("Changing FTDI latency value for {0}", deviceName);
+                ////Try to load up the sub key
+                //var deviceParamtersKey = Registry.LocalMachine.OpenSubKey(key, true);
 
-                        //Set the value
-                        deviceParamtersKey.SetValue(LatencyTimerKey, LatencyMs);
+                ////Make sure that we found something
+                //if (deviceParamtersKey != null)
+                //{
+                //    //Set the value
+                //    deviceParamtersKey.SetValue(LatencyTimerKey, LatencyMs);
 
-                        //We have changed a value. It was glorious.
-                        hasChanged = true;
-                    }
-                }
+                //    //We have changed a value. It was glorious.
+                //    hasChanged = true;
+                //}
             }
 
-            return hasChanged;
-        }
+            //Create a temporary path
+            var tempPath = Path.Combine(Path.GetTempPath(), string.Format("{0}.reg", Guid.NewGuid().ToString("N")));
 
-        public static void LaunchConfigurationTool()
-        {
-            const string executable = "ModbusTools.Configuration.exe";
+            //Write out the file
+            File.WriteAllText(tempPath, regFile.ToString());
 
-            var process = Process.Start(executable);
+            var process = Process.Start(tempPath);
 
             if (process == null)
             {
-                MessageBox.Show(string.Format("Unable to find or launch '{0}'", executable));
+                MessageBox.Show("Unable to start latency process");
             }
             else
             {
-                process.WaitForExit();    
+                process.WaitForExit();
             }
+
+            //Delete the file
+            File.Delete(tempPath);
         }
 
         public static bool CheckForLatency(Window window)
@@ -128,9 +149,9 @@ namespace ModbusTools.Common
                     {
                         case MessageBoxResult.Yes:
 
-                            LaunchConfigurationTool();
+                            //LaunchConfigurationTool();
+                            SetLatency();
 
-                            //SetLatency();
                             break;
 
                         case MessageBoxResult.No:
