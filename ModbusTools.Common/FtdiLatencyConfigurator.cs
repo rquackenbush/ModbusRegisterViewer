@@ -120,7 +120,7 @@ namespace ModbusTools.Common
             {
                 if (RequiresLatencyChanges())
                 {
-                    const string message = "One or more FTDI ports are configured incorrectly on this computer.\n\n. Attempt to auto correct?";
+                    const string message = "One or more FTDI ports are configured incorrectly on this computer.\n\nAttempt to auto correct?";
 
                     var result = MessageBox.Show(window, message, "Incompatible Port Settings", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
 

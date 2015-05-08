@@ -19,6 +19,8 @@ namespace ModbusTools.Configuration
             {
                 MessageBox.Show(ex.ToString(), "Error configuring FTDI adapters.");
             }
+
+            Shutdown();
         }
     }
 }
