@@ -3,25 +3,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d">
     
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" Margin="4" MinWidth="200" ItemsSource="{Binding Path=Adapters}" SelectedItem="{Binding Path=SelectedAdapter}" DisplayMemberPath="DisplayName"  VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+            <ComboBox Grid.Column="0" Margin="4" MinWidth="200" ItemsSource="{Binding Path=Ports}" SelectedItem="{Binding Path=SelectedPort}"  VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
             <Button Grid.Column="1" Command="{Binding Path=RefreshCommand}" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="/ModbusTools.Common;component/Images/Refresh.png" Width="16" ></Image>
             </Button>
+            <xctk:IntegerUpDown Grid.Column="2" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Baud" Value="{Binding Path=Baud}"/>
+            <xctk:IntegerUpDown Grid.Column="3" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Data Bits" Minimum="5" Maximum="8" Value="{Binding Path=DataBits}"/>
+            <ComboBox Grid.Column="4" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Parity" SelectedValue="{Binding Path=Parity}" ItemsSource="{Binding Path=Parities}" />
+            <ComboBox Grid.Column="5" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Stop Bits" ItemsSource="{Binding Path=StopBitChoices}" SelectedValue="{Binding Path=StopBits}" SelectedValuePath="Key" DisplayMemberPath="Value" />
+            <TextBlock Grid.Column="6" Text=":" VerticalAlignment="Center" Margin="1,0,1,0"/>
+            <xctk:DecimalUpDown Grid.Column="7" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Read Timeout (seconds)" Value="{Binding Path=ReadTimeout}" FormatString="0.0" Minimum="0" Maximum="5" />
+            <xctk:DecimalUpDown Grid.Column="8" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Write Timeout (seconds)" Value="{Binding Path=WriteTimeout}" FormatString="0.0" Minimum="0" Maximum="5" />
         </Grid>
     </Grid>
     

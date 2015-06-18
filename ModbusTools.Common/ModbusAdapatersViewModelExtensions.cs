@@ -9,21 +9,21 @@ namespace ModbusTools.Common
         {
             var displayName = preferences[key];
 
-            var item = modbusAdaptersViewModel.Adapters.FirstOrDefault(a => string.Compare(a.DisplayName, displayName, true) == 0);
+            var item = modbusAdaptersViewModel.Ports.FirstOrDefault(a => string.Compare(a, displayName, true) == 0);
 
             if (item != null)
             {
-                modbusAdaptersViewModel.SelectedAdapter = item;
+                modbusAdaptersViewModel.SelectedPort = item;
             }
         }
 
         public static void GetPreferences(this ModbusAdaptersViewModel modbusAdaptersViewModel, IPreferences preferences, string key)
         {
-            var selectedAdapter = modbusAdaptersViewModel.SelectedAdapter;
+            var selectedPort = modbusAdaptersViewModel.SelectedPort;
 
-            if (selectedAdapter != null)
+            if (selectedPort != null)
             {
-                preferences[key] = selectedAdapter.DisplayName;
+                preferences[key] = selectedPort;
             }
         }
     }
