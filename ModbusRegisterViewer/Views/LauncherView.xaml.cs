@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using ModbusRegisterViewer.ViewModel;
 using ModbusTools.Capture.View;
+using ModbusTools.SlaveExplorer.View;
 using ModbusTools.SlaveSimulator.View;
 
 namespace ModbusRegisterViewer.Views
@@ -9,11 +10,15 @@ namespace ModbusRegisterViewer.Views
     /// <summary>
     /// Interaction logic for LauncherView.xaml
     /// </summary>
-    public partial class LauncherView : Window
+    public partial class LauncherView
     {
         public LauncherView()
         {
             InitializeComponent();
+
+            LaunchView<SlaveExplorerView>();
+
+            Close();
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
@@ -23,7 +28,6 @@ namespace ModbusRegisterViewer.Views
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
             if (e.ChangedButton == MouseButton.Left)
                 DragMove();
         }
@@ -60,6 +64,11 @@ namespace ModbusRegisterViewer.Views
             };
 
             aboutView.ShowDialog();
+        }
+
+        private void LaunchSlaveExplorer(object sender, RoutedEventArgs e)
+        {
+            LaunchView<SlaveExplorerView>();
         }
     }
 }

@@ -39,19 +39,10 @@ namespace ModbusTools.SlaveSimulator.View
             SlaveDocumentPane.SelectedContentIndex = SlaveDocumentPane.ChildrenCount - 1;
         }
 
-        private void PerformViewModelAction(Action<SlaveSimulatorViewModel> action)
-        {
-            var viewModel = DataContext as SlaveSimulatorViewModel;
-
-            if (viewModel == null)
-                throw new Exception("Unable to find view model");
-
-            action(viewModel);
-        }
-
+      
         private void SlaveClosed(object sender, EventArgs eventArgs)
         {
-            PerformViewModelAction(viewModel =>
+            this.PerformViewModelAction<SlaveSimulatorViewModel>(viewModel =>
             {
                 var slaveContainer = sender as LayoutDocument;
 
@@ -75,7 +66,7 @@ namespace ModbusTools.SlaveSimulator.View
 
         private void SlaveClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            PerformViewModelAction(viewModel =>
+            this.PerformViewModelAction<SlaveSimulatorViewModel>(viewModel =>
             {
                 if (!viewModel.CanCloseSlave())
                 {

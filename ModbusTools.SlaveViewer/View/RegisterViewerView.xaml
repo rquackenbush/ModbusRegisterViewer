@@ -5,9 +5,11 @@
         xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
         Title="Modbus Register Viewer" Height="519" Width="865"
         Closed="RegisterViewerView_OnClosed"
-        Background="{StaticResource WindowBackground}"
+        
         Icon="/Images/Connection_Manager.png"
 >
+
+    <!--Background="{StaticResource WindowBackground}"-->
 
     <Window.InputBindings>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding Path=SaveCommand}"></KeyBinding>

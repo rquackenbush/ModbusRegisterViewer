@@ -274,6 +274,10 @@
       <Project>{12696174-c514-4e69-abda-0e926a52ba57}</Project>
       <Name>ModbusTools.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.SlaveExplorer\ModbusTools.SlaveExplorer.csproj">
+      <Project>{ec75ebe4-ff4f-4fbd-b7cd-a35890e45b6e}</Project>
+      <Name>ModbusTools.SlaveExplorer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ModbusTools.SlaveSimulator\ModbusTools.SlaveSimulator.csproj">
       <Project>{4563f1da-9e71-4c2e-a6a3-67aa57414afa}</Project>
       <Name>ModbusTools.SlaveSimulator</Name>
@@ -285,6 +289,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Help_32x42_72.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\XSLTTransformfile_829_32x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

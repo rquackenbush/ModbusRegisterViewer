@@ -119,6 +119,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 
                 <Grid.ColumnDefinitions>
@@ -140,9 +141,24 @@
                     </Button>
                 </Grid>
 
+
+                <!-- Slave Explorer -->
+                <!--<Image Grid.Row="1" Grid.Column="0" Margin="5" Source="/ModbusRegisterViewer;component/Images/XSLTTransformfile_829_32x.png" />
+                <Grid Grid.Row="1" Grid.Column="1"  Style="{StaticResource ToolDescription}" >
+
+                    <Button Click="LaunchSlaveExplorer" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
+
+                        <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  Margin="4">
+                                    <TextBlock FontWeight="Bold" FontFamily="Arial">Structured Slave Explorer</TextBlock>
+                                    <LineBreak/>
+                                    <TextBlock>Query and set values on connected slave devices using typed data.</TextBlock>
+                        </TextBlock>
+                    </Button>
+                </Grid>-->
+
                 <!-- Capture -->
-                <Image Grid.Row="1" Grid.Column="0"  Margin="5" Source="/ModbusRegisterViewer;component/Images/Network_Map.png" />
-                <Grid Grid.Row="1" Grid.Column="1" Style="{StaticResource ToolDescription}" >
+                <Image Grid.Row="2" Grid.Column="0"  Margin="5" Source="/ModbusRegisterViewer;component/Images/Network_Map.png" />
+                <Grid Grid.Row="2" Grid.Column="1" Style="{StaticResource ToolDescription}" >
 
                     <Button Click="LaunchCapture" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
 
@@ -157,8 +173,8 @@
 
              
                 <!-- Slave Simulator -->
-                <Image Grid.Row="2" Grid.Column="0" Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"/>
-                <Grid Grid.Row="2"  Grid.Column="1" Style="{StaticResource ToolDescription}" >
+                <Image Grid.Row="3" Grid.Column="0" Margin="5" Source="/ModbusRegisterViewer;component/Images/flow_write_48.png"/>
+                <Grid Grid.Row="3"  Grid.Column="1" Style="{StaticResource ToolDescription}" >
 
                     <Button Click="LaunchMultipleSlaveSimulator" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
 
