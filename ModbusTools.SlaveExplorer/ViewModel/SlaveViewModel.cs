@@ -1,42 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices.ComTypes;
+using System.Linq;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using ModbusTools.Common;
+using ModbusTools.SlaveExplorer.Model;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
     public class SlaveViewModel : ViewModelBase
     {
-        private byte _slaveAddress = 1;
+        private byte _slaveId = 1;
         private readonly ObservableCollection<RangeViewModelBase> _ranges = new ObservableCollection<RangeViewModelBase>();
+        private string _name;
 
-        private int _newRangeNumber = 1;
-
-        public SlaveViewModel()
+        public SlaveViewModel(SlaveModel slaveModel)
         {
-            AddHoldingRegistersCommand = new RelayCommand(AddHoldingRegisters, CanAdd);
-            AddInputRegistersCommand = new RelayCommand(AddInputRegisters, CanAdd);
-            AddCoilsCommand = new RelayCommand(AddCoils, CanAdd);
-            AddDiscretesCommand = new RelayCommand(AddDiscrete, CanAdd);
+            if (slaveModel == null) throw new ArgumentNullException("slaveModel");
+
+            Name = slaveModel.Name;
+            SlaveId = slaveModel.SlaveId;
+
+
+            AddRegistersCommand = new RelayCommand(AddRegisters, CanAdd);
+            //AddInputRegistersCommand = new RelayCommand(AddInputRegisters, CanAdd);
+            //AddCoilsCommand = new RelayCommand(AddCoils, CanAdd);
+            //AddDiscretesCommand = new RelayCommand(AddDiscrete, CanAdd);
+
+            if (slaveModel.Ranges != null)
+            {
+                foreach (var range in slaveModel.Ranges)
+                {
+                    var rangeViewModel = new RegisterRangeViewModel(range);
+
+                    _ranges.Add(rangeViewModel);
+                }
+            }
         }
 
-        public byte SlaveAddress
+        internal SlaveModel GetModel()
         {
-            get { return _slaveAddress; }
+            return new SlaveModel()
+            {
+                Name = Name,
+                SlaveId = SlaveId,
+                Ranges = Ranges.Select(r => r.GetModel()).ToArray()
+            };
+        }
+
+        public byte SlaveId
+        {
+            get { return _slaveId; }
             set
             {
-                _slaveAddress = value; 
+                _slaveId = value; 
                 RaisePropertyChanged();
             }
         }
 
-        public ICommand AddHoldingRegistersCommand { get; private set; }
-        public ICommand AddInputRegistersCommand { get; private set; }
-        public ICommand AddCoilsCommand { get; private set; }
-        public ICommand AddDiscretesCommand { get; private set; }
+        public ICommand AddRegistersCommand { get; private set; }
+        //public ICommand AddInputRegistersCommand { get; private set; }
+        //public ICommand AddCoilsCommand { get; private set; }
+        //public ICommand AddDiscretesCommand { get; private set; }
 
         private bool CanAdd()
         {
@@ -45,30 +72,32 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         private string CreateNewRangeName()
         {
-            return string.Format("Range {0}", _newRangeNumber++);
+            return _ranges.Select(r => r.Name).CreateUnique("Range {0}");
         }
 
-        private void AddHoldingRegisters()
+        private void AddRegisters()
         {
-            _ranges.Add(new RegisterRangeViewModel()
+            var rangeModel = new RangeModel()
+            {
+                Name = "Range 1",
+                StartIndex = 1,
+                RegisterType = RegisterType.Holding
+            };
+
+            _ranges.Add(new RegisterRangeViewModel(rangeModel)
             {
                 Name = CreateNewRangeName()
             });
         }
 
-        private void AddInputRegisters()
+        public string Name
         {
-            
-        }
-
-        private void AddCoils()
-        {
-            
-        }
-
-        private void AddDiscrete()
-        {
-            
+            get { return _name; }
+            set
+            {
+                _name = value; 
+                RaisePropertyChanged();
+            }
         }
 
         public IEnumerable<RangeViewModelBase> Ranges

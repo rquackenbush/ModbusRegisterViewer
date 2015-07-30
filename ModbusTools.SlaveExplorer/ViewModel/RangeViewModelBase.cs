@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using ModbusTools.SlaveExplorer.Model;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
@@ -31,5 +32,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 RaisePropertyChanged();
             }
         }
+
+        protected internal abstract RangeModel GetModel();
     }
 }

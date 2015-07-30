@@ -47,7 +47,7 @@
                             </Style>
                         </StackPanel.Resources>
                         
-                        <Button Command="{Binding Path=AddHoldingRegistersCommand}">Holding Register Range</Button>
+                        <Button Command="{Binding Path=AddRegistersCommand}">Holding Register Range</Button>
                         <Button Command="{Binding Path=AddInputRegistersCommand}">Input Register Range</Button>
                         <!--<Button Command="{Binding Path=AddCoilsCommand}">Coil Range</Button>
                         <Button Command="{Binding Path=AddDiscretesCommand}">Discrete Range</Button>-->
@@ -81,7 +81,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Style="{StaticResource LabelStyle}">Modbus Slave Id</TextBlock>
-            <xctk:IntegerUpDown Grid.Row="0" Minimum="0" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveAddress}"/>
+            <xctk:IntegerUpDown Grid.Row="0" Minimum="0" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveId}"/>
 
                 
                 

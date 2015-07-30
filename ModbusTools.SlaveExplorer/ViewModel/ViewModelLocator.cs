@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ModbusTools.Common;
+using ModbusTools.SlaveExplorer.Model;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
@@ -17,13 +19,34 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         {
             get
             {
-
-                var viewModel = new SlaveViewModel();
-
-                viewModel.AddRange(new RegisterRangeViewModel()
+                var slaveModel = new SlaveModel()
+                {
+                    Name = "RTULink",
+                    SlaveId = 60,
+                    Ranges = new RangeModel[]
                     {
-                        Name = "Register Range 1"
-                    });
+                        new RangeModel()
+                        {
+                            Name = "Sys Info",
+                            Fields = new FieldModel[]
+                            {
+                                new FieldModel()
+                                {
+                                    Name = "Field 1"
+                                }
+                                ,
+                                new FieldModel()
+                                {
+                                    Name = "Field 2"
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var viewModel = new SlaveViewModel(slaveModel);
+
+                
 
 
                 return viewModel;
@@ -32,25 +55,31 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         public static RegisterRangeEditorViewModel RegisterRangeEditor
         {
-            get 
-            {  
+            get
+            {
+                var rangeModel = new RangeModel()
+                {
+                    Name = "Test Range",
+                    RegisterType = RegisterType.Holding,
+                    Fields = new FieldModel[]
+                    {
+                        new FieldModel()
+                        {
+                            Name = "Field 1",
+                            FieldType = FieldType.UINT16,
+                        },
+                        new FieldModel()
+                        {
+                            Name = "Field 2",
+                            FieldType = FieldType.FLOAT32
+                        }
+                    }
+                };
 
-                var viewModel = new RegisterRangeEditorViewModel()
+                var viewModel = new RegisterRangeEditorViewModel(rangeModel)
                 {
                     Name = "Design Time Editor"
                 };
-
-                viewModel.Fields.Add(
-                    new EditFieldViewModel()
-                    {
-                        Name = "Test 1"
-                    });
-
-                viewModel.Fields.Add(
-                    new EditFieldViewModel()
-                    {
-                        Name = "Test 2"
-                    });
 
                 return viewModel;
             }

@@ -136,6 +136,7 @@
     <Compile Include="Services\IMessageBoxServiceExtensions.cs" />
     <Compile Include="Services\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="ViewModel\ICloseableViewModel.cs" />
     <Compile Include="ViewModel\ModbusAdaptersViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />

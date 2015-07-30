@@ -143,7 +143,7 @@
 
 
                 <!-- Slave Explorer -->
-                <!--<Image Grid.Row="1" Grid.Column="0" Margin="5" Source="/ModbusRegisterViewer;component/Images/XSLTTransformfile_829_32x.png" />
+                <Image Grid.Row="1" Grid.Column="0" Margin="5" Source="/ModbusRegisterViewer;component/Images/XSLTTransformfile_829_32x.png" />
                 <Grid Grid.Row="1" Grid.Column="1"  Style="{StaticResource ToolDescription}" >
 
                     <Button Click="LaunchSlaveExplorer" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
@@ -154,7 +154,7 @@
                                     <TextBlock>Query and set values on connected slave devices using typed data.</TextBlock>
                         </TextBlock>
                     </Button>
-                </Grid>-->
+                </Grid>
 
                 <!-- Capture -->
                 <Image Grid.Row="2" Grid.Column="0"  Margin="5" Source="/ModbusRegisterViewer;component/Images/Network_Map.png" />

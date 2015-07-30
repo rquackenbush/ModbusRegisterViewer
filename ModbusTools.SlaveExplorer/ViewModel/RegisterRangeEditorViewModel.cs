@@ -33,13 +33,30 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             _registerTypeInput
         };
 
-        
-
         private RegisterType _registerType;
         private EditFieldViewModel _selectedField;
 
-        public RegisterRangeEditorViewModel()
+        public RegisterRangeEditorViewModel(RangeModel rangeModel)
         {
+            if (rangeModel == null) 
+                throw new ArgumentNullException("rangeModel");
+
+            Name = rangeModel.Name;
+            StartingRegisterIndex = rangeModel.StartIndex;
+
+            if (rangeModel.Fields != null)
+            {
+                foreach (var field in rangeModel.Fields)
+                {
+                    Fields.Add(new EditFieldViewModel()
+                    {
+                        Name = field.Name,
+                        FieldType = field.FieldType
+                    });
+                }
+            }
+            
+
             OkCommand = new RelayCommand(Ok, CanOk);
             CancelCommand = new RelayCommand(Cancel);
 
@@ -94,7 +111,6 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         {
             Close.RaiseEvent(new CloseEventArgs(false));
         }
-
 
         public string Name
         {

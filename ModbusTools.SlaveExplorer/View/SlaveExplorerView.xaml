@@ -6,10 +6,17 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:view1="clr-namespace:ModbusTools.SlaveExplorer.View"
+        xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         DataContext="{x:Static viewModel:ViewModelLocator.SlaveExplorer}"
+        Loaded="SlaveExplorerView_OnLoaded"
         Background="#EAEAEA"
         Title="Slave Explorer" Height="634.94" Width="1316.867" Icon="/ModbusTools.SlaveExplorer;component/Images/XSLTTransformfile_829_32x.png">
-    
+
+    <i:Interaction.Behaviors>
+        <common:CloseableBehavior />
+    </i:Interaction.Behaviors>
+
     <Window.Resources>
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="Margin" Value="6"/>
@@ -33,49 +40,38 @@
 
             <Menu>
                 <MenuItem Header="_File">
-                    <!--<MenuItem Header="_Open..." Command="{Binding Path=OpenCommand}"></MenuItem>
+                    <MenuItem Header="_Open..." Command="{Binding Path=OpenCommand}"/>
                     <Separator />
-                    <MenuItem Header="_Save" Command="{Binding Path=SaveCommand}" Visibility="Collapsed"/>
+                    <MenuItem Header="_Save" Command="{Binding Path=SaveCommand}" />
                     <MenuItem Header="Save _As..." Command="{Binding Path=SaveAsCommand}"/>
-                    <MenuItem Header="Export" >
-                        <MenuItem  Header="Export to CSV..." Command="{Binding Path=ExportToCsvCommand}" />
-                    </MenuItem>
-                    <Separator />-->
+                    <Separator/>
                     <MenuItem Header="E_xit" Click="ExitMenuItem_OnClick" />
                 </MenuItem>
-                <MenuItem Header="_View">
+                <!--<MenuItem Header="_View">
                     <MenuItem Header="_Toolbox"  />
                     <MenuItem Header="_Properties"  />
-                </MenuItem>
+                </MenuItem>-->
             </Menu>
             
-            <!--<ToolBar Grid.Row="1">
-                <Button></Button>
-            </ToolBar>-->
-
+            <ToolBar Grid.Row="1">
+                <Button Command="{Binding Path=CreateNewSlaveCommand}">Add Slave</Button>
+            </ToolBar>
+            
             <xcad:DockingManager x:Name="dockManager" Grid.Row="2" >
 
                 <xcad:LayoutRoot x:Name="_layoutRoot">
-                    
-
 
                     <xcad:LayoutPanel Orientation="Horizontal"  >
-
                        
-
-                        
-
-
                         <xcad:LayoutPanel Orientation="Vertical" DockWidth="*">
 
                             <xcad:LayoutDocumentPaneGroup  >
                                 <xcad:LayoutDocumentPane x:Name="MainDocumentPane" >
                                     
-                                    <xcad:LayoutDocument Title="RTULink [60]" CanClose="true" >
-
+                                    <!--<xcad:LayoutDocument Title="RTULink [60]" CanClose="true" >
                                         <view1:SlaveView/>
-
-                                    </xcad:LayoutDocument>
+                                    </xcad:LayoutDocument>-->
+                                    
                                 </xcad:LayoutDocumentPane>
                             </xcad:LayoutDocumentPaneGroup >
 

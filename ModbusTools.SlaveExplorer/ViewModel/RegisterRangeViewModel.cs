@@ -1,28 +1,30 @@
 ﻿using System.Windows.Input;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using ModbusTools.SlaveExplorer.Model;
 using ModbusTools.SlaveExplorer.View;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
     public class RegisterRangeViewModel : RangeViewModelBase
     {
+        private readonly RangeModel _rangeModel;
         private bool _isZeroBased;
         private ushort _startingRegisterIndex;
 
-        public RegisterRangeViewModel()
+        public RegisterRangeViewModel(RangeModel rangeModel)
         {
-                        EditCommand = new RelayCommand(Edit, CanEdit);
+            _rangeModel = rangeModel;
+            EditCommand = new RelayCommand(Edit, CanEdit);
         }
 
         public ICommand EditCommand { get; private set; }
 
         private void Edit()
         {
-            var rangeEditorViewModel = new RegisterRangeEditorViewModel()
-            {
+            var rangeModel = _rangeModel.Clone();
 
-            };
+            var rangeEditorViewModel = new RegisterRangeEditorViewModel(rangeModel);
 
             var view = new RegisterRangeEditorView()
             {
@@ -30,6 +32,16 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             };
 
             var result = view.ShowDialog();
+
+            if (result == true)
+            {
+                //TODO:
+            }
+        }
+
+        protected internal override RangeModel GetModel()
+        {
+            return _rangeModel;
         }
 
         private bool CanEdit()
