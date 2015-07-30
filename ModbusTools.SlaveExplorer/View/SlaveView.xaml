@@ -35,29 +35,7 @@
         </Grid.RowDefinitions>
         
         <ToolBar>
-            <xctk:SplitButton Content="Add" >
-                <xctk:SplitButton.DropDownContent>
-                    <StackPanel>
-                        
-                        <StackPanel.Resources>
-                            <Style TargetType="Button">
-                                <Setter Property="BorderThickness" Value="0"/>
-                                <Setter Property="Margin" Value="2"/>
-                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                            </Style>
-                        </StackPanel.Resources>
-                        
-                        <Button Command="{Binding Path=AddRegistersCommand}">Holding Register Range</Button>
-                        <Button Command="{Binding Path=AddInputRegistersCommand}">Input Register Range</Button>
-                        <!--<Button Command="{Binding Path=AddCoilsCommand}">Coil Range</Button>
-                        <Button Command="{Binding Path=AddDiscretesCommand}">Discrete Range</Button>-->
-                    </StackPanel>
-                </xctk:SplitButton.DropDownContent>    
-                
-                
-            </xctk:SplitButton>
-            
-            
+            <Button Command="{Binding Path=AddRegistersCommand}">Holding Register Range</Button>
         </ToolBar>
 
         <Grid Grid.Row="1">

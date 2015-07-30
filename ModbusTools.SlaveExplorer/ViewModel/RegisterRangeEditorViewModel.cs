@@ -61,6 +61,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             CancelCommand = new RelayCommand(Cancel);
 
             _fields.CollectionChanged += FieldsOnCollectionChanged;
+
+            CalculateOffsets();
         }
 
         private void FieldsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
@@ -268,5 +270,16 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         }
 
         #endregion
+
+        internal RangeModel GetModel()
+        {
+            return new RangeModel()
+            {
+                Name = Name,
+                RegisterType = RegisterType,
+                StartIndex = StartingRegisterIndex,
+                Fields = Fields.Select(f => f.GetModel()).ToArray()
+            };
+        }
     }
 }

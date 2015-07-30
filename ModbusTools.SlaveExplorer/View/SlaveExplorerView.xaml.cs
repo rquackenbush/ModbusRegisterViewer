@@ -34,10 +34,8 @@ namespace ModbusTools.SlaveExplorer.View
                 Content = new SlaveView()
                 {
                     DataContext = slaveViewModel
-                },
-                
+                },                
             };
-
 
             layoutDocument.Closed += LayoutDocumentOnClosed;
 

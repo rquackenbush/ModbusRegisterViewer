@@ -8,7 +8,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 {
     public class RegisterRangeViewModel : RangeViewModelBase
     {
-        private readonly RangeModel _rangeModel;
+        private RangeModel _rangeModel;
         private bool _isZeroBased;
         private ushort _startingRegisterIndex;
 
@@ -16,15 +16,14 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         {
             _rangeModel = rangeModel;
             EditCommand = new RelayCommand(Edit, CanEdit);
+            Name = rangeModel.Name;
         }
 
         public ICommand EditCommand { get; private set; }
 
         private void Edit()
         {
-            var rangeModel = _rangeModel.Clone();
-
-            var rangeEditorViewModel = new RegisterRangeEditorViewModel(rangeModel);
+            var rangeEditorViewModel = new RegisterRangeEditorViewModel(_rangeModel.Clone());
 
             var view = new RegisterRangeEditorView()
             {
@@ -36,6 +35,12 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             if (result == true)
             {
                 //TODO:
+
+                var rangeModel = rangeEditorViewModel.GetModel();
+
+                Name = rangeModel.Name;
+
+                _rangeModel = rangeModel;
             }
         }
 

@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IRuntimeField.cs" />
     <Compile Include="Model\FieldModel.cs" />
     <Compile Include="Model\FieldType.cs" />
     <Compile Include="Model\Mapper.cs" />
@@ -110,6 +111,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Runtime\RuntimeFieldBase.cs" />
     <Compile Include="ViewModel\EditFieldViewModel.cs" />
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="ViewModel\RangeViewModelBase.cs" />

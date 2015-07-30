@@ -7,6 +7,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using ModbusTools.Common;
 using ModbusTools.SlaveExplorer.Model;
+using ModbusTools.SlaveExplorer.View;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
@@ -79,15 +80,26 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         {
             var rangeModel = new RangeModel()
             {
-                Name = "Range 1",
+                Name = CreateNewRangeName(),
                 StartIndex = 1,
                 RegisterType = RegisterType.Holding
             };
 
-            _ranges.Add(new RegisterRangeViewModel(rangeModel)
+            var rangeEditorViewModel = new RegisterRangeEditorViewModel(rangeModel);
+
+            var dialog = new RegisterRangeEditorView()
             {
-                Name = CreateNewRangeName()
-            });
+                DataContext = rangeEditorViewModel
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var updatedRangeModel = rangeEditorViewModel.GetModel();
+
+                var rangeViewModel = new RegisterRangeViewModel(updatedRangeModel);
+
+                _ranges.Add(rangeViewModel);
+            }
         }
 
         public string Name
