@@ -131,7 +131,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
+                    <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridCellStyle}" />
                     <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
                     <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
                     <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
