@@ -18,6 +18,26 @@ namespace ModbusTools.SlaveExplorer.Model
             }
         }
 
+        public double GetDouble(string key, double defaultValue)
+        {
+            string rawValue;
+
+            if (!_options.TryGetValue(key, out rawValue))
+                return defaultValue;
+
+            double value;
+
+            if (double.TryParse(rawValue, out value))
+                return value;
+
+            return defaultValue;
+        }
+
+        public void SetDouble(string key, double value)
+        {
+            _options[key] = value.ToString();
+        }
+
         protected int GetInt32(string key, int defaultValue)
         {
             string rawValue;

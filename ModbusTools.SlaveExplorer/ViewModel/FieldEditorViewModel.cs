@@ -15,7 +15,10 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         internal RegisterRangeEditorViewModel Parent { get; set; }
 
         public FieldEditorViewModel() 
-            : this(new FieldModel())
+            : this(new FieldModel()
+            {
+                FieldType = FieldType.UINT16
+            })
         {
         }
 
@@ -41,26 +44,51 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         public ICommand EditOptionsCommand { get; private set; }
 
+        private void EditBit8Options()
+        {
+            var options = new BIT8OptionWrapper(_fieldModel.Options);
+
+            var viewModel = new BIT8FieldOptionsViewModel(options);
+
+            var view = new BIT8FieldOptionsView()
+            {
+                DataContext = viewModel
+            };
+
+            if (view.ShowDialog() == true)
+            {
+                _fieldModel.Options = options.GetOptions();
+            }
+        }
+
+        private void EditFixedPointOptions()
+        {
+            var options = new FixedPointOptionWrapper(_fieldModel.Options);
+
+            var viewModel = new FixedPointOptionsViewModel(options);
+
+            var view = new FixedPointOptionsView()
+            {
+                DataContext = viewModel
+            };
+
+            if (view.ShowDialog() == true)
+            {
+                _fieldModel.Options = options.GetOptions();
+            }
+        }
+
         private void EditOptions()
         {
             switch (FieldType)
             {
                 case FieldType.BIT8:
+                    EditBit8Options();
+                    break;
 
-                    var options = new BIT8OptionWrapper(_fieldModel.Options);
-
-                    var viewModel = new BIT8FieldOptionsViewModel(options);
-
-                    var view = new BIT8FieldOptionsView()
-                    {
-                        DataContext = viewModel
-                    };
-
-                    if (view.ShowDialog() == true)
-                    {
-                        _fieldModel.Options = options.GetOptions();
-                    }
-
+                case FieldType.FIXED16:
+                case FieldType.UFIXED16:
+                    EditFixedPointOptions();
                     break;
             }
         }
@@ -72,6 +100,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 switch (FieldType)
                 {
                     case FieldType.BIT8:
+                    case FieldType.FIXED16:
+                    case FieldType.UFIXED16:
                         return true;
 
                     default:
@@ -129,7 +159,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
                     case FieldType.UINT16:
                     case FieldType.INT16:
-                    //case FieldType.BIT16:
+                    case FieldType.FIXED16:
+                    case FieldType.UFIXED16:
                         return 2;
 
                     case FieldType.UINT8:

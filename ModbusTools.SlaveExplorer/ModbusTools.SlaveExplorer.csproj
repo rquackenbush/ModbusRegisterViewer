@@ -102,6 +102,7 @@
     <Compile Include="Model\FieldOptionModel.cs" />
     <Compile Include="Model\FieldOptionWrapper.cs" />
     <Compile Include="Model\FieldType.cs" />
+    <Compile Include="Model\FixedPointOptionWrapper.cs" />
     <Compile Include="Model\IDirtyExtensions.cs" />
     <Compile Include="Model\Mapper.cs" />
     <Compile Include="Model\ObjectExtensions.cs" />
@@ -123,6 +124,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Runtime\BIT8RuntimeField.cs" />
+    <Compile Include="Runtime\FIXED16RuntimeField.cs" />
     <Compile Include="Runtime\INT16RuntimeField.cs" />
     <Compile Include="Runtime\INT32RuntimeField.cs" />
     <Compile Include="Runtime\INT8RuntimeField.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="Runtime\UINT8RuntimeField.cs" />
     <Compile Include="ViewModel\BIT8FieldOptionsViewModel.cs" />
     <Compile Include="ViewModel\FieldEditorViewModel.cs" />
+    <Compile Include="ViewModel\FixedPointOptionsViewModel.cs" />
     <Compile Include="ViewModel\RangeViewModelBase.cs" />
     <Compile Include="ViewModel\RegisterRangeEditorViewModel.cs" />
     <Compile Include="ViewModel\RegisterRangeViewModel.cs" />
@@ -143,6 +146,9 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\BIT8FieldOptionsView.xaml.cs">
       <DependentUpon>BIT8FieldOptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FixedPointOptionsView.xaml.cs">
+      <DependentUpon>FixedPointOptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FlagRangeView.xaml.cs">
       <DependentUpon>FlagRangeView.xaml</DependentUpon>
@@ -172,6 +178,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="View\BIT8FieldOptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\FixedPointOptionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

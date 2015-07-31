@@ -18,6 +18,12 @@
 
         //BIT16,
 
-        FLOAT32
+        FLOAT32,
+
+        //Signed 16 bit fixedpoint integer
+        FIXED16,
+
+        //Unsigned 16 bit fixedpoint integer
+        UFIXED16
     }
 }

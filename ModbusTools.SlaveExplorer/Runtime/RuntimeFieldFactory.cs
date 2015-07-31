@@ -38,6 +38,12 @@ namespace ModbusTools.SlaveExplorer.Runtime
                 case FieldType.BIT8:
                     return new BIT8RuntimeField(fieldModel);
 
+                case FieldType.FIXED16:
+                    return new FIXED16RuntimeField(fieldModel);
+
+                //case FieldType.UFIXED16:
+                //    return new UFIXED16RuntimeField(fieldModel);
+
                 default:
                     throw new ApplicationException(string.Format("Unsupported field type {0}", fieldModel.FieldType));
             }
