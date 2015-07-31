@@ -34,7 +34,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             _parent = parent;
             _dirty = dirty;
             _modbusAdapterProvider = modbusAdapterProvider;
-            IsExpanded = rangeModel.IsExpanded;
+
            
             EditCommand = new RelayCommand(Edit, CanEdit);
             ReadCommand = new RelayCommand(Read, CanRead);
@@ -62,6 +62,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             }
 
             _rangeModel = rangeModel;
+
+            IsExpanded = rangeModel.IsExpanded;
         }
 
         public ICommand EditCommand { get; private set; }

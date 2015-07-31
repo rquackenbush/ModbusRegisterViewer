@@ -10,7 +10,7 @@ namespace ModbusTools.SlaveExplorer.View
     /// <summary>
     /// Interaction logic for SlaveExplorerView.xaml
     /// </summary>
-    public partial class SlaveExplorerView : Window
+    public partial class SlaveExplorerView
     {
         public SlaveExplorerView()
         {
@@ -29,7 +29,6 @@ namespace ModbusTools.SlaveExplorer.View
                 vm.SlaveAdded += SlaveAdded;
 
                 vm.SlaveRemoved += SlaveRemoved;
-
             });
         }
 
@@ -69,7 +68,7 @@ namespace ModbusTools.SlaveExplorer.View
         {
             var layoutDocument = new LayoutDocument()
             {
-                Title = slaveViewModel.Name,
+                Title = slaveViewModel.DisplayName,
                 Content = new SlaveView()
                 {
                     DataContext = slaveViewModel
@@ -80,6 +79,27 @@ namespace ModbusTools.SlaveExplorer.View
             layoutDocument.Closing += LayoutDocumentClosing;
 
             MainDocumentPane.Children.Add(layoutDocument);
+
+            slaveViewModel.PropertyChanged += slaveViewModel_PropertyChanged;
+        }
+
+        void slaveViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var slaveViewModel = sender as SlaveViewModel;
+
+            if (slaveViewModel == null)
+                return;
+
+            if (e.PropertyName == "DisplayName")
+            {
+                var layoutDocument = GetSlaveDocument(slaveViewModel);
+
+                if (layoutDocument != null)
+                {
+                    layoutDocument.Title = slaveViewModel.DisplayName;
+                }
+                    
+            }
         }
 
         private SlaveViewModel GetSlaveViewModelFromSender(object sender)

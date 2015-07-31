@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoGreyableImage.cs" />
+    <Compile Include="Behaviors\MultiSelectorSelectedItemsBehavior.cs" />
     <Compile Include="CloseableBehavior.cs" />
     <Compile Include="CloseEventArgs.cs" />
     <Compile Include="Converters\HiddenWhenFalseConverter.cs" />

@@ -40,6 +40,25 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                     _ranges.Add(rangeViewModel);
                 }
             }
+
+            RenameCommand = new RelayCommand(Rename, CanRename);
+        }
+
+        public ICommand RenameCommand { get; private set; }
+
+        private void Rename()
+        {
+            var name = Microsoft.VisualBasic.Interaction.InputBox("Name", "Modbus Slave Name", Name, -1, -1);
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                Name = name;
+            }
+        }
+
+        private bool CanRename()
+        {
+            return true;
         }
 
         internal SlaveModel GetModel()
@@ -52,6 +71,11 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             };
         }
 
+        public string DisplayName
+        {
+            get { return string.Format("{0} [{1}]", Name, SlaveId); }
+        }
+
         public byte SlaveId
         {
             get { return _slaveId; }
@@ -59,6 +83,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             {
                 _slaveId = value; 
                 RaisePropertyChanged();
+                _dirty.MarkDirtySafe();
+                RaisePropertyChanged(() => DisplayName);
             }
         }
 
@@ -80,7 +106,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             {
                 Name = CreateNewRangeName(),
                 StartIndex = 1,
-                RegisterType = RegisterType.Holding
+                RegisterType = RegisterType.Holding,
+                IsExpanded = true
             };
 
             var rangeEditorViewModel = new RegisterRangeEditorViewModel(rangeModel);
@@ -117,8 +144,13 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             get { return _name; }
             private set
             {
-                _name = value; 
-                RaisePropertyChanged();
+                if (_name != value)
+                {
+                    _name = value;
+                    RaisePropertyChanged();
+                    _dirty.MarkDirtySafe();
+                    RaisePropertyChanged(() => DisplayName);
+                }
             }
         }
 

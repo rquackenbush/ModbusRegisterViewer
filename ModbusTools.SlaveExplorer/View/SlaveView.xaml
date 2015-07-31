@@ -38,6 +38,9 @@
             <Button Command="{Binding Path=AddRegistersCommand}" ToolTip="Add a new register range...">
                 <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/New.png" Width="16" />
             </Button>
+            <Button Command="{Binding Path=RenameCommand}" ToolTip="Rename the Modbus Slave Device">
+                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/Properties.png" Width="16" />
+            </Button>
         </ToolBar>
 
         <Grid Grid.Row="1">
