@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IDirty.cs" />
     <Compile Include="Interfaces\IRuntimeField.cs" />
+    <Compile Include="Interfaces\IRuntimeFieldEditor.cs" />
     <Compile Include="Model\Dirty.cs" />
     <Compile Include="Model\FieldModel.cs" />
     <Compile Include="Model\FieldType.cs" />
@@ -122,13 +123,13 @@
     <Compile Include="Runtime\INT32RuntimeField.cs" />
     <Compile Include="Runtime\INT8RuntimeField.cs" />
     <Compile Include="Runtime\RuntimeFieldBase.cs" />
+    <Compile Include="Runtime\RuntimeFieldEditor.cs" />
     <Compile Include="Runtime\RuntimeFieldFactory.cs" />
     <Compile Include="Runtime\FLOAT32RuntimeField.cs" />
     <Compile Include="Runtime\UINT16RuntimeField.cs" />
     <Compile Include="Runtime\UINT32RuntimeField.cs" />
     <Compile Include="Runtime\UINT8RuntimeField.cs" />
     <Compile Include="ViewModel\EditFieldViewModel.cs" />
-    <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="ViewModel\RangeViewModelBase.cs" />
     <Compile Include="ViewModel\RegisterRangeEditorViewModel.cs" />
     <Compile Include="ViewModel\RegisterRangeViewModel.cs" />

@@ -25,15 +25,11 @@ namespace ModbusTools.SlaveExplorer.Runtime
 
         public abstract int Size { get; }
 
-        public string Name
-        {
-            get { return _fieldModel.Name; }
-        }
-
-        public abstract Visual Visual { get; }
-
         public abstract void SetBytes(byte[] data);
 
         public abstract byte[] GetBytes();
+
+        public abstract IRuntimeFieldEditor[] FieldEditors { get; }
+        
     }
 }

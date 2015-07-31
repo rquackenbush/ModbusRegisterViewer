@@ -19,7 +19,10 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         private RangeModel _rangeModel;
         private bool _isZeroBased;
         private ushort _startingRegisterIndex;
-        private readonly ObservableCollection<FieldViewModel> _fields = new ObservableCollection<FieldViewModel>();
+
+        private IRuntimeField[] _fields;
+        private readonly ObservableCollection<IRuntimeFieldEditor> _fieldEditors = new ObservableCollection<IRuntimeFieldEditor>();
+
         private readonly SlaveViewModel _parent;
         private readonly IDirty _dirty;
 
@@ -46,23 +49,22 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         private void PopulateFromModel(RangeModel rangeModel)
         {
+            //Set the name
             Name = rangeModel.Name;
 
             //Ditch the old fields
-            _fields.Clear();
+            _fieldEditors.Clear();
 
-            foreach (var field in rangeModel.Fields)
-            {
-                var runtimeFields = RuntimeFieldFactory.Create(field);
+            //Create the fields
+            _fields = rangeModel.Fields.Select(RuntimeFieldFactory.Create).ToArray();
 
-                foreach (var runtimeField in runtimeFields)
-                {
-                    _fields.Add(new FieldViewModel(runtimeField));
-                }
-            }
+            //Set up the field editors
+            _fieldEditors.AddRange(_fields.SelectMany(f => f.FieldEditors));
 
+            //Save this
             _rangeModel = rangeModel;
 
+            //To expand or not expand. That is the question. Whether tis nobler to...
             IsExpanded = rangeModel.IsExpanded;
         }
 
@@ -128,9 +130,9 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 {
                     var bytes = results.ToBytes();
 
-                    foreach (var field in Fields)
+                    foreach (var field in _fields)
                     {
-                        field.RuntimeField.SetBytes(bytes.Skip(field.Offset).Take(field.RuntimeField.Size).ToArray());
+                        field.SetBytes(bytes.Skip(field.Offset).Take(field.Size).ToArray());
                     }
 
                     //TODO: Map these back to the fields                
@@ -173,13 +175,13 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 //Convert this to bytes
                 var bytes = _previousRegisters.ToBytes();
 
-                foreach (var field in Fields)
+                foreach (var field in _fields)
                 {
-                    var fieldBytes = field.RuntimeField.GetBytes();
+                    var fieldBytes = field.GetBytes();
 
                     for (int index = 0; index < fieldBytes.Length; index++)
                     {
-                        bytes[index + field.RuntimeField.Offset] = fieldBytes[index];
+                        bytes[index + field.Offset] = fieldBytes[index];
                     }
                 }
 
@@ -308,9 +310,9 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             }
         }
 
-        public IEnumerable<FieldViewModel> Fields
+        public IEnumerable<IRuntimeFieldEditor> Fields
         {
-            get { return _fields; }
+            get { return _fieldEditors; }
         }
 
     }
