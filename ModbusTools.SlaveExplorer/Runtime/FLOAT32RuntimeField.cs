@@ -9,24 +9,23 @@ using Xceed.Wpf.Toolkit;
 
 namespace ModbusTools.SlaveExplorer.Runtime
 {
-    public class UINT32RuntimeField : RuntimeFieldBase
+    public class FLOAT32RuntimeField : RuntimeFieldBase
     {
-        private readonly RuntimeFieldEditor<LongUpDown> _editor;
-        
-        public UINT32RuntimeField(FieldModel fieldModel) 
+         private readonly RuntimeFieldEditor<DoubleUpDown> _editor;
+
+         public FLOAT32RuntimeField(FieldModel fieldModel) 
             : base(fieldModel)
-        {
-            _editor = new RuntimeFieldEditor<LongUpDown>(
-                fieldModel.Name,
-                new LongUpDown()
+         {
+             _editor = new RuntimeFieldEditor<DoubleUpDown>(
+               fieldModel.Name,
+               new DoubleUpDown()
                 {
-                    Minimum = UInt32.MinValue,
-                    Maximum = UInt32.MaxValue,
+                    Minimum = Single.MinValue,
+                    Maximum = Single.MaxValue,
                     VerticalAlignment = VerticalAlignment.Stretch,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Margin = new Thickness(0),
-                    BorderThickness = new Thickness(0),
-                    ClipValueToMinMax = true
+                    BorderThickness = new Thickness(0)
                 });
         }
 
@@ -37,14 +36,14 @@ namespace ModbusTools.SlaveExplorer.Runtime
 
         public override void SetBytes(byte[] data)
         {
-            var value = EndianBitConverter.Big.ToUInt32(data, 0);
+            var value = EndianBitConverter.Big.ToSingle(data, 0);
 
             _editor.Visual.Value = value;
         }
 
         public override byte[] GetBytes()
         {
-            var value = (UInt32)(_editor.Visual.Value ?? 0);
+            var value = (Int16)(_editor.Visual.Value ?? 0);
 
             return EndianBitConverter.Big.GetBytes(value);
         }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
-using MiscUtil.Conversion;
 using ModbusTools.Common;
 using ModbusTools.SlaveExplorer.Interfaces;
 using ModbusTools.SlaveExplorer.Model;
@@ -9,19 +7,19 @@ using Xceed.Wpf.Toolkit;
 
 namespace ModbusTools.SlaveExplorer.Runtime
 {
-    public class UINT32RuntimeField : RuntimeFieldBase
+    public class UINT8RuntimeField : RuntimeFieldBase
     {
-        private readonly RuntimeFieldEditor<LongUpDown> _editor;
+        private readonly RuntimeFieldEditor<IntegerUpDown> _editor;
         
-        public UINT32RuntimeField(FieldModel fieldModel) 
+        public UINT8RuntimeField(FieldModel fieldModel) 
             : base(fieldModel)
         {
-            _editor = new RuntimeFieldEditor<LongUpDown>(
+            _editor = new RuntimeFieldEditor<IntegerUpDown>(
                 fieldModel.Name,
-                new LongUpDown()
+                new IntegerUpDown()
                 {
-                    Minimum = UInt32.MinValue,
-                    Maximum = UInt32.MaxValue,
+                    Minimum = byte.MinValue,
+                    Maximum = byte.MaxValue,
                     VerticalAlignment = VerticalAlignment.Stretch,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Margin = new Thickness(0),
@@ -32,21 +30,19 @@ namespace ModbusTools.SlaveExplorer.Runtime
 
         public override int Size
         {
-            get { return 4; }
+            get { return 1; }
         }
 
         public override void SetBytes(byte[] data)
         {
-            var value = EndianBitConverter.Big.ToUInt32(data, 0);
-
-            _editor.Visual.Value = value;
+            _editor.Visual.Value = data[0];
         }
 
         public override byte[] GetBytes()
         {
-            var value = (UInt32)(_editor.Visual.Value ?? 0);
+            var value = (byte)(_editor.Visual.Value ?? 0);
 
-            return EndianBitConverter.Big.GetBytes(value);
+            return new [] { value };
         }
 
         public override IRuntimeFieldEditor[] FieldEditors

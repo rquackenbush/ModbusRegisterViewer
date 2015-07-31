@@ -10,7 +10,7 @@ namespace ModbusTools.SlaveExplorer.View
     /// <summary>
     /// Interaction logic for SlaveExplorerView.xaml
     /// </summary>
-    public partial class SlaveExplorerView : Window
+    public partial class SlaveExplorerView
     {
         public SlaveExplorerView()
         {
@@ -29,7 +29,6 @@ namespace ModbusTools.SlaveExplorer.View
                 vm.SlaveAdded += SlaveAdded;
 
                 vm.SlaveRemoved += SlaveRemoved;
-
             });
         }
 
@@ -69,31 +68,75 @@ namespace ModbusTools.SlaveExplorer.View
         {
             var layoutDocument = new LayoutDocument()
             {
-                Title = slaveViewModel.Name,
+                Title = slaveViewModel.DisplayName,
                 Content = new SlaveView()
                 {
                     DataContext = slaveViewModel
-                },                
+                },
             };
 
             layoutDocument.Closed += LayoutDocumentOnClosed;
+            layoutDocument.Closing += LayoutDocumentClosing;
 
             MainDocumentPane.Children.Add(layoutDocument);
+
+            slaveViewModel.PropertyChanged += slaveViewModel_PropertyChanged;
         }
 
-        private void LayoutDocumentOnClosed(object sender, EventArgs eventArgs)
+        void slaveViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var slaveViewModel = sender as SlaveViewModel;
+
+            if (slaveViewModel == null)
+                return;
+
+            if (e.PropertyName == "DisplayName")
+            {
+                var layoutDocument = GetSlaveDocument(slaveViewModel);
+
+                if (layoutDocument != null)
+                {
+                    layoutDocument.Title = slaveViewModel.DisplayName;
+                }
+                    
+            }
+        }
+
+        private SlaveViewModel GetSlaveViewModelFromSender(object sender)
         {
             var layoutDocument = sender as LayoutDocument;
 
             if (layoutDocument == null)
-                return;
+                return null;
 
             var element = layoutDocument.Content as FrameworkElement;
 
             if (element == null)
+                return null;
+
+            return element.DataContext as SlaveViewModel;
+        }
+
+        void LayoutDocumentClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var viewModel = GetSlaveViewModelFromSender(sender);
+
+            if (viewModel == null)
                 return;
 
-            var viewModel = element.DataContext as SlaveViewModel;
+            var message = string.Format("Delete Modbus slave '{0}'?", viewModel.Name);
+
+            var result = MessageBox.Show(this, message, "Delete?", MessageBoxButton.YesNo);
+
+            if (result != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void LayoutDocumentOnClosed(object sender, EventArgs eventArgs)
+        {
+            var viewModel = GetSlaveViewModelFromSender(sender);
 
             if (viewModel == null)
                 return;

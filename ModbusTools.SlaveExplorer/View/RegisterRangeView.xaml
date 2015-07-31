@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:viewModel="clr-namespace:ModbusTools.SlaveExplorer.ViewModel"
+             xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
              mc:Ignorable="d" 
              d:DataContext="{x:Static viewModel:ViewModelLocator.RegisterRange}"
              d:DesignWidth="800">
@@ -33,6 +34,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -43,6 +45,8 @@
                 <Button Grid.Row="0" Grid.Column="1" Margin="4" MinWidth="100" Command="{Binding Path=WriteCommand}">Write</Button>
 
                 <Button Grid.Row="0" Grid.Column="3" Margin="4" MinWidth="100" Command="{Binding Path=EditCommand}">Edit</Button>
+                
+                <Button Grid.Row="0" Grid.Column="4" Margin="4" Command="{Binding Path=DeleteCommand}"><common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/Delete.gif" /></Button>
             </Grid>
 
             <DataGrid Grid.Row="1" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Fields}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" CanUserDeleteRows="True" CanUserAddRows="True">

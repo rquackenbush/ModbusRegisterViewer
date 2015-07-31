@@ -12,6 +12,7 @@
         xmlns:model="clr-namespace:ModbusTools.SlaveExplorer.Model"
         xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviors="clr-namespace:ModbusTools.Common.Behaviors;assembly=ModbusTools.Common"
         mc:Ignorable="d"
         x:Name="root"
         d:DataContext="{x:Static viewModel:ViewModelLocator.RegisterRangeEditor}" Icon="/ModbusTools.SlaveExplorer;component/Images/resource_16xLG.png">
@@ -133,6 +134,9 @@
 
         <!-- Fields -->
         <DataGrid Grid.Row="2" AutoGenerateColumns="False" ItemsSource="{Binding Path=Fields}" CanUserSortColumns="False">
+            <i:Interaction.Behaviors>
+                <behaviors:MultiSelectorSelectedItemsBehavior SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Offset" IsReadOnly="True" Binding="{Binding Path=Offset}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Name" MinWidth="150" Binding="{Binding Path=Name}"></DataGridTextColumn>

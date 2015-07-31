@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoGreyableImage.cs" />
+    <Compile Include="Behaviors\MultiSelectorSelectedItemsBehavior.cs" />
     <Compile Include="CloseableBehavior.cs" />
     <Compile Include="CloseEventArgs.cs" />
     <Compile Include="Converters\HiddenWhenFalseConverter.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="Model\DescriptionStore.cs" />
     <Compile Include="Model\SerialMasterContext.cs" />
     <Compile Include="Model\SerialMasterContextFactory.cs" />
+    <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="ObservableCollectionExtensions.cs" />
     <Compile Include="OperationAttempter.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="PromiscuousListener.cs" />

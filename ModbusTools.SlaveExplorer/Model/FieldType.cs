@@ -14,9 +14,9 @@
 
         INT8,
 
-        BIT8,
+        //BIT8,
 
-        BIT16,
+        //BIT16,
 
         FLOAT32
     }

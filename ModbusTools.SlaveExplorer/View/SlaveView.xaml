@@ -7,6 +7,7 @@
              xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
              xmlns:viewModel="clr-namespace:ModbusTools.SlaveExplorer.ViewModel"
              xmlns:view="clr-namespace:ModbusTools.SlaveExplorer.View"
+             xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
              mc:Ignorable="d" 
              d:DataContext="{x:Static viewModel:ViewModelLocator.Slave}"
              Background="#EAEAEA"
@@ -34,7 +35,12 @@
         </Grid.RowDefinitions>
         
         <ToolBar>
-            <Button Command="{Binding Path=AddRegistersCommand}">Holding Register Range</Button>
+            <Button Command="{Binding Path=AddRegistersCommand}" ToolTip="Add a new register range...">
+                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/New.png" Width="16" />
+            </Button>
+            <Button Command="{Binding Path=RenameCommand}" ToolTip="Rename the Modbus Slave Device">
+                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/Properties.png" Width="16" />
+            </Button>
         </ToolBar>
 
         <Grid Grid.Row="1">

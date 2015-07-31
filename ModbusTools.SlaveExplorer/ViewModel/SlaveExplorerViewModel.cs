@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -9,7 +10,6 @@ using Microsoft.Win32;
 using ModbusTools.Common;
 using ModbusTools.Common.ViewModel;
 using ModbusTools.SlaveExplorer.Model;
-using ModbusTools.SlaveExplorer.View;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
@@ -41,6 +41,33 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         public ICommand SaveCommand { get; private set; }
         public ICommand SaveAsCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
+
+        private bool SaveIfDirty()
+        {
+            //Easy case - nothing is dirty
+            if (!_dirty.IsDirty)
+                return true;
+
+            var message = string.Format("Project has changed. Save?");
+
+            var result = MessageBox.Show(message, "Save?", MessageBoxButton.YesNoCancel);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    return Save();
+
+                case MessageBoxResult.No:
+                    return true;
+
+                case MessageBoxResult.Cancel:
+                    return false;
+
+                default:
+                    MessageBox.Show("That was odd.");
+                    return false;
+            }
+        }
 
         private bool Save()
         {
@@ -101,11 +128,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 //Now add all of the slaves
                 foreach (var slave in projectModel.Slaves)
                 {
-                    var slaveViewModel = new SlaveViewModel(_modbusAdapters, slave);
-
-                    _slaves.Add(slaveViewModel);
-
-                    SlaveAdded.RaiseEvent(slaveViewModel);
+                    AddSlave(slave);
                 }
 
                 _dirty.MarkClean();
@@ -124,6 +147,15 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             return true;
         }
 
+        private void AddSlave(SlaveModel slaveModel)
+        {
+            var slaveViewModel = new SlaveViewModel(_modbusAdapters, slaveModel, _dirty);
+
+            _slaves.Add(slaveViewModel);
+
+            SlaveAdded.RaiseEvent(slaveViewModel);
+        }
+
         private void CreateNewSlave()
         {
             var name = Slaves.Select(s => s.Name).CreateUnique("Modbus Slave {0}");
@@ -134,11 +166,9 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 Name = name
             };
 
-            var slave = new SlaveViewModel(_modbusAdapters, slaveModel);
+            AddSlave(slaveModel);
 
-            _slaves.Add(slave);
-
-            SlaveAdded.RaiseEvent(slave);
+            _dirty.MarkDirtySafe();
         }
 
         private bool CanCreateNewSlave()
@@ -190,7 +220,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         public bool CanClose()
         {
-            return true;
+            return SaveIfDirty();
         }
 
         public void Closed()

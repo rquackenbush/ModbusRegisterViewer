@@ -15,5 +15,7 @@ namespace ModbusTools.SlaveExplorer.Model
         public ushort BlockSize { get; set; }
 
         public ushort NumberOfRegisters { get; set; }
+
+        public bool IsExpanded { get; set; }
     }
 }

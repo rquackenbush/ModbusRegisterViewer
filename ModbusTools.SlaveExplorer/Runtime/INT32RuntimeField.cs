@@ -9,19 +9,19 @@ using Xceed.Wpf.Toolkit;
 
 namespace ModbusTools.SlaveExplorer.Runtime
 {
-    public class UINT32RuntimeField : RuntimeFieldBase
+    public class INT32RuntimeField : RuntimeFieldBase
     {
         private readonly RuntimeFieldEditor<LongUpDown> _editor;
-        
-        public UINT32RuntimeField(FieldModel fieldModel) 
+
+        public INT32RuntimeField(FieldModel fieldModel) 
             : base(fieldModel)
         {
-            _editor = new RuntimeFieldEditor<LongUpDown>(
-                fieldModel.Name,
+             _editor = new RuntimeFieldEditor<LongUpDown>(
+                fieldModel.Name, 
                 new LongUpDown()
                 {
-                    Minimum = UInt32.MinValue,
-                    Maximum = UInt32.MaxValue,
+                    Minimum = Int32.MinValue,
+                    Maximum = Int32.MaxValue,
                     VerticalAlignment = VerticalAlignment.Stretch,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Margin = new Thickness(0),
@@ -37,14 +37,14 @@ namespace ModbusTools.SlaveExplorer.Runtime
 
         public override void SetBytes(byte[] data)
         {
-            var value = EndianBitConverter.Big.ToUInt32(data, 0);
+            var value = EndianBitConverter.Big.ToInt32(data, 0);
 
             _editor.Visual.Value = value;
         }
 
         public override byte[] GetBytes()
         {
-            var value = (UInt32)(_editor.Visual.Value ?? 0);
+            var value = (Int32)(_editor.Visual.Value ?? 0);
 
             return EndianBitConverter.Big.GetBytes(value);
         }

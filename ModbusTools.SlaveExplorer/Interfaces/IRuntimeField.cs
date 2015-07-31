@@ -8,12 +8,10 @@ namespace ModbusTools.SlaveExplorer.Interfaces
 
         int Size { get; }
 
-        string Name { get; }
-
-        Visual Visual { get; }
-
         void SetBytes(byte[] data);
 
         byte[] GetBytes();
+
+        IRuntimeFieldEditor[] FieldEditors { get; }
     }
 }

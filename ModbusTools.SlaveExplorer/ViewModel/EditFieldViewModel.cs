@@ -67,18 +67,17 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
                     case FieldType.UINT16:
                     case FieldType.INT16:
-                    case FieldType.BIT16:
+                    //case FieldType.BIT16:
                         return 2;
 
                     case FieldType.UINT8:
                     case FieldType.INT8:
-                    case FieldType.BIT8:
+                    //case FieldType.BIT8:
                         return 1;
 
                     default:
                         throw new Exception(string.Format("Unexpected value {0}", FieldType));
                 }
-                
             }
         }
 

@@ -2,26 +2,32 @@
 using System.Windows;
 using System.Windows.Media;
 using MiscUtil.Conversion;
+using ModbusTools.Common;
+using ModbusTools.SlaveExplorer.Interfaces;
+using ModbusTools.SlaveExplorer.Model;
 using Xceed.Wpf.Toolkit;
 
 namespace ModbusTools.SlaveExplorer.Runtime
 {
     public class UINT16RuntimeField : RuntimeFieldBase
     {
-        private readonly IntegerUpDown _visual;
+        private readonly RuntimeFieldEditor<IntegerUpDown> _editor;
 
-        public UINT16RuntimeField(string name, int offset) 
-            : base(name, offset)
+        public UINT16RuntimeField(FieldModel fieldModel) 
+            : base(fieldModel)
         {
-            _visual = new IntegerUpDown()
-            {
-                Minimum = ushort.MinValue,
-                Maximum = ushort.MaxValue,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                Margin = new Thickness(0),
-                BorderThickness = new Thickness(0)
-            };
+            _editor = new RuntimeFieldEditor<IntegerUpDown>(
+                fieldModel.Name,
+                new IntegerUpDown()
+                {
+                    Minimum = ushort.MinValue,
+                    Maximum = ushort.MaxValue,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Margin = new Thickness(0),
+                    BorderThickness = new Thickness(0),
+                    ClipValueToMinMax = true
+                });
         }
 
         public override int Size
@@ -29,23 +35,23 @@ namespace ModbusTools.SlaveExplorer.Runtime
             get { return 2; }
         }
 
-        public override Visual Visual
-        {
-            get { return _visual; }
-        }
-
         public override void SetBytes(byte[] data)
         {
             var value = EndianBitConverter.Big.ToUInt16(data, 0);
 
-            _visual.Value = value;
+            _editor.Visual.Value = value;
         }
 
         public override byte[] GetBytes()
         {
-            var value = (ushort)(_visual.Value ?? 0);
+            var value = (ushort)(_editor.Visual.Value ?? 0);
 
             return EndianBitConverter.Big.GetBytes(value);
+        }
+
+        public override IRuntimeFieldEditor[] FieldEditors
+        {
+            get { return _editor.ToSingletonArray<IRuntimeFieldEditor>(); }
         }
     }
 }

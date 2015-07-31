@@ -45,7 +45,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                     }
                 };
 
-                var viewModel = new SlaveViewModel(null, slaveModel);
+                var viewModel = new SlaveViewModel(null, slaveModel, null);
 
                 
 
@@ -78,7 +78,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 };
                 
 
-                return new RegisterRangeViewModel(null, rangeModel, null);
+                return new RegisterRangeViewModel(null, rangeModel, null, null);
             }
         }
 

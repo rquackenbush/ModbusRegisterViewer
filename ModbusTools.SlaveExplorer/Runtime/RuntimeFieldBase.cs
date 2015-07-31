@@ -1,35 +1,35 @@
 ﻿using System.Windows.Media;
 using ModbusTools.SlaveExplorer.Interfaces;
+using ModbusTools.SlaveExplorer.Model;
 
 namespace ModbusTools.SlaveExplorer.Runtime
 {
     public abstract class RuntimeFieldBase : IRuntimeField
     {
-        private readonly string _name;
-        private readonly int _offset;
+        private readonly FieldModel _fieldModel;
 
-        protected RuntimeFieldBase(string name, int offset)
+        protected RuntimeFieldBase(FieldModel fieldModel)
         {
-            _name = name;
-            _offset = offset;
+            _fieldModel = fieldModel;
+        }
+
+        protected FieldModel FieldModel
+        {
+            get { return _fieldModel; }
         }
 
         public int Offset
         {
-            get { return _offset; }   
+            get { return _fieldModel.Offset; }   
         }
 
         public abstract int Size { get; }
 
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        public abstract Visual Visual { get; }
-
         public abstract void SetBytes(byte[] data);
 
         public abstract byte[] GetBytes();
+
+        public abstract IRuntimeFieldEditor[] FieldEditors { get; }
+        
     }
 }
