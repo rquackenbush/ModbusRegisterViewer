@@ -97,6 +97,7 @@
     <Compile Include="Model\Dirty.cs" />
     <Compile Include="Model\FieldModel.cs" />
     <Compile Include="Model\FieldType.cs" />
+    <Compile Include="Model\IDirtyExtensions.cs" />
     <Compile Include="Model\Mapper.cs" />
     <Compile Include="Model\ObjectExtensions.cs" />
     <Compile Include="Model\ProjectFactory.cs" />
@@ -116,10 +117,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Runtime\INT16RuntimeField.cs" />
+    <Compile Include="Runtime\INT32RuntimeField.cs" />
+    <Compile Include="Runtime\INT8RuntimeField.cs" />
     <Compile Include="Runtime\RuntimeFieldBase.cs" />
     <Compile Include="Runtime\RuntimeFieldFactory.cs" />
+    <Compile Include="Runtime\FLOAT32RuntimeField.cs" />
     <Compile Include="Runtime\UINT16RuntimeField.cs" />
     <Compile Include="Runtime\UINT32RuntimeField.cs" />
+    <Compile Include="Runtime\UINT8RuntimeField.cs" />
     <Compile Include="ViewModel\EditFieldViewModel.cs" />
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="ViewModel\RangeViewModelBase.cs" />
@@ -197,6 +203,9 @@
     <Resource Include="Images\move_to_bottom.png" />
     <Resource Include="Images\move_to_top.png" />
     <Resource Include="Images\Up_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\New.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

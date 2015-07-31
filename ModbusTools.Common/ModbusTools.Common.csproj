@@ -116,6 +116,7 @@
     <Compile Include="Model\DescriptionStore.cs" />
     <Compile Include="Model\SerialMasterContext.cs" />
     <Compile Include="Model\SerialMasterContextFactory.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="OperationAttempter.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="PromiscuousListener.cs" />

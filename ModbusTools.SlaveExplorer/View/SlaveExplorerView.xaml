@@ -47,6 +47,10 @@
                     <Separator/>
                     <MenuItem Header="E_xit" Click="ExitMenuItem_OnClick" />
                 </MenuItem>
+                
+                <MenuItem Header="_Edit">
+                    <MenuItem Command="{Binding Path=CreateNewSlaveCommand}" Header="Create new slave"></MenuItem>
+                </MenuItem>
                 <!--<MenuItem Header="_View">
                     <MenuItem Header="_Toolbox"  />
                     <MenuItem Header="_Properties"  />
@@ -54,7 +58,9 @@
             </Menu>
             
             <ToolBar Grid.Row="1">
-                <Button Command="{Binding Path=CreateNewSlaveCommand}">Add Slave</Button>
+                <Button Command="{Binding Path=CreateNewSlaveCommand}"><common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/New.png" Width="16" ToolTip="Create new slave">
+                    
+                </common:AutoGreyableImage></Button>
             </ToolBar>
             
             <xcad:DockingManager x:Name="dockManager" Grid.Row="2" >

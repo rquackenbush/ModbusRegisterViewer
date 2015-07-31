@@ -73,27 +73,50 @@ namespace ModbusTools.SlaveExplorer.View
                 Content = new SlaveView()
                 {
                     DataContext = slaveViewModel
-                },                
+                },
             };
 
             layoutDocument.Closed += LayoutDocumentOnClosed;
+            layoutDocument.Closing += LayoutDocumentClosing;
 
             MainDocumentPane.Children.Add(layoutDocument);
         }
 
-        private void LayoutDocumentOnClosed(object sender, EventArgs eventArgs)
+        private SlaveViewModel GetSlaveViewModelFromSender(object sender)
         {
             var layoutDocument = sender as LayoutDocument;
 
             if (layoutDocument == null)
-                return;
+                return null;
 
             var element = layoutDocument.Content as FrameworkElement;
 
             if (element == null)
+                return null;
+
+            return element.DataContext as SlaveViewModel;
+        }
+
+        void LayoutDocumentClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var viewModel = GetSlaveViewModelFromSender(sender);
+
+            if (viewModel == null)
                 return;
 
-            var viewModel = element.DataContext as SlaveViewModel;
+            var message = string.Format("Delete Modbus slave '{0}'?", viewModel.Name);
+
+            var result = MessageBox.Show(this, message, "Delete?", MessageBoxButton.YesNo);
+
+            if (result != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void LayoutDocumentOnClosed(object sender, EventArgs eventArgs)
+        {
+            var viewModel = GetSlaveViewModelFromSender(sender);
 
             if (viewModel == null)
                 return;

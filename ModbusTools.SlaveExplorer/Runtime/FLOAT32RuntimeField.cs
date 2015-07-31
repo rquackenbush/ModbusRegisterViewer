@@ -7,28 +7,27 @@ using Xceed.Wpf.Toolkit;
 
 namespace ModbusTools.SlaveExplorer.Runtime
 {
-    public class UINT16RuntimeField : RuntimeFieldBase
+    public class FLOAT32RuntimeField : RuntimeFieldBase
     {
-        private readonly IntegerUpDown _visual;
+         private readonly DoubleUpDown _visual;
 
-        public UINT16RuntimeField(FieldModel fieldModel) 
+         public FLOAT32RuntimeField(FieldModel fieldModel) 
             : base(fieldModel)
-        {
-            _visual = new IntegerUpDown()
+         {
+            _visual = new DoubleUpDown()
             {
-                Minimum = ushort.MinValue,
-                Maximum = ushort.MaxValue,
+                Minimum = Single.MinValue,
+                Maximum = Single.MaxValue,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Margin = new Thickness(0),
-                BorderThickness = new Thickness(0),
-                ClipValueToMinMax = true
+                BorderThickness = new Thickness(0)
             };
         }
 
         public override int Size
         {
-            get { return 2; }
+            get { return 4; }
         }
 
         public override Visual Visual
@@ -38,14 +37,14 @@ namespace ModbusTools.SlaveExplorer.Runtime
 
         public override void SetBytes(byte[] data)
         {
-            var value = EndianBitConverter.Big.ToUInt16(data, 0);
+            var value = EndianBitConverter.Big.ToSingle(data, 0);
 
             _visual.Value = value;
         }
 
         public override byte[] GetBytes()
         {
-            var value = (ushort)(_visual.Value ?? 0);
+            var value = (Int16)(_visual.Value ?? 0);
 
             return EndianBitConverter.Big.GetBytes(value);
         }

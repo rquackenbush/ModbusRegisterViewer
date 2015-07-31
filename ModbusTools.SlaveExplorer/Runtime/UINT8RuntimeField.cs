@@ -1,23 +1,21 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
-using MiscUtil.Conversion;
 using ModbusTools.SlaveExplorer.Model;
 using Xceed.Wpf.Toolkit;
 
 namespace ModbusTools.SlaveExplorer.Runtime
 {
-    public class UINT16RuntimeField : RuntimeFieldBase
+    public class UINT8RuntimeField : RuntimeFieldBase
     {
         private readonly IntegerUpDown _visual;
 
-        public UINT16RuntimeField(FieldModel fieldModel) 
+        public UINT8RuntimeField(FieldModel fieldModel) 
             : base(fieldModel)
         {
             _visual = new IntegerUpDown()
             {
-                Minimum = ushort.MinValue,
-                Maximum = ushort.MaxValue,
+                Minimum = sbyte.MinValue,
+                Maximum = byte.MaxValue,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Margin = new Thickness(0),
@@ -28,7 +26,7 @@ namespace ModbusTools.SlaveExplorer.Runtime
 
         public override int Size
         {
-            get { return 2; }
+            get { return 1; }
         }
 
         public override Visual Visual
@@ -38,16 +36,14 @@ namespace ModbusTools.SlaveExplorer.Runtime
 
         public override void SetBytes(byte[] data)
         {
-            var value = EndianBitConverter.Big.ToUInt16(data, 0);
-
-            _visual.Value = value;
+            _visual.Value = data[0];
         }
 
         public override byte[] GetBytes()
         {
-            var value = (ushort)(_visual.Value ?? 0);
+            var value = (byte)(_visual.Value ?? 0);
 
-            return EndianBitConverter.Big.GetBytes(value);
+            return new [] { value };
         }
     }
 }

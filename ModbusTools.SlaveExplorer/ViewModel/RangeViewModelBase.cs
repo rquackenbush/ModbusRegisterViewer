@@ -1,16 +1,18 @@
 ﻿using GalaSoft.MvvmLight;
+using ModbusTools.SlaveExplorer.Interfaces;
 using ModbusTools.SlaveExplorer.Model;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
     public abstract class RangeViewModelBase : ViewModelBase
     {
+        private readonly IDirty _dirty;
         private string _name;
         private bool _isExpanded = true;
 
-        protected RangeViewModelBase()
+        protected RangeViewModelBase(IDirty dirty)
         {
-            
+            _dirty = dirty;
         }
 
         public string Name
@@ -28,8 +30,12 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             get { return _isExpanded; }
             set
             {
-                _isExpanded = value; 
-                RaisePropertyChanged();
+                if (_isExpanded != value)
+                {
+                    _isExpanded = value;
+                    RaisePropertyChanged();
+                    _dirty.MarkDirtySafe();
+                }
             }
         }
 

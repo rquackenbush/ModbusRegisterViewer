@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using MiscUtil.Conversion;
+using ModbusTools.SlaveExplorer.Model;
 using Xceed.Wpf.Toolkit;
 
 namespace ModbusTools.SlaveExplorer.Runtime
@@ -9,13 +11,18 @@ namespace ModbusTools.SlaveExplorer.Runtime
     {
         private readonly LongUpDown _visual;
 
-        public UINT32RuntimeField(string name, int offset) 
-            : base(name, offset)
+        public UINT32RuntimeField(FieldModel fieldModel) 
+            : base(fieldModel)
         {
             _visual = new LongUpDown()
             {
-                Minimum = 0,
-                Maximum = UInt32.MaxValue
+                Minimum = UInt32.MinValue,
+                Maximum = UInt32.MaxValue,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Margin = new Thickness(0),
+                BorderThickness = new Thickness(0),
+                ClipValueToMinMax = true
             };
         }
 

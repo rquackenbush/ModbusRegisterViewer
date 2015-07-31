@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.CommandWpf;
 using ModbusTools.Common;
+using ModbusTools.SlaveExplorer.Interfaces;
 using ModbusTools.SlaveExplorer.Model;
 using ModbusTools.SlaveExplorer.Runtime;
 using ModbusTools.SlaveExplorer.View;
@@ -19,19 +20,26 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         private bool _isZeroBased;
         private ushort _startingRegisterIndex;
         private readonly ObservableCollection<FieldViewModel> _fields = new ObservableCollection<FieldViewModel>();
-        private SlaveViewModel _parent;
+        private readonly SlaveViewModel _parent;
+        private readonly IDirty _dirty;
 
-        public RegisterRangeViewModel(IModbusAdapterProvider modbusAdapterProvider, RangeModel rangeModel, SlaveViewModel parent)
+        private ushort[] _previousRegisters;
+
+        public RegisterRangeViewModel(IModbusAdapterProvider modbusAdapterProvider, RangeModel rangeModel, SlaveViewModel parent, IDirty dirty) 
+            : base(dirty)
         {
             if (rangeModel == null) 
                 throw new ArgumentNullException("rangeModel");
 
             _parent = parent;
+            _dirty = dirty;
             _modbusAdapterProvider = modbusAdapterProvider;
+            IsExpanded = rangeModel.IsExpanded;
            
             EditCommand = new RelayCommand(Edit, CanEdit);
             ReadCommand = new RelayCommand(Read, CanRead);
             WriteCommand = new RelayCommand(Write, CanWrite);
+            DeleteCommand = new RelayCommand(Delete, CanDelete);
 
             PopulateFromModel(rangeModel);
         }
@@ -45,9 +53,12 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
             foreach (var field in rangeModel.Fields)
             {
-                var runtimeField = RuntimeFieldFactory.Create(field);
+                var runtimeFields = RuntimeFieldFactory.Create(field);
 
-                _fields.Add(new FieldViewModel(runtimeField));
+                foreach (var runtimeField in runtimeFields)
+                {
+                    _fields.Add(new FieldViewModel(runtimeField));
+                }
             }
 
             _rangeModel = rangeModel;
@@ -56,6 +67,24 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         public ICommand EditCommand { get; private set; }
         public ICommand ReadCommand { get; private set; }
         public ICommand WriteCommand { get; private set; }
+        public ICommand DeleteCommand { get; private set; }
+
+        private void Delete()
+        {
+            var message = string.Format("Are you sure you want to delete register range '{0}'?", Name);
+
+            var result = MessageBox.Show(message, "Confirm", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _parent.RemoveRange(this);    
+            }            
+        }
+
+        private bool CanDelete()
+        {
+            return _parent != null;
+        }
 
         private void Read()
         {
@@ -90,6 +119,9 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                     }
                 }
 
+                //Save this for next time
+                _previousRegisters = results;
+
                 if (results != null)
                 {
                     var bytes = results.ToBytes();
@@ -106,7 +138,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, Name);
             }
         }
 
@@ -129,7 +161,40 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         private void Write()
         {
-            
+            try
+            {
+                if (_previousRegisters == null)
+                {
+                    _previousRegisters = new ushort[_rangeModel.NumberOfRegisters];
+                }
+
+                //Convert this to bytes
+                var bytes = _previousRegisters.ToBytes();
+
+                foreach (var field in Fields)
+                {
+                    var fieldBytes = field.RuntimeField.GetBytes();
+
+                    for (int index = 0; index < fieldBytes.Length; index++)
+                    {
+                        bytes[index + field.RuntimeField.Offset] = fieldBytes[index];
+                    }
+                }
+
+                //Convert back to regsiters
+                _previousRegisters = bytes.ToRegisters();
+
+                //Write it back
+                using (var master = _modbusAdapterProvider.GetFactory().Create())
+                {
+                    master.Master.WriteMultipleRegisters(_parent.SlaveId, _rangeModel.StartIndex, _previousRegisters);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Name);
+            }
         }
 
         private bool CanWrite()
@@ -168,11 +233,15 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 var rangeModel = rangeEditorViewModel.GetModel();
 
                 PopulateFromModel(rangeModel);
+
+                _dirty.MarkDirtySafe();
             }
         }
 
         protected internal override RangeModel GetModel()
         {
+            _rangeModel.IsExpanded = IsExpanded;
+
             return _rangeModel;
         }
 

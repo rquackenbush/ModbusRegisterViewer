@@ -14,12 +14,15 @@ namespace ModbusTools.SlaveExplorer.Model
 
         public void MarkDirty()
         {
-            _isDirty = false;
+            if (!_isDirty)
+            {
+                _isDirty = true;
+            }
         }
 
         public void MarkClean()
         {
-            _isDirty = true;
+            _isDirty = false;
         }
     }
 }

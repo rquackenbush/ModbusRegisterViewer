@@ -81,7 +81,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    newItems.Value.ForEach(f => f.Parent = this);
+                    oldItems.Value.ForEach(f => f.Parent = this);
                     break;
 
                 case NotifyCollectionChangedAction.Replace:
