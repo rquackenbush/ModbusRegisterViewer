@@ -24,13 +24,9 @@
                 <Setter Property="FontFamily" Value="Consolas"></Setter>
             </Style>
 
-            <Style TargetType="DataGridCell">
+            <!--<Style TargetType="DataGridCell">
                 <Setter Property="Padding" Value="4"></Setter>
-            </Style>
-
-            <Style TargetType="DataGridCell" p4:Key="RegisterDataGridlCellStyle" xmlns:p4="http://schemas.microsoft.com/winfx/2006/xaml">
-                <!--<Setter Property="Background" Value="#E9F4F7"></Setter>-->
-            </Style>
+            </Style>-->
 
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="14"></Setter>

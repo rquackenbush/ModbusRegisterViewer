@@ -1,25 +1,156 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
+using ModbusTools.Common;
 using ModbusTools.SlaveExplorer.Model;
+using ModbusTools.SlaveExplorer.Runtime;
 using ModbusTools.SlaveExplorer.View;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
     public class RegisterRangeViewModel : RangeViewModelBase
     {
+        private readonly IModbusAdapterProvider _modbusAdapterProvider;
         private RangeModel _rangeModel;
         private bool _isZeroBased;
         private ushort _startingRegisterIndex;
+        private readonly ObservableCollection<FieldViewModel> _fields = new ObservableCollection<FieldViewModel>();
+        private SlaveViewModel _parent;
 
-        public RegisterRangeViewModel(RangeModel rangeModel)
+        public RegisterRangeViewModel(IModbusAdapterProvider modbusAdapterProvider, RangeModel rangeModel, SlaveViewModel parent)
         {
-            _rangeModel = rangeModel;
+            if (rangeModel == null) 
+                throw new ArgumentNullException("rangeModel");
+
+            _parent = parent;
+            _modbusAdapterProvider = modbusAdapterProvider;
+           
             EditCommand = new RelayCommand(Edit, CanEdit);
+            ReadCommand = new RelayCommand(Read, CanRead);
+            WriteCommand = new RelayCommand(Write, CanWrite);
+
+            PopulateFromModel(rangeModel);
+        }
+
+        private void PopulateFromModel(RangeModel rangeModel)
+        {
             Name = rangeModel.Name;
+
+            //Ditch the old fields
+            _fields.Clear();
+
+            foreach (var field in rangeModel.Fields)
+            {
+                var runtimeField = RuntimeFieldFactory.Create(field);
+
+                _fields.Add(new FieldViewModel(runtimeField));
+            }
+
+            _rangeModel = rangeModel;
         }
 
         public ICommand EditCommand { get; private set; }
+        public ICommand ReadCommand { get; private set; }
+        public ICommand WriteCommand { get; private set; }
+
+        private void Read()
+        {
+            try
+            {
+                var contextFactory = _modbusAdapterProvider.GetFactory();
+
+                ushort[] results = null;
+
+                using (var master = contextFactory.Create())
+                {
+                    switch (_rangeModel.RegisterType)
+                    {
+                        case RegisterType.Holding:
+
+                            results = master.Master.ReadHoldingRegisters(_parent.SlaveId,
+                                                           _rangeModel.StartIndex,
+                                                           _rangeModel.NumberOfRegisters,
+                                                           _rangeModel.BlockSize);
+
+                            break;
+
+
+                        case RegisterType.Input:
+
+                            results = master.Master.ReadInputRegisters(_parent.SlaveId,
+                                                           _rangeModel.StartIndex,
+                                                           _rangeModel.NumberOfRegisters,
+                                                           _rangeModel.BlockSize);
+
+                            break;
+                    }
+                }
+
+                if (results != null)
+                {
+                    var bytes = results.ToBytes();
+
+                    foreach (var field in Fields)
+                    {
+                        field.RuntimeField.SetBytes(bytes.Skip(field.Offset).Take(field.RuntimeField.Size).ToArray());
+                    }
+
+                    //TODO: Map these back to the fields                
+                    Console.WriteLine(results);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private bool CanRead()
+        {
+            if (_rangeModel == null)
+                return false;
+
+            if (_modbusAdapterProvider == null)
+                return false;
+
+            if (_rangeModel.Fields.Length == 0)
+                return false;
+
+            if (_parent == null)
+                return false;
+
+            return true;
+        }
+
+        private void Write()
+        {
+            
+        }
+
+        private bool CanWrite()
+        {
+            if (_rangeModel == null)
+                return false;
+
+            if (_modbusAdapterProvider == null)
+                return false;
+
+            if (_rangeModel.RegisterType != RegisterType.Holding)
+                return false;
+
+            if (_rangeModel.Fields.Length == 0)
+                return false;
+
+            if (_parent == null)
+                return false;
+
+            return true;
+        }
 
         private void Edit()
         {
@@ -34,13 +165,9 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
             if (result == true)
             {
-                //TODO:
-
                 var rangeModel = rangeEditorViewModel.GetModel();
 
-                Name = rangeModel.Name;
-
-                _rangeModel = rangeModel;
+                PopulateFromModel(rangeModel);
             }
         }
 
@@ -108,6 +235,11 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 RaisePropertyChanged(() => StartingRegisterNumber);
                 RaisePropertyChanged(() => StartingRegisterNumberMin);
             }
+        }
+
+        public IEnumerable<FieldViewModel> Fields
+        {
+            get { return _fields; }
         }
 
     }

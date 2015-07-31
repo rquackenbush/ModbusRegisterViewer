@@ -16,9 +16,9 @@ namespace ModbusRegisterViewer.Views
         {
             InitializeComponent();
 
-            LaunchView<SlaveExplorerView>();
+            //LaunchView<SlaveExplorerView>();
 
-            Close();
+            //Close();
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)

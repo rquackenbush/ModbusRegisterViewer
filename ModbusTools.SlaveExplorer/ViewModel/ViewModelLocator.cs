@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ModbusTools.Common;
 using ModbusTools.SlaveExplorer.Model;
+using ModbusTools.SlaveExplorer.View;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
@@ -44,12 +45,40 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                     }
                 };
 
-                var viewModel = new SlaveViewModel(slaveModel);
+                var viewModel = new SlaveViewModel(null, slaveModel);
 
                 
 
 
                 return viewModel;
+            }
+        }
+
+        public static RegisterRangeViewModel RegisterRange
+        {
+            get
+            {
+                var rangeModel = new RangeModel()
+                {
+                    Name = "Sys Info",
+                    Fields = new FieldModel[]
+                    {
+                        new FieldModel()
+                        {
+                            Name = "Field 1",
+                            FieldType = FieldType.UINT16
+                        }
+                        ,
+                        new FieldModel()
+                        {
+                            Name = "Field 2",
+                            FieldType = FieldType.UINT16
+                        }
+                    }
+                };
+                
+
+                return new RegisterRangeViewModel(null, rangeModel, null);
             }
         }
 

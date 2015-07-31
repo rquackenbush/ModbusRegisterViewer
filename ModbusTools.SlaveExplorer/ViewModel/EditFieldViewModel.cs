@@ -87,7 +87,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             return new FieldModel()
             {
                 Name = Name,
-                FieldType = FieldType
+                FieldType = FieldType,
+                Offset = Offset
             };
         }
     }

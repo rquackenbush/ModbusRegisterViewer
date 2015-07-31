@@ -13,28 +13,26 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 {
     public class SlaveViewModel : ViewModelBase
     {
+        private readonly IModbusAdapterProvider _modbusAdapterProvider;
         private byte _slaveId = 1;
         private readonly ObservableCollection<RangeViewModelBase> _ranges = new ObservableCollection<RangeViewModelBase>();
         private string _name;
 
-        public SlaveViewModel(SlaveModel slaveModel)
+        public SlaveViewModel(IModbusAdapterProvider modbusAdapterProvider, SlaveModel slaveModel)
         {
+            _modbusAdapterProvider = modbusAdapterProvider;
             if (slaveModel == null) throw new ArgumentNullException("slaveModel");
 
             Name = slaveModel.Name;
             SlaveId = slaveModel.SlaveId;
 
-
             AddRegistersCommand = new RelayCommand(AddRegisters, CanAdd);
-            //AddInputRegistersCommand = new RelayCommand(AddInputRegisters, CanAdd);
-            //AddCoilsCommand = new RelayCommand(AddCoils, CanAdd);
-            //AddDiscretesCommand = new RelayCommand(AddDiscrete, CanAdd);
 
             if (slaveModel.Ranges != null)
             {
                 foreach (var range in slaveModel.Ranges)
                 {
-                    var rangeViewModel = new RegisterRangeViewModel(range);
+                    var rangeViewModel = new RegisterRangeViewModel(modbusAdapterProvider, range, this);
 
                     _ranges.Add(rangeViewModel);
                 }
@@ -62,9 +60,6 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         }
 
         public ICommand AddRegistersCommand { get; private set; }
-        //public ICommand AddInputRegistersCommand { get; private set; }
-        //public ICommand AddCoilsCommand { get; private set; }
-        //public ICommand AddDiscretesCommand { get; private set; }
 
         private bool CanAdd()
         {
@@ -96,7 +91,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             {
                 var updatedRangeModel = rangeEditorViewModel.GetModel();
 
-                var rangeViewModel = new RegisterRangeViewModel(updatedRangeModel);
+                var rangeViewModel = new RegisterRangeViewModel(_modbusAdapterProvider, updatedRangeModel, this);
 
                 _ranges.Add(rangeViewModel);
             }

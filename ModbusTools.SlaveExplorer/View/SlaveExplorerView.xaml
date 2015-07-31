@@ -11,7 +11,7 @@
         DataContext="{x:Static viewModel:ViewModelLocator.SlaveExplorer}"
         Loaded="SlaveExplorerView_OnLoaded"
         Background="#EAEAEA"
-        Title="Slave Explorer" Height="634.94" Width="1316.867" Icon="/ModbusTools.SlaveExplorer;component/Images/XSLTTransformfile_829_32x.png">
+        Title="{Binding Path=Title}" Height="634.94" Width="1316.867" Icon="/ModbusTools.SlaveExplorer;component/Images/XSLTTransformfile_829_32x.png">
 
     <i:Interaction.Behaviors>
         <common:CloseableBehavior />

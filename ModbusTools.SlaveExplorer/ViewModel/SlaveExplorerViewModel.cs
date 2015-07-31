@@ -21,14 +21,18 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         private readonly ObservableCollection<SlaveViewModel> _slaves = new ObservableCollection<SlaveViewModel>();
 
         public EventHandler<SlaveViewModel> SlaveAdded;
-        
+        public EventHandler<SlaveViewModel> SlaveRemoved;
+
+        private const string Filter = "Modbus Project Files (*.mbproj)|*.mbproj|All Files (*.*)|*.*";
+
+        private readonly Dirty _dirty = new Dirty();
 
         public SlaveExplorerViewModel()
         {
             CreateNewSlaveCommand = new RelayCommand(CreateNewSlave, CanCreateNewSlave);
             ExitCommand = new RelayCommand(Exit, CanExit);
-            SaveCommand = new RelayCommand(Save);
-            SaveAsCommand = new RelayCommand(SaveAs);
+            SaveCommand = new RelayCommand(() => Save());
+            SaveAsCommand = new RelayCommand(() => SaveAs());
             OpenCommand = new RelayCommand(Open);
         }
 
@@ -38,62 +42,76 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         public ICommand SaveAsCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
 
-        private void Save()
+        private bool Save()
         {
             if (string.IsNullOrWhiteSpace(_path))
             {
-                SaveAs();
+                return SaveAs();
             }
-            else
+            
+            var projectModel = new ProjectModel()
             {
-                var projectModel = new ProjectModel()
-                {
-                    Slaves = Slaves.Select(s => s.GetModel()).ToArray()
-                };
+                Slaves = Slaves.Select(s => s.GetModel()).ToArray()
+            };
 
-                ProjectFactory.SaveProject(projectModel, _path);
-            }
+            ProjectFactory.SaveProject(projectModel, _path);
+
+            return true;
         }
 
-        private void SaveAs()
+        private bool SaveAs()
         {
             var dialog = new SaveFileDialog()
             {
-
+                Filter = Filter
             };
 
             if (dialog.ShowDialog() == true)
             {
                 _path = dialog.FileName;
 
-                Save();
+                RaisePropertyChanged(() => Title);
+
+                return Save();
             }
+
+            return false;
         }
 
         private void Open()
         {
             var dialog = new OpenFileDialog()
             {
-
+                Filter = Filter
             };
 
             if (dialog.ShowDialog() == true)
             {
                 _path = dialog.FileName;
 
-                _slaves.Clear();
+                //Remove the slaves
+                foreach (var slave in _slaves.ToArray())
+                {
+                    RemoveSlave(slave);
+                }
 
+                //Load up the project
                 var projectModel = ProjectFactory.LoadProject(_path);
 
+                //Now add all of the slaves
                 foreach (var slave in projectModel.Slaves)
                 {
-                    var slaveViewModel = new SlaveViewModel(slave);
+                    var slaveViewModel = new SlaveViewModel(_modbusAdapters, slave);
 
                     _slaves.Add(slaveViewModel);
 
                     SlaveAdded.RaiseEvent(slaveViewModel);
                 }
+
+                _dirty.MarkClean();
             }
+
+            RaisePropertyChanged(() => Title);
         }
 
         private void Exit()
@@ -116,7 +134,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 Name = name
             };
 
-            var slave = new SlaveViewModel(slaveModel);
+            var slave = new SlaveViewModel(_modbusAdapters, slaveModel);
 
             _slaves.Add(slave);
 
@@ -138,12 +156,32 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             if (slave == null) 
                 throw new ArgumentNullException("slave");
 
+            if (!_slaves.Contains(slave))
+                return;
+
             _slaves.Remove(slave);
+
+            SlaveRemoved.RaiseEvent(slave);
         }
 
         public ModbusAdaptersViewModel ModbusAdapters
         {
             get { return _modbusAdapters; }
+        }
+
+        public string Title
+        {
+            get
+            {
+                const string AppName = "Slave Explorer";
+
+                if (string.IsNullOrWhiteSpace(_path))
+                {
+                    return AppName;
+                }
+
+                return string.Format("{0} [{1}]", AppName, _path);
+            }
         }
 
         #region ICloseableViewModel

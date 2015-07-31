@@ -132,6 +132,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="RegisterExtensions.cs" />
     <Compile Include="RegisterType.cs" />
     <Compile Include="Services\IMessageBoxServiceExtensions.cs" />
     <Compile Include="Services\IMessageBoxService.cs" />

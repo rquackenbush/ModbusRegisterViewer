@@ -90,31 +90,6 @@ namespace ModbusTools.Common.ViewModel
             }
         }
 
-        ///// <summary>
-        ///// Gets or sets the selected display name. If the value provided is not found during execution of the setter, it is ignored.
-        ///// </summary>
-        //public string SelectedDisplayName
-        //{
-        //    get
-        //    {
-        //        var selectedAdapter = this.SelectedPort;
-
-        //        if (selectedAdapter == null)
-        //            return null;
-
-        //        return selectedAdapter.DisplayName;
-        //    }
-        //    set
-        //    {
-        //        var adapterToSelect = _ports.FirstOrDefault(a => string.Compare(value, a.DisplayName, true) == 0);
-
-        //        if (adapterToSelect != null)
-        //        {
-        //            this.SelectedPort = adapterToSelect;
-        //        }
-        //    }
-        //}
-
         private int _baud = 19200;
         public int Baud
         {

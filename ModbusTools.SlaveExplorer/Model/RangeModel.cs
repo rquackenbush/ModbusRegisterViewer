@@ -11,5 +11,9 @@ namespace ModbusTools.SlaveExplorer.Model
         public RegisterType RegisterType { get; set; }
 
         public FieldModel[] Fields { get; set; }
+
+        public ushort BlockSize { get; set; }
+
+        public ushort NumberOfRegisters { get; set; }
     }
 }

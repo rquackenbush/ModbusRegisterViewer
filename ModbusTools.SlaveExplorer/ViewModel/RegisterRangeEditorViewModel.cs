@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows.Documents;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -51,7 +52,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                     Fields.Add(new EditFieldViewModel()
                     {
                         Name = field.Name,
-                        FieldType = field.FieldType
+                        FieldType = field.FieldType,
+                        Offset = field.Offset
                     });
                 }
             }
@@ -62,7 +64,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
             _fields.CollectionChanged += FieldsOnCollectionChanged;
 
-            CalculateOffsets();
+            //CalculateOffsets();
         }
 
         private void FieldsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
@@ -278,6 +280,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 Name = Name,
                 RegisterType = RegisterType,
                 StartIndex = StartingRegisterIndex,
+                BlockSize = BlockSize,
+                NumberOfRegisters = (ushort)Math.Ceiling(RegisterCount),
                 Fields = Fields.Select(f => f.GetModel()).ToArray()
             };
         }

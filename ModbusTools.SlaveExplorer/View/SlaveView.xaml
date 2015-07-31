@@ -9,7 +9,6 @@
              xmlns:view="clr-namespace:ModbusTools.SlaveExplorer.View"
              mc:Ignorable="d" 
              d:DataContext="{x:Static viewModel:ViewModelLocator.Slave}"
-             DataContext="{x:Static viewModel:ViewModelLocator.Slave}"
              Background="#EAEAEA"
              d:DesignHeight="400" d:DesignWidth="900">
 

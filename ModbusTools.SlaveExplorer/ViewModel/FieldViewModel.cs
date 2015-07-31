@@ -1,34 +1,36 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Windows.Media;
+using GalaSoft.MvvmLight;
+using ModbusTools.SlaveExplorer.Interfaces;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
     public class FieldViewModel : ViewModelBase
     {
-        private string _name;
-        private int _offset;
-
-        public FieldViewModel()
+        private readonly IRuntimeField _runtimeField;
+        
+        public FieldViewModel(IRuntimeField runtimeField)
         {
+            _runtimeField = runtimeField;
         }
 
         public string Name
         {
-            get { return _name; }
-            set
-            {
-                _name = value; 
-                RaisePropertyChanged();
-            }
+            get { return _runtimeField.Name; }
         }
 
         public int Offset
         {
-            get { return _offset; }
-            internal set
-            {
-                _offset = value; 
-                RaisePropertyChanged();
-            }
+            get { return _runtimeField.Offset; }
+        }
+
+        public Visual Visual
+        {
+            get { return _runtimeField.Visual; }
+        }
+
+        public IRuntimeField RuntimeField
+        {
+            get { return _runtimeField; }
         }
     }
 }

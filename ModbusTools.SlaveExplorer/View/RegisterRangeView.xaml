@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:viewModel="clr-namespace:ModbusTools.SlaveExplorer.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="800">
+             d:DataContext="{x:Static viewModel:ViewModelLocator.RegisterRange}"
+             d:DesignWidth="800">
     <UserControl.Resources>
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <!--<Setter Property="Foreground" Value="White"/>-->
@@ -43,28 +45,34 @@
                 <Button Grid.Row="0" Grid.Column="3" Margin="4" MinWidth="100" Command="{Binding Path=EditCommand}">Edit</Button>
             </Grid>
 
-            <DataGrid Grid.Row="1" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Registers}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" CanUserDeleteRows="True" CanUserAddRows="True">
+            <DataGrid Grid.Row="1" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Fields}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" CanUserDeleteRows="True" CanUserAddRows="True">
                 <DataGrid.Columns>
-                    <!--<DataGridTemplateColumn IsReadOnly="True">
+                    
+                    <!-- Name -->
+                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" IsReadOnly="True" MinWidth="100">
+                        <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    
+                    <!-- Value -->
+                    <DataGridTemplateColumn Header="Value" MinWidth="300" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="/Images/126_Edit_16x16_72.png" Width="16">
-                                    <Image.Style>
-                                        <Style TargetType="Image">
-                                            <Setter Property="Visibility" Value="Hidden"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=IsDirty}" Value="True">
-                                                    <Setter Property="Visibility" Value="Visible"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Image.Style>
-                                </Image>
+                                <ContentControl Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Content="{Binding Path=Visual}"></ContentControl>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>-->
-                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" MinWidth="100" />
-                    <DataGridTextColumn Header="Value" Binding="{Binding Path=Hex}" MinWidth="300" />
+                        <DataGridTemplateColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </DataGridTemplateColumn.CellStyle>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
