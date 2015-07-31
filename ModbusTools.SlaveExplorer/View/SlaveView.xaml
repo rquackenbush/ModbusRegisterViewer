@@ -71,21 +71,33 @@
         </Grid>
 
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Background="Gray" >
-            <ItemsControl ItemsSource="{Binding Path=Ranges}" x:Name="DesignerItemsControl" >
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <ItemsControl ItemsSource="{Binding Path=Ranges}" x:Name="DesignerItemsControl" >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
 
-                        <Expander Background="#EAEAEA" Margin="1,1,1,0" IsExpanded="{Binding Path=IsExpanded}">
-                            <Expander.Header>
-                                <TextBlock Text="{Binding Path=Name}"/>
-                            </Expander.Header>
-                            <view:RegisterRangeView></view:RegisterRangeView>
-                        </Expander>
-                        
-                        
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                            <Expander Background="#EAEAEA" Margin="1,1,1,0" IsExpanded="{Binding Path=IsExpanded}">
+                                <Expander.Header>
+                                    <TextBlock Text="{Binding Path=Name}"/>
+                                </Expander.Header>
+                                <view:RegisterRangeView></view:RegisterRangeView>
+                            </Expander>
+
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+                <Button Grid.Row="1" MinWidth="200" Margin="2" HorizontalAlignment="Left" Command="{Binding Path=AddRegistersCommand}">
+                    Add New Range...
+                </Button>
+            </Grid>
+            
         </ScrollViewer>
 
     </Grid>

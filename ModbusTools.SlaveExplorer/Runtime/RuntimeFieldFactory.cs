@@ -35,6 +35,9 @@ namespace ModbusTools.SlaveExplorer.Runtime
                 case FieldType.INT8:
                     return new INT8RuntimeField(fieldModel);
 
+                case FieldType.BIT8:
+                    return new BIT8RuntimeField(fieldModel);
+
                 default:
                     throw new ApplicationException(string.Format("Unsupported field type {0}", fieldModel.FieldType));
             }
