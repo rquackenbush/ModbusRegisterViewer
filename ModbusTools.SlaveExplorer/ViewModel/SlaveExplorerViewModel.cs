@@ -83,6 +83,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
             ProjectFactory.SaveProject(projectModel, _path);
 
+            _dirty.MarkClean();
+
             return true;
         }
 

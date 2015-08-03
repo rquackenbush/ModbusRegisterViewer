@@ -13,6 +13,7 @@
         xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:behaviors="clr-namespace:ModbusTools.Common.Behaviors;assembly=ModbusTools.Common"
+        xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
         mc:Ignorable="d"
         x:Name="root"
         d:DataContext="{x:Static viewModel:ViewModelLocator.RegisterRangeEditor}" Icon="/ModbusTools.SlaveExplorer;component/Images/resource_16xLG.png">
@@ -23,6 +24,8 @@
 
     <Window.Resources>
        
+        <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
+        
         <Style TargetType="toolkit:IntegerUpDown">
             <Setter Property="Margin" Value="4" />
         </Style>
@@ -141,8 +144,17 @@
                 <DataGridTextColumn Header="Offset" IsReadOnly="True" Binding="{Binding Path=Offset}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Name" MinWidth="150" Binding="{Binding Path=Name}"></DataGridTextColumn>
                 <DataGridComboBoxColumn Header="Type" MinWidth="150" SelectedValueBinding="{Binding Path=FieldType}" ItemsSource="{Binding Source={StaticResource fieldTypes}}"/>
-                <!--<DataGridTemplateColumn Header="Options"></DataGridTemplateColumn>-->
                 <DataGridTextColumn Header="Size" Binding="{Binding Path=Size}" />
+                <DataGridTemplateColumn Header="Options" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding Path=EditOptionsCommand}" HorizontalAlignment="Center" Padding="4,0,4, 0" Content="..." Visibility="{Binding Path=CanEditOptions, Converter={StaticResource HiddenWhenFalseConverter}}">
+                                
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
             </DataGrid.Columns>
         </DataGrid>
 

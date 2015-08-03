@@ -27,7 +27,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         private static readonly KeyValuePair<RegisterType, string> _registerTypeInput = new KeyValuePair<RegisterType, string>(RegisterType.Input, "Input");
         private static readonly KeyValuePair<RegisterType, string> _registerTypeHolding = new KeyValuePair<RegisterType, string>(RegisterType.Holding, "Holding");
 
-        private readonly ObservableCollection<EditFieldViewModel> _fields = new ObservableCollection<EditFieldViewModel>();
+        private readonly ObservableCollection<FieldEditorViewModel> _fields = new ObservableCollection<FieldEditorViewModel>();
 
         private IList _selectedItems;
 
@@ -38,7 +38,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         };
 
         private RegisterType _registerType;
-        private EditFieldViewModel _selectedField;
+        private FieldEditorViewModel _selectedField;
 
         public RegisterRangeEditorViewModel(RangeModel originalRangeModel)
         {
@@ -53,17 +53,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
             if (originalRangeModel.Fields != null)
             {
-                foreach (var field in originalRangeModel.Fields)
-                {
-                    Fields.Add(new EditFieldViewModel()
-                    {
-                        Name = field.Name,
-                        FieldType = field.FieldType,
-                        Offset = field.Offset
-                    });
-                }
+                Fields.AddRange(originalRangeModel.Fields.Select(f => new FieldEditorViewModel(f.Clone())));
             }
-            
 
             OkCommand = new RelayCommand(Ok, CanOk);
             CancelCommand = new RelayCommand(Cancel);
@@ -83,8 +74,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         {
             CalculateOffsets();
 
-            var newItems = new Lazy<List<EditFieldViewModel>> (() => args.NewItems.Cast<EditFieldViewModel>().ToList());
-            var oldItems = new Lazy<List<EditFieldViewModel>>(() => args.OldItems.Cast<EditFieldViewModel>().ToList());
+            var newItems = new Lazy<List<FieldEditorViewModel>> (() => args.NewItems.Cast<FieldEditorViewModel>().ToList());
+            var oldItems = new Lazy<List<FieldEditorViewModel>>(() => args.OldItems.Cast<FieldEditorViewModel>().ToList());
 
             switch (args.Action)
             {
@@ -101,7 +92,6 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                     newItems.Value.ForEach(f => f.Parent = this);
                     break;
             }
-
         }
 
         public ICommand OkCommand { get; private set; }
@@ -114,11 +104,11 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         public ICommand InsertAboveCommand { get; private set; }
         public ICommand InsertBelowCommand { get; private set; }
 
-        private EditFieldViewModel CreateNewEntry()
+        private FieldEditorViewModel CreateNewEntry()
         {
-            return new EditFieldViewModel()
-            {
-            };
+            var fieldModel = new FieldModel();
+
+            return new FieldEditorViewModel(fieldModel);
         }
 
         private bool CanMoveToTop()
@@ -269,16 +259,16 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         /// <summary>
         /// Gets a typed collection of the selected entries.
         /// </summary>
-        public EditFieldViewModel[] SelectedEntries
+        public FieldEditorViewModel[] SelectedEntries
         {
             get
             {
                 //Make sure that we have something to work with here.
                 if (SelectedItems == null)
-                    return new EditFieldViewModel[] { };
+                    return new FieldEditorViewModel[] { };
 
                 //We use .OfType so that we avoid grabbing the "new line" row.
-                return SelectedItems.OfType<EditFieldViewModel>().OrderBy(entry => _fields.IndexOf(entry)).ToArray();
+                return SelectedItems.OfType<FieldEditorViewModel>().OrderBy(entry => _fields.IndexOf(entry)).ToArray();
             }
         }
 
@@ -407,12 +397,12 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             }
         }
 
-        public ObservableCollection<EditFieldViewModel> Fields
+        public ObservableCollection<FieldEditorViewModel> Fields
         {
             get { return _fields; }
         }
 
-        public EditFieldViewModel SelectedField
+        public FieldEditorViewModel SelectedField
         {
             get { return _selectedField; }
             set
