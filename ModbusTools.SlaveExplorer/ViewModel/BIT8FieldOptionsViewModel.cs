@@ -44,7 +44,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         public string Bit2Name
         {
-            get { return _options.Bit3Name; }
+            get { return _options.Bit2Name; }
             set
             {
                 _options.Bit2Name = value;

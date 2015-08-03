@@ -3,18 +3,18 @@ using System.Windows;
 using MiscUtil.Conversion;
 using ModbusTools.Common;
 using ModbusTools.SlaveExplorer.Interfaces;
-using Xceed.Wpf.Toolkit;
 using ModbusTools.SlaveExplorer.Model;
+using Xceed.Wpf.Toolkit;
 
 namespace ModbusTools.SlaveExplorer.Runtime
 {
-    public class FIXED16RuntimeField : RuntimeFieldBase
+    public class UFIXED16RuntimeField : RuntimeFieldBase
     {
         private readonly RuntimeFieldEditor<DoubleUpDown> _editor;
 
         private readonly FixedPointOptionWrapper _options;
 
-        public FIXED16RuntimeField(FieldModel fieldModel) 
+        public UFIXED16RuntimeField(FieldModel fieldModel) 
             : base(fieldModel)
          {
              _options = new FixedPointOptionWrapper(fieldModel.Options);
@@ -28,8 +28,8 @@ namespace ModbusTools.SlaveExplorer.Runtime
                     Margin = new Thickness(0),
                     BorderThickness = new Thickness(0),
                     ClipValueToMinMax = true,
-                    Minimum = Int16.MinValue / _options.Scale,
-                    Maximum = Int16.MaxValue / _options.Scale
+                    Minimum = 0,
+                    Maximum = UInt16.MaxValue / _options.Scale
                 });
         }
 
@@ -40,14 +40,14 @@ namespace ModbusTools.SlaveExplorer.Runtime
 
         public override void SetBytes(byte[] data)
         {
-            var value = EndianBitConverter.Big.ToInt16(data, 0);
+            var value = EndianBitConverter.Big.ToUInt16(data, 0);
 
             _editor.Visual.Value = value / _options.Scale;
         }
 
         public override byte[] GetBytes()
         {
-            var value = (Int16) ((_editor.Visual.Value ?? 0)*_options.Scale);
+            var value = (UInt16)((_editor.Visual.Value ?? 0) * _options.Scale);
 
             return EndianBitConverter.Big.GetBytes(value);
         }

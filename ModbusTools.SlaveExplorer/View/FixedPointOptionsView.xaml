@@ -6,6 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Background="#EAEAEA"
         SizeToContent="Height"
+        ResizeMode="NoResize"
         Title="FixedPointOptionsView" Width="300">
     <i:Interaction.Behaviors>
         <common:CloseableBehavior />
@@ -54,7 +55,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button MinWidth="100" Grid.Column="1" Margin="2" Command="{Binding Path=OkCommand}">_OK</Button>
+            <Button MinWidth="100" Grid.Column="1" Margin="2" IsDefault="True" Command="{Binding Path=OkCommand}">_OK</Button>
             <Button MinWidth="100" Grid.Column="2" Margin="2" IsCancel="True" Command="{Binding Path=CancelCommand}">_Cancel</Button>
         </Grid>
 

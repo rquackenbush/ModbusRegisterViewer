@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.CommandWpf;
 using ModbusTools.Common;
+using ModbusTools.SlaveExplorer.FieldTypeServices;
 using ModbusTools.SlaveExplorer.Interfaces;
 using ModbusTools.SlaveExplorer.Model;
 using ModbusTools.SlaveExplorer.Runtime;
@@ -56,7 +57,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             _fieldEditors.Clear();
 
             //Create the fields
-            _fields = rangeModel.Fields.Select(RuntimeFieldFactory.Create).ToArray();
+            _fields = rangeModel.Fields.Select(f => FieldTypeServiceFactory.GetFieldTypeService(f.FieldType).CreateRuntimeField(f)).ToArray();
 
             //Set up the field editors
             _fieldEditors.AddRange(_fields.SelectMany(f => f.FieldEditors));
