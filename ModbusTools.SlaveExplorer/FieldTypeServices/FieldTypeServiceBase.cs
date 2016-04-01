@@ -4,7 +4,7 @@ using ModbusTools.SlaveExplorer.Model;
 
 namespace ModbusTools.SlaveExplorer.FieldTypeServices
 {
-    internal abstract class FieldTypeServiceBase : IFieldTypeService
+    public abstract class FieldTypeServiceBase : IFieldTypeService
     {
         private readonly FieldType _fieldType;
 

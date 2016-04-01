@@ -20,6 +20,10 @@
         </Style>
 
     </UserControl.Resources>
+    
+    <UserControl.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding Path=ReadCommand}"/>
+    </UserControl.InputBindings>
 
     <Grid>
         <Grid>
@@ -41,7 +45,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button Grid.Row="0" Grid.Column="0" Margin="4" MinWidth="100" Command="{Binding Path=ReadCommand}">Read</Button>
+                <Button Grid.Row="0" Grid.Column="0" Margin="4" MinWidth="100" Command="{Binding Path=ReadCommand}">Read (F5)</Button>
                 <Button Grid.Row="0" Grid.Column="1" Margin="4" MinWidth="100" Command="{Binding Path=WriteCommand}">Write</Button>
 
                 <Button Grid.Row="0" Grid.Column="3" Margin="4" MinWidth="100" Command="{Binding Path=EditCommand}">Edit</Button>

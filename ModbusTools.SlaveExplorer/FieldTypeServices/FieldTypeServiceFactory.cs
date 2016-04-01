@@ -15,7 +15,9 @@ namespace ModbusTools.SlaveExplorer.FieldTypeServices
         {
             var services = new IFieldTypeService[]
             {
-                new BIT8FieldTypeService(), 
+                new BIT8FieldTypeService(),
+                new BIT16FieldTypeService(), 
+                new BIT32FieldTypeService(),  
                 new FIXED16FieldTypeService(),
                 new FLOAT32FieldTypeService(),
                 new INT16FieldTypeService(),
