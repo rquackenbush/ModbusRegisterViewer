@@ -31,11 +31,8 @@
         </Style>
 
         <ObjectDataProvider x:Key="fieldTypes"
-                MethodName="GetValues" 
-                ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="model:FieldType" />
-            </ObjectDataProvider.MethodParameters>
+                MethodName="GetFieldTypes" 
+                ObjectType="{x:Type model:FieldTypeFactory}">
         </ObjectDataProvider>
 
     </Window.Resources>
@@ -144,7 +141,7 @@
                 <DataGridTextColumn Header="Offset" IsReadOnly="True" Binding="{Binding Path=Offset}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Name" MinWidth="150" Binding="{Binding Path=Name}"></DataGridTextColumn>
                 <DataGridComboBoxColumn Header="Type" MinWidth="150" SelectedValueBinding="{Binding Path=FieldType}" ItemsSource="{Binding Source={StaticResource fieldTypes}}"/>
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=Size}" />
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=Size, Mode=OneWay}" />
                 <DataGridTemplateColumn Header="Options" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

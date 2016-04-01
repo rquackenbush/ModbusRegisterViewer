@@ -274,6 +274,8 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         private void Ok()
         {
+            CalculateOffsets();
+
             Close.RaiseEvent(new CloseEventArgs(true));
         }
 

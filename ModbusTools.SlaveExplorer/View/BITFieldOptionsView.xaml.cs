@@ -17,11 +17,18 @@ namespace ModbusTools.SlaveExplorer.View
     /// <summary>
     /// Interaction logic for BIT8FieldOptionsView.xaml
     /// </summary>
-    public partial class BIT8FieldOptionsView : Window
+    public partial class BITFieldOptionsView : Window
     {
-        public BIT8FieldOptionsView()
+        public BITFieldOptionsView()
         {
             InitializeComponent();
+        }
+
+        private void BitNameGotFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+
+            textBox?.SelectAll();
         }
     }
 }
