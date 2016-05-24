@@ -6,7 +6,7 @@
     /// </summary>
     public enum FunctionCode : byte
     {
-        ReadDiscreteInputs = 2,
+         ReadDiscreteInputs = 2,
 
          ReadCoils = 1,
 

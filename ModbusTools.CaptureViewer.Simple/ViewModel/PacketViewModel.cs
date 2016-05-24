@@ -15,8 +15,8 @@ namespace ModbusTools.CaptureViewer.Simple.ViewModel
 
         public PacketViewModel(byte[] message)
         {
-            if (message == null) throw new ArgumentNullException("message");
-            if (message.Length == 0) throw new ArgumentException("message must have at least a single byte.", "message");
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (message.Length == 0) throw new ArgumentException("message must have at least a single byte.", nameof(message));
 
             _message = message;
 

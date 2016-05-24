@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using ModbusTools.Capture.Common;
 using ModbusTools.Capture.Model;
 
 namespace ModbusTools.Capture.ViewModel
@@ -6,9 +7,9 @@ namespace ModbusTools.Capture.ViewModel
     public class CaptureCompletedActionViewModel : ViewModelBase
     {
         private readonly string _name;
-        private readonly CaptureViewerFactory _factory;
+        private readonly ICaptureViewerFactory _factory;
 
-        public CaptureCompletedActionViewModel(string name, CaptureViewerFactory factory)
+        public CaptureCompletedActionViewModel(string name, ICaptureViewerFactory factory)
         {
             _name = name;
             _factory = factory;
@@ -19,7 +20,7 @@ namespace ModbusTools.Capture.ViewModel
             get { return _name; }
         }
 
-        public CaptureViewerFactory Factory
+        public ICaptureViewerFactory Factory
         {
             get { return _factory; }
         }

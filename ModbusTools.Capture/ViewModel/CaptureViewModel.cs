@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
-using Modbus.IO;
+using ModbusTools.Capture.Common;
 using ModbusTools.Capture.Model;
-using ModbusTools.Capture.View;
-using ModbusTools.CaptureViewer.Simple.View;
-using ModbusTools.CaptureViewer.Simple.ViewModel;
-using ModbusTools.Common;
+using ModbusTools.CaptureViewer.Interpreted;
+using ModbusTools.CaptureViewer.Interpreted.ViewModel;
+using ModbusTools.CaptureViewer.Simple;
 using ModbusTools.Common.ViewModel;
 
 namespace ModbusTools.Capture.ViewModel
@@ -26,23 +23,13 @@ namespace ModbusTools.Capture.ViewModel
         private string _capturePath;
         private CaptureHost _captureHost;
         
-        private const string CaptureFilter = "Modbus Capture Files(*.mbcap)|*.mbcap";
-
         public CaptureViewModel()
         {
             // These are the different ways to view the capture
-            var captureViewerFactories = new []
+            var captureViewerFactories = new ICaptureViewerFactory[]
             {
-                new CaptureViewerFactory("Simple Text", path =>
-                {
-                    var viewModel = new SimpleTextCaptureViewModel(path);
-
-                    return new SimpleTextCaptureView()
-                    {
-                        DataContext = viewModel
-                    };
-
-                }), 
+                new InterpretedCaptureViewerFactory(), 
+                new SimpleCaptureViewerFactory(),
             };
 
             //These are the ways a user can explicitly open a capture file
@@ -54,7 +41,7 @@ namespace ModbusTools.Capture.ViewModel
                 new CaptureCompletedActionViewModel("<None>", null), 
             }.Concat(captureViewerFactories.Select(f => new CaptureCompletedActionViewModel(f.Name, f))).ToArray();
 
-            CaptureCompletedAction = _captureCompletedActions.FirstOrDefault();
+            CaptureCompletedAction = _captureCompletedActions[1];
 
             StartCommand = new RelayCommand(Start, CanStart);
             StopCommand = new RelayCommand(Stop, CanStop);
@@ -127,7 +114,7 @@ namespace ModbusTools.Capture.ViewModel
 
             var dialog = new SaveFileDialog()
             {
-                Filter = CaptureFilter
+                Filter = CaptureConstants.CaptureFilter
             };
 
             if (dialog.ShowDialog() != true)

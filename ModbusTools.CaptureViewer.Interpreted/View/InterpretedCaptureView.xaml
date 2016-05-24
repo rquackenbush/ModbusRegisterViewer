@@ -1,0 +1,51 @@
+﻿<Window x:Class="ModbusTools.CaptureViewer.Interpreted.View.InterpretedCaptureView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ModbusTools.CaptureViewer.Interpreted.View"
+        xmlns:viewModel="clr-namespace:ModbusTools.CaptureViewer.Interpreted.ViewModel"
+        xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
+        mc:Ignorable="d"
+        DataContext="{x:Static viewModel:Locator.Interpreted}"
+        Title="{Binding Path=Title}" Height="800" Width="1000">
+
+    <Window.Resources>
+        <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="1">
+            <DataGrid ItemsSource="{Binding Path=Packets}" AutoGenerateColumns="False">
+                <DataGrid.Columns >
+                    <DataGridTemplateColumn IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="/ModbusTools.CaptureViewer.Interpreted;component/Images/Warning.png" Width="16" Visibility="{Binding Path=HasError, Converter={StaticResource HiddenWhenFalseConverter}}"></Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Slave Id" IsReadOnly="True" Binding="{Binding Path=SlaveId}"/>
+                    <DataGridTextColumn Header="Function" IsReadOnly="True" Binding="{Binding Path=FunctionCodeDescription}"/>
+                    <DataGridTextColumn Header="Summary" IsReadOnly="True" Binding="{Binding Path=Summary}"/>
+                    <DataGridTextColumn Header="Length" IsReadOnly="True" Binding="{Binding Path=Length}"/>
+                    <DataGridTextColumn Header="Error" IsReadOnly="True" Binding="{Binding Path=Error}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        
+        <GridSplitter Grid.Row="2" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Background="Gray" VerticalAlignment="Stretch"></GridSplitter>
+        
+        <StatusBar Grid.Row="4">
+            <Label>Ready</Label>
+        </StatusBar>
+    </Grid>
+</Window>

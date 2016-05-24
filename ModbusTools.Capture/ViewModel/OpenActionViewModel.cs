@@ -3,17 +3,18 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
+using ModbusTools.Capture.Common;
 using ModbusTools.Capture.Model;
 
 namespace ModbusTools.Capture.ViewModel
 {
     public class OpenActionViewModel : ViewModelBase
     {
-        private readonly CaptureViewerFactory _factory;
+        private readonly ICaptureViewerFactory _factory;
 
-        public OpenActionViewModel(CaptureViewerFactory factory)
+        public OpenActionViewModel(ICaptureViewerFactory factory)
         {
-            if (factory == null) throw new ArgumentNullException("factory");
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
 
             _factory = factory;
 
@@ -29,7 +30,10 @@ namespace ModbusTools.Capture.ViewModel
 
         private void Open()
         {
-            var dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog()
+            {
+                Filter = CaptureConstants.CaptureFilter
+            };
 
             if (dialog.ShowDialog() == true)
             {

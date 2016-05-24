@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{66DD80BC-CBA9-422B-AE71-712AE52F9CF4}"
 EndProject
@@ -37,6 +37,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SlaveExplorer", "SlaveExplorer", "{14886183-A7EF-48DC-99CE-CDB91D05D810}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveExplorer", "ModbusTools.SlaveExplorer\ModbusTools.SlaveExplorer.csproj", "{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.CaptureViewer.Interpreted", "ModbusTools.CaptureViewer.Interpreted\ModbusTools.CaptureViewer.Interpreted.csproj", "{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Capture.Common", "ModbusTools.Capture.Common\ModbusTools.Capture.Common.csproj", "{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +84,14 @@ Global
 		{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,5 +104,7 @@ Global
 		{EB096034-F10D-48C7-BE3D-ECE13B34F04E} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
 		{F5343276-D294-43FC-954D-66EE6413BD29} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
 		{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E} = {14886183-A7EF-48DC-99CE-CDB91D05D810}
+		{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
+		{904DDAEC-B32F-40F0-BDE7-CF509D4825E8} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
 	EndGlobalSection
 EndGlobal
