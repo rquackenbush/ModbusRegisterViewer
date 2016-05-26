@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 using ModbusTools.Capture.Model;
+using ModbusTools.CaptureViewer.Interpreted.Model;
 using ModbusTools.Common;
 
 namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
@@ -9,6 +11,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
     public class PacketViewModel
     {
         private readonly Sample[] _samples;
+        private readonly FunctionServiceResult _serviceResult;
 
         public PacketViewModel(IEnumerable<Sample> samples)
         {
@@ -41,10 +44,15 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
                 {
                     Error = "CRC Mismatch";
                 }
-            }            
+            }
 
-            //Summary = "Summary here";
-            
+            if (!HasError)
+            {
+                _serviceResult = FunctionServiceManager.Process(_samples);
+
+                Summary = _serviceResult.Summary;
+            }
+           
         }
 
         public byte? SlaveId { get; private set; }
@@ -65,6 +73,16 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
         public int Length
         {
             get { return _samples.Length; }
+        }
+
+        public Sample[] Samples
+        {
+            get { return _samples; }
+        }
+
+        public Visual Visual
+        {
+            get { return _serviceResult?.Visual; }
         }
     }
 }

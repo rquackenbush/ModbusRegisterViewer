@@ -11,6 +11,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
         private readonly string _captureFilePath;
         private double _packetThreshold = 2.5;
         private readonly ObservableCollection<PacketViewModel> _packets = new ObservableCollection<PacketViewModel>();
+        private PacketViewModel _selectedPacket;
 
         /// <summary>
         /// For designer
@@ -100,6 +101,16 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
         public ObservableCollection<PacketViewModel> Packets
         {
             get { return _packets; }
+        }
+
+        public PacketViewModel SelectedPacket
+        {
+            get { return _selectedPacket; }
+            set
+            {
+                _selectedPacket = value; 
+                RaisePropertyChanged();
+            }
         }
     }
 }

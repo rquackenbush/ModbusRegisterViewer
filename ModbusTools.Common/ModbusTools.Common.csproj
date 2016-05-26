@@ -112,6 +112,7 @@
     <Compile Include="FrameworkElementExtensions.cs" />
     <Compile Include="FtdiConfiguration.cs" />
     <Compile Include="FunctionCode.cs" />
+    <Compile Include="HexFormatter.cs" />
     <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="IMasterContext.cs" />
     <Compile Include="IMasterContextFactory.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Model\DescriptionStore.cs" />
     <Compile Include="Model\SerialMasterContext.cs" />
     <Compile Include="Model\SerialMasterContextFactory.cs" />
+    <Compile Include="NumericExtensions.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="ObservableCollectionExtensions.cs" />
     <Compile Include="OperationAttempter.cs" />

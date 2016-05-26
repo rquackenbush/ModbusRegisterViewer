@@ -8,7 +8,7 @@
         xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
         mc:Ignorable="d"
         DataContext="{x:Static viewModel:Locator.Interpreted}"
-        Title="{Binding Path=Title}" Height="800" Width="1000">
+        Title="{Binding Path=Title}" Height="800" Width="1000" Icon="/ModbusTools.CaptureViewer.Interpreted;component/Images/Network_Map.png">
 
     <Window.Resources>
         <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
         
         <Grid Grid.Row="1">
-            <DataGrid ItemsSource="{Binding Path=Packets}" AutoGenerateColumns="False">
+            <DataGrid ItemsSource="{Binding Path=Packets}" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding Path=SelectedPacket}">
                 <DataGrid.Columns >
                     <DataGridTemplateColumn IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
@@ -42,7 +42,11 @@
             </DataGrid>
         </Grid>
         
-        <GridSplitter Grid.Row="2" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Background="Gray" VerticalAlignment="Stretch"></GridSplitter>
+        <GridSplitter Grid.Row="2" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Background="LightGray" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ></GridSplitter>
+        
+        <ContentControl Grid.Row="3" Content="{Binding Path=SelectedPacket.Visual}">
+            
+        </ContentControl>
         
         <StatusBar Grid.Row="4">
             <Label>Ready</Label>

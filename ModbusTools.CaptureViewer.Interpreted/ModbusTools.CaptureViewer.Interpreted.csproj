@@ -49,6 +49,10 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MiscUtil, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d3c42c4bfacf7596, processorArchitecture=MSIL">
+      <HintPath>..\packages\JonSkeet.MiscUtil.0.1\lib\net35-Client\MiscUtil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -70,7 +74,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FunctionCodeDescriptionFactory.cs" />
+    <Compile Include="Model\FunctionServiceBase.cs" />
     <Compile Include="InterpretedCaptureViewerFactory.cs" />
+    <Compile Include="Model\FunctionServiceManager.cs" />
+    <Compile Include="Model\FunctionServiceResult.cs" />
+    <Compile Include="Model\IFunctionService.cs" />
+    <Compile Include="Model\PacketType.cs" />
+    <Compile Include="Model\ReadHoldingRegistersService.cs" />
+    <Compile Include="Model\ReadInputRegistersService.cs" />
+    <Compile Include="Model\ReadRegistersService.cs" />
+    <Compile Include="Model\WriteRegistersService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -87,8 +100,12 @@
     <Compile Include="ViewModel\InterpretedCaptureViewModel.cs" />
     <Compile Include="ViewModel\Locator.cs" />
     <Compile Include="ViewModel\PacketViewModel.cs" />
+    <Compile Include="ViewModel\RegistersViewModel.cs" />
     <Compile Include="View\InterpretedCaptureView.xaml.cs">
       <DependentUpon>InterpretedCaptureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RegistersView.xaml.cs">
+      <DependentUpon>RegistersView.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -123,6 +140,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\RegistersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Network_Map.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

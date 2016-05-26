@@ -52,7 +52,6 @@
     <Compile Include="FunctionHandlers\ReadInputRegistersFunctionHandler.cs" />
     <Compile Include="FunctionHandlers\WriteHoldingRegisterFunctionHandler.cs" />
     <Compile Include="FunctionHandlers\WriteHoldingRegistersFunctionHandler.cs" />
-    <Compile Include="HexFormatter.cs" />
     <Compile Include="IModbusFunctionHandler.cs" />
     <Compile Include="IRegisterStorage.cs" />
     <Compile Include="IRegisterStorageExtensions.cs" />
