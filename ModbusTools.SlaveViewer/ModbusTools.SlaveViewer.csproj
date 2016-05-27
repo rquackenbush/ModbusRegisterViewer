@@ -111,6 +111,7 @@
     <Compile Include="ViewModel\RegisterTypeViewModel.cs" />
     <Compile Include="ViewModel\SlaveExplorerViewModel.cs" />
     <Compile Include="ViewModel\SlaveExplorerRegisterViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\SimpleSlaveExplorerView.xaml.cs">
       <DependentUpon>SimpleSlaveExplorerView.xaml</DependentUpon>
     </Compile>
@@ -146,6 +147,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Gear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\openHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\saveHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Export.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

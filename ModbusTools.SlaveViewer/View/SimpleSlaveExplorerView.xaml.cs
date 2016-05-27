@@ -16,12 +16,7 @@ namespace ModbusTools.SlaveViewer.View
         {
             InitializeComponent();
 
-            var preferencesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ModbusTools", "registerViewerPreferences.xml");
-
-            var messageBoxService = new MessageBoxService();
-            var preferences = new Preferences(preferencesPath);
-
-            DataContext = new SlaveExplorerViewModel(messageBoxService, preferences);
+            
         }
     }
 }

@@ -9,7 +9,7 @@
     
     <UserControl.Resources>
         <Style p4:Key="RowStyle" TargetType="DataGridRow" xmlns:p4="http://schemas.microsoft.com/winfx/2006/xaml">
-            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
             <Setter Property="FontFamily" Value="Consolas"></Setter>
         </Style>
 
@@ -22,7 +22,7 @@
         </Style>
 
         <Style TargetType="DataGridColumnHeader">
-            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
             <Setter Property="FontWeight" Value="Bold"></Setter>
             <!--<Setter Property="FontFamily" Value="Consolas"></Setter>-->
         </Style>

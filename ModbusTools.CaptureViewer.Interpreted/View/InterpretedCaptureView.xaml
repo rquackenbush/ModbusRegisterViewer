@@ -1,4 +1,4 @@
-﻿<Window x:Class="ModbusTools.CaptureViewer.Interpreted.View.InterpretedCaptureView"
+﻿<UserControl x:Class="ModbusTools.CaptureViewer.Interpreted.View.InterpretedCaptureView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,12 +7,12 @@
         xmlns:viewModel="clr-namespace:ModbusTools.CaptureViewer.Interpreted.ViewModel"
         xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
         mc:Ignorable="d"
-        DataContext="{x:Static viewModel:Locator.Interpreted}"
-        Title="{Binding Path=Title}" Height="800" Width="1000" Icon="/ModbusTools.CaptureViewer.Interpreted;component/Images/Network_Map.png">
+        d:DesignHeight="200"
+        DataContext="{x:Static viewModel:Locator.Interpreted}">
 
-    <Window.Resources>
+    <UserControl.Resources>
         <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
-    </Window.Resources>
+    </UserControl.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
@@ -43,13 +43,13 @@
         </Grid>
         
         <GridSplitter Grid.Row="2" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Background="LightGray" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ></GridSplitter>
+        <!--<Rectangle Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Stretch" Fill="Gray" Height="1"/>-->
+        <Rectangle Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Fill="Gray" Height="1"/>
         
         <ContentControl Grid.Row="3" Content="{Binding Path=SelectedPacket.Visual}">
             
         </ContentControl>
         
-        <StatusBar Grid.Row="4">
-            <Label>Ready</Label>
-        </StatusBar>
+     
     </Grid>
-</Window>
+</UserControl>

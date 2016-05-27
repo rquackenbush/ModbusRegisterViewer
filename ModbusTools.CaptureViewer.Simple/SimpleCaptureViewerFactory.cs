@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 using ModbusTools.Capture.Common;
 using ModbusTools.CaptureViewer.Simple.View;
 using ModbusTools.CaptureViewer.Simple.ViewModel;
@@ -12,7 +13,7 @@ namespace ModbusTools.CaptureViewer.Simple
             get { return "Simple"; }
         }
 
-        public Window Open(string filename)
+        public Visual Open(string filename)
         {
             var viewModel = new SimpleTextCaptureViewModel(filename);
 

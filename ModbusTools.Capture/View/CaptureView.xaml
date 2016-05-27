@@ -13,31 +13,75 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <Menu>
-            <MenuItem Header="_File">
-                <MenuItem Header="_Open" ItemsSource="{Binding Path=OpenActions}">
-                    <MenuItem.ItemContainerStyle>
-                        <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding Path=Name}"/>
-                            <Setter Property="Command" Value="{Binding Path=OpenCommand}"></Setter>
-                        </Style>
-                    </MenuItem.ItemContainerStyle>
-                    
-                </MenuItem>
-            </MenuItem>
+        <ToolBar Grid.Row="1">
             
-        </Menu>
+            <Button ToolTip="Open existing capture file..." Command="{Binding Path=OpenCommand}">
+                <Image Source="/ModbusTools.Capture;component/Images/openHS.png" Width="16"></Image>
+            </Button>
+            
+            <Separator/>
+            
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding Path=StartCommand}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1">
+                    <common:AutoGreyableImage  Width="16"  Source="/ModbusTools.Capture;component/Images/Play32.png" />
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="4,0,0,0" FontSize="14">Capture</TextBlock>
+                </Grid>
+            </Button>
+
+            <Separator/>
+
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding Path=StopCommand}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <common:AutoGreyableImage  Width="16"  Source="/ModbusTools.Capture;component/Images/Stop32.png" />
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="4,0,0,0" FontSize="14">Stop</TextBlock>
+                </Grid>
+            </Button>
+
+            <Separator/>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="4,7" VerticalAlignment="Center">Viewer:</TextBlock>
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" ItemsSource="{Binding Path=CaptureViewerFactories}" SelectedItem="{Binding Path=CaptureViewerFactory}"  DisplayMemberPath="Name" />
+            </Grid>
+
+        </ToolBar>
+
+        <ContentControl Grid.Row="3" MinHeight="20" Content="{Binding Path=CaptureViewer}"/>
+
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -45,44 +89,9 @@
 
             <TextBlock Grid.Row="0" Margin="4" VerticalAlignment="Center">Adapter:</TextBlock>
             <view:ModbusAdapterSelector Grid.Row="0" Grid.Column="1" DataContext="{Binding Path=ModbusAdapters}" />
+          </Grid>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Margin="4" VerticalAlignment="Center">Open using:</TextBlock>
-            <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" ItemsSource="{Binding Path=CaptureCompletedActions}" SelectedItem="{Binding Path=CaptureCompletedAction}"  DisplayMemberPath="Name" />
-        </Grid>
-
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4" MinWidth="200" Command="{Binding Path=StartCommand}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    
-                    <common:AutoGreyableImage  Width="32" Margin="6" Source="/ModbusTools.Capture;component/Images/Play32.png" />
-                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="6" FontSize="16">Capture</TextBlock>
-                </Grid>
-            </Button>
-
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4" Grid.Column="1" MinWidth="200" Command="{Binding Path=StopCommand}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <common:AutoGreyableImage  Width="32" Margin="6" Source="/ModbusTools.Capture;component/Images/Stop32.png" />
-                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="6" FontSize="16">Stop</TextBlock>
-                </Grid>
-            </Button>
-        </Grid>
-        
-        <StatusBar Grid.Row="3">
+            <StatusBar Grid.Row="5">
             <TextBlock Text="{Binding Path=Status}"  ></TextBlock>
             <Separator />
             <TextBlock>

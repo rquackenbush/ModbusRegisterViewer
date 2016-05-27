@@ -8,7 +8,7 @@ namespace ModbusTools.Common
         {
             var buffer = new byte[1];
 
-            streamResource.Read(buffer, 0, 1);
+            streamResource?.Read(buffer, 0, 1);
 
             return buffer[0];
         }

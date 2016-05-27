@@ -46,6 +46,12 @@ namespace ModbusTools.SlaveViewer.ViewModel
         private static readonly RegisterTypeViewModel _registerTypeHolding = new RegisterTypeViewModel(Common.RegisterType.Holding, "Holding");
 
         private readonly DescriptionStore _descriptionStore = new DescriptionStore();
+        private readonly ObservableCollection<string> _logEntries = new ObservableCollection<string>();
+
+        private bool _isZeroBased;
+        private int _errorCount;
+        private int _readCount;
+        private double _autoRefreshInterval = 2.0;
 
         private readonly List<RegisterTypeViewModel> _registerTypes = new List<RegisterTypeViewModel>()
         {
@@ -320,6 +326,16 @@ namespace ModbusTools.SlaveViewer.ViewModel
             }
         }
 
+        public double AutoRefreshInterval
+        {
+            get { return _autoRefreshInterval; }
+            set
+            {
+                _autoRefreshInterval = value; 
+                RaisePropertyChanged();
+            }
+        }
+
         private void SavePreferences()
         {
             if (RegisterType == null)
@@ -340,69 +356,87 @@ namespace ModbusTools.SlaveViewer.ViewModel
         {
             if (_isRunning)
                 return;
-
+            
             try
             {
                 if (RegisterType == null)
                     return;
 
                 SavePreferences();
-                
+
                 ushort[] results = null;
 
                 ExecuteComm(m =>
+                {
+                    switch (RegisterType.RegisterType)
                     {
-                        switch (RegisterType.RegisterType)
-                        {
-                            case Common.RegisterType.Input:
+                        case Common.RegisterType.Input:
 
-                                results = m.ReadInputRegisters(SlaveAddress,
-                                                        StartingRegisterIndex,
-                                                        NumberOfRegisters,
-                                                        BlockSize);
+                            results = m.ReadInputRegisters(SlaveAddress,
+                                StartingRegisterIndex,
+                                NumberOfRegisters,
+                                BlockSize);
 
-                                break;
+                            break;
 
-                            case Common.RegisterType.Holding:
+                        case Common.RegisterType.Holding:
 
-                                results = m.ReadHoldingRegisters(SlaveAddress,
-                                                        StartingRegisterIndex,
-                                                        NumberOfRegisters,
-                                                        BlockSize);
-                                
+                            results = m.ReadHoldingRegisters(SlaveAddress,
+                                StartingRegisterIndex,
+                                NumberOfRegisters,
+                                BlockSize);
 
-                                break;
 
-                            default:
-                                throw new InvalidOperationException(string.Format("Unrecognized enum value {0}",
-                                                                                    RegisterType.RegisterType));
-                        }
-                    });
+                            break;
+
+                        default:
+                            throw new InvalidOperationException($"Unrecognized enum value {RegisterType.RegisterType}");
+                    }
+                });
 
                 ushort registerIndex = StartingRegisterIndex;
 
                 if (results != null)
                 {
-                    var rows = results.Select(r => new SlaveExplorerRegisterViewModel(registerIndex++, r, _descriptionStore)
-                    {
-                        IsZeroBased = IsZeroBased
-                    });
+                    var rows =
+                        results.Select(r => new SlaveExplorerRegisterViewModel(registerIndex++, r, _descriptionStore)
+                        {
+                            IsZeroBased = IsZeroBased
+                        });
 
                     Registers = new ObservableCollection<SlaveExplorerRegisterViewModel>(rows);
                 }
 
+                if (IsAutoRefresh)
+                {
+                    ReadCount++;
+                    _autoRefreshTimer.Interval = AutoRefreshInterval*1000;
+                    _autoRefreshTimer.Start();
+                }
+
+
             }
             catch (Exception ex)
             {
-                _autoRefreshTimer.Enabled = false;
-
                 if (IsAutoRefresh)
                 {
-                    IsAutoRefresh = false;
+                    AddLogEntry(ex.Message);
+                    ErrorCount++;
                 }
-
-                _messageBoxService.Show(ex, "Read Failed");
+                else
+                {
+                    _messageBoxService.Show(ex, "Read Failed");
+                }
             }
+        }
+
+        private void AddLogEntry(string message)
+        {
+            var now = DateTime.Now;
+
+            var formatted = $"{now.ToShortDateString()} {now.ToShortTimeString()} - {message}";
+
+            LogEntries.Add(formatted);
         }
 
         private void Exit()
@@ -431,6 +465,26 @@ namespace ModbusTools.SlaveViewer.ViewModel
             }
         }
 
+        public int ErrorCount
+        {
+            get { return _errorCount; }
+            private set
+            {
+                _errorCount = value; 
+                RaisePropertyChanged();
+            }
+        }
+
+        public int ReadCount
+        {
+            get { return _readCount; }
+            private set
+            {
+                _readCount = value; 
+                RaisePropertyChanged();
+            }
+        }
+
         public byte BlockSize
         {
             get { return _blockSize; }
@@ -453,10 +507,15 @@ namespace ModbusTools.SlaveViewer.ViewModel
             {
                 if (_autoRefreshTimer.Enabled != value)
                 {
+                    _autoRefreshTimer.Interval = _autoRefreshInterval*1000;
                     _autoRefreshTimer.Enabled = value;
 
                     if (value)
                     {
+                        ErrorCount = 0;
+                        ReadCount = 0;
+                        LogEntries.Clear();
+
                         Read();
                     }
 
@@ -558,7 +617,8 @@ namespace ModbusTools.SlaveViewer.ViewModel
             }
         }
 
-        private bool _isZeroBased;
+      
+
         public bool IsZeroBased
         {
             get { return _isZeroBased; }
@@ -576,5 +636,9 @@ namespace ModbusTools.SlaveViewer.ViewModel
             }
         }
 
+        public ObservableCollection<string> LogEntries
+        {
+            get { return _logEntries; }
+        }
     }
 }
