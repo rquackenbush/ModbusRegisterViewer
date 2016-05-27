@@ -12,31 +12,34 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
+       
         <Menu>
             <MenuItem Header="_File">
-                <MenuItem Header="_New">
-                    <MenuItem Header="Slave Explorer" x:Name="AddNewSlaveExplorerMenuItem" Click="AddNewSlaveExplorerMenuItem_OnClick" />
-                    <MenuItem Header="Structured Slave Explorer" x:Name="AddNewStructuredSlaveExplorerMenuItem" Click="AddNewStructuredSlaveExplorerMenuItem_OnClick" />
-                    <MenuItem Header="Modbus Capture" x:Name="AddNewModbusCaptureMenuItem" Click="AddNewModbusCaptureMenuItem_OnClick" />
-                    <MenuItem Header="Slave Simulator" x:Name="AddNewSlaveSimulatorMenuItem" Click="AddNewSlaveSimulatorMenuItem_OnClick" />
+                <MenuItem   Header="_New..." x:Name="NewMenuItem"  Click="ToolLauncherMenuItem_OnClick" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/Insert.png" ></Image>
+                    </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="E_xit" x:Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
-            </MenuItem>
-
-            <MenuItem Header="_Tools">
-                <MenuItem Header="Tool Launcher..." x:Name="ToolLauncherMenuItem" Click="ToolLauncherMenuItem_OnClick"></MenuItem>
             </MenuItem>
 
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" x:Name="AboutMenuItem" Click="AboutMenuItem_OnClick" />
             </MenuItem>
         </Menu>
+        
+        <ToolBar Grid.Row="1">
+            <Button ToolTip="Add new tool..." Click="ToolLauncherMenuItem_OnClick" Background="Transparent">
+                <Image Source="Images/Insert.png" Width="16"/>
+            </Button>
+        </ToolBar>
 
-        <xcad:DockingManager Grid.Row="1" >
+        <xcad:DockingManager Grid.Row="2" >
             <xcad:LayoutRoot>
                 <xcad:LayoutPanel Orientation="Vertical" DockWidth="*">
 

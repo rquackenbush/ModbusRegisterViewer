@@ -10,16 +10,11 @@ namespace ModbusTools.SlaveExplorer.View
     /// <summary>
     /// Interaction logic for SlaveExplorerView.xaml
     /// </summary>
-    public partial class SlaveExplorerView
+    public partial class StructuredSlaveExplorerView
     {
-        public SlaveExplorerView()
+        public StructuredSlaveExplorerView()
         {
             InitializeComponent();
-        }
-
-        private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            //Close();
         }
 
         private void SlaveExplorerView_OnLoaded(object sender, RoutedEventArgs e)
@@ -111,10 +106,7 @@ namespace ModbusTools.SlaveExplorer.View
 
             var element = layoutDocument.Content as FrameworkElement;
 
-            if (element == null)
-                return null;
-
-            return element.DataContext as SlaveViewModel;
+            return element?.DataContext as SlaveViewModel;
         }
 
         void LayoutDocumentClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -124,7 +116,7 @@ namespace ModbusTools.SlaveExplorer.View
             if (viewModel == null)
                 return;
 
-            var message = string.Format("Delete Modbus slave '{0}'?", viewModel.Name);
+            var message = $"Delete Modbus slave '{viewModel.Name}'?";
 
             var result = MessageBox.Show(message, "Delete?", MessageBoxButton.YesNo);
 

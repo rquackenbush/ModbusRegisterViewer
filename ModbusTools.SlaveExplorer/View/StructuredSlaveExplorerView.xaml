@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ModbusTools.SlaveExplorer.View.SlaveExplorerView"
+﻿<UserControl x:Class="ModbusTools.SlaveExplorer.View.StructuredSlaveExplorerView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModel="clr-namespace:ModbusTools.SlaveExplorer.ViewModel"
@@ -49,10 +49,6 @@
                 <MenuItem Header="_Edit">
                     <MenuItem Command="{Binding Path=CreateNewSlaveCommand}" Header="Create new slave"></MenuItem>
                 </MenuItem>
-                <!--<MenuItem Header="_View">
-                    <MenuItem Header="_Toolbox"  />
-                    <MenuItem Header="_Properties"  />
-                </MenuItem>-->
             </Menu>
             
             <ToolBar Grid.Row="1">

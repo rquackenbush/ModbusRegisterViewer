@@ -190,8 +190,8 @@
     <Compile Include="View\RegisterRangeView.xaml.cs">
       <DependentUpon>RegisterRangeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SlaveExplorerView.xaml.cs">
-      <DependentUpon>SlaveExplorerView.xaml</DependentUpon>
+    <Compile Include="View\StructuredSlaveExplorerView.xaml.cs">
+      <DependentUpon>StructuredSlaveExplorerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SlaveView.xaml.cs">
       <DependentUpon>SlaveView.xaml</DependentUpon>
@@ -224,7 +224,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SlaveExplorerView.xaml">
+    <Page Include="View\StructuredSlaveExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

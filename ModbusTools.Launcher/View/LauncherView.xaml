@@ -1,44 +1,55 @@
 ﻿<Window x:Class="ModbusTools.Launcher.View.LauncherView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         WindowStyle="None"
         BorderThickness="0"
         ResizeMode="NoResize"
         SizeToContent="Height"
         WindowStartupLocation="CenterScreen"
-        Title="LauncherView"  Width="580" Background="{StaticResource WindowBackground}" Icon="/ModbusTools.Launcher;component/Images/WindowIcon.png">
+        Title="LauncherView"  Width="580" Background="{DynamicResource WindowBackground}" Icon="/ModbusTools.Launcher;component/Images/WindowIcon.png">
     
     <Window.Resources>
-        <Style TargetType="Label" x:Key="TitleLabel">
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="FontSize" Value="28"></Setter>
-        </Style> 
         
-        <Style TargetType="Grid" x:Key="ToolDescription">
-            <Setter Property="Margin" Value="5"></Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
 
-        <ControlTemplate TargetType="Button" x:Key="ToolButtonTemplate">
-            <Grid>
-                <Rectangle RadiusX="10" RadiusY="10"  >
-                    <Rectangle.Style>
-                        <Style TargetType="Rectangle">
-                            <Setter Property="Fill" Value="White"></Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Fill" Value="LightYellow"></Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Rectangle.Style>
-                </Rectangle>
+                <ResourceDictionary  Source="pack://application:,,,/ModbusTools.Common;component/CommonResources.xaml" />
+
+                <ResourceDictionary>
+                <Style TargetType="Label" x:Key="TitleLabel">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="FontFamily" Value="Arial"/>
+                    <Setter Property="FontSize" Value="28"></Setter>
+                </Style> 
+        
+                <Style TargetType="Grid" x:Key="ToolDescription">
+                    <Setter Property="Margin" Value="5"></Setter>
+                </Style>
+
+                <ControlTemplate TargetType="Button" x:Key="ToolButtonTemplate">
+                    <Grid>
+                        <Rectangle RadiusX="10" RadiusY="10"  >
+                            <Rectangle.Style>
+                                <Style TargetType="Rectangle">
+                                    <Setter Property="Fill" Value="White"></Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Fill" Value="LightYellow"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Rectangle.Style>
+                        </Rectangle>
                 
-                <ContentPresenter Margin="10,0,0,0" IsHitTestVisible="False" />
+                        <ContentPresenter Margin="10,0,0,0" IsHitTestVisible="False" />
                
-            </Grid>
+                    </Grid>
             
-        </ControlTemplate>
+                </ControlTemplate>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
 
     </Window.Resources>
 
@@ -135,7 +146,7 @@
                     <Button Click="LaunchRegisterViewer" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
 
                         <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  Margin="4">
-                                    <TextBlock FontWeight="Bold" FontFamily="Arial">Slave Explorer</TextBlock>
+                                    <TextBlock FontWeight="Bold" FontFamily="Arial">Simple Slave Explorer</TextBlock>
                                     <LineBreak/>
                                     <TextBlock>Query and set values on connected slave devices.</TextBlock>
                         </TextBlock>

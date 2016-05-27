@@ -10,9 +10,9 @@ namespace ModbusTools.SlaveViewer.View
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class RegisterViewerView
+    public partial class SimpleSlaveExplorerView
     {
-        public RegisterViewerView()
+        public SimpleSlaveExplorerView()
         {
             InitializeComponent();
 

@@ -46,16 +46,16 @@ namespace ModbusTools.Launcher
             switch (toolType)
             {
                 case ToolType.SimpleSlaveExplorer:
-                    AddTool<RegisterViewerView>("Simple Slave Explorer");
+                    AddTool<SimpleSlaveExplorerView>("Simple Slave Explorer");
                     break;
 
                 case ToolType.StructuredSlaveExplorer:
 
-                    AddTool<SlaveExplorerView>("Structured Slave Explorer");
+                    AddTool<StructuredSlaveExplorerView>("Structured Slave Explorer");
                     break;
 
                 case ToolType.ModbusCapture:
-                    AddTool<CaptureView>("Capture");
+                    AddTool<CaptureView>("Modbus Capture");
                     break;
 
                 case ToolType.SlaveSimulator:
@@ -98,26 +98,6 @@ namespace ModbusTools.Launcher
         private void ApplicationView_OnLoaded(object sender, RoutedEventArgs e)
         {
             ShowToolLauncher();
-        }
-
-        private void AddNewSlaveExplorerMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            AddTool(ToolType.SimpleSlaveExplorer);
-        }
-
-        private void AddNewStructuredSlaveExplorerMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            AddTool(ToolType.StructuredSlaveExplorer);
-        }
-
-        private void AddNewModbusCaptureMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            AddTool(ToolType.ModbusCapture);
-        }
-
-        private void AddNewSlaveSimulatorMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            AddTool(ToolType.SlaveSimulator);
         }
 
         private void ToolLauncherMenuItem_OnClick(object sender, RoutedEventArgs e)

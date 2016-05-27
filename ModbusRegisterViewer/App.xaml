@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
         
-            <SolidColorBrush x:Key="WindowBackground" Color="#EAEAEA"  />
+            <!--<SolidColorBrush x:Key="WindowBackground" Color="#EAEAEA"  />
 
             <SolidColorBrush Color="#7EC7C6C6" x:Key="ModalBackground"  />
 
@@ -20,14 +20,14 @@
             </Style>
 
             <Style TargetType="DataGridCell" x:Key="RegisterDataGridCellStyle">
-                <!--<Setter Property="Background" Value="#E9F4F7"></Setter>-->
+                --><!--<Setter Property="Background" Value="#E9F4F7"></Setter>--><!--
             </Style>
 
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="14"></Setter>
                 <Setter Property="FontWeight" Value="Bold"></Setter>
-                <!--<Setter Property="FontFamily" Value="Consolas"></Setter>-->
-            </Style>
+                --><!--<Setter Property="FontFamily" Value="Consolas"></Setter>--><!--
+            </Style>-->
 
         </ResourceDictionary>
     </Application.Resources>
