@@ -10,7 +10,7 @@ namespace ModbusTools.SlaveViewer.View
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class RegisterViewerView : Window
+    public partial class RegisterViewerView
     {
         public RegisterViewerView()
         {
@@ -18,25 +18,10 @@ namespace ModbusTools.SlaveViewer.View
 
             var preferencesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ModbusTools", "registerViewerPreferences.xml");
 
-            var messageBoxService = new MessageBoxService(this);
+            var messageBoxService = new MessageBoxService();
             var preferences = new Preferences(preferencesPath);
 
             DataContext = new SlaveExplorerViewModel(messageBoxService, preferences);
-        }
-
-        private void RegisterViewerView_OnClosed(object sender, EventArgs e)
-        {
-            var viewModel = DataContext as SlaveExplorerViewModel;
-
-            if (viewModel != null)
-            {
-                viewModel.Closed();
-            }
-        }
-
-        private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
     }
 }

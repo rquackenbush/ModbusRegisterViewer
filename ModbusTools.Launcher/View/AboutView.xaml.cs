@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace ModbusRegisterViewer.Views
+﻿namespace ModbusTools.Launcher.View
 {
     /// <summary>
     /// Interaction logic for AboutView.xaml
@@ -10,8 +8,6 @@ namespace ModbusRegisterViewer.Views
         public AboutView()
         {
             InitializeComponent();
-
-
         }
 
         private void OnOkClicked(object sender, System.Windows.RoutedEventArgs e)

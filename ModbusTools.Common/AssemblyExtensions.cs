@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace ModbusRegisterViewer
+namespace ModbusTools.Common
 {
     public static class AssemblyExtensions
     {

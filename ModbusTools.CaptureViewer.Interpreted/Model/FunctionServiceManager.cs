@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ModbusTools.Capture.Model;
 using ModbusTools.CaptureViewer.Interpreted.ViewModel;
@@ -14,8 +15,9 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
         {
             var services = new IFunctionService[]
             {
-                new ReadHoldingRegistersService(),
-                new ReadInputRegistersService(), 
+                new ReadHoldingRegistersFunctionService(),
+                new ReadInputRegistersFunctionService(), 
+                new WriteRegistersFunctionService(), 
             };
 
             _functionServices = services.ToDictionary(s => s.FunctionCode, s => s);
@@ -23,28 +25,38 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
 
         public static FunctionServiceResult Process(Sample[] samples)
         {
-            IFunctionService service;
+            try
+            {  
+                IFunctionService service;
 
-            if (samples.Length < 5)
-            {
-                return new FunctionServiceResult("ERROR. Not long enough.");
+                if (samples.Length < 5)
+                {
+                    return new FunctionServiceResult("Packet not long enough.");
+                }
+
+                byte rawFunctionCode = samples[1].Value;
+
+                if ((rawFunctionCode & 0x80) > 0)
+                {
+                    var exceptionDescription = SlaveExceptionDescriptionFactory.GetExceptionDescription(samples[2].Value);
+
+                    return new FunctionServiceResult(exceptionDescription);
+                }
+
+                FunctionCode functionCode = (FunctionCode)rawFunctionCode;
+
+                if (_functionServices.TryGetValue(functionCode, out service))
+                {
+                    return service.Process(samples);
+                }
+
+                return new FunctionServiceResult("Unsupported function code.");
+
             }
-
-            byte rawFunctionCode = samples[1].Value;
-
-            if ((rawFunctionCode & 0x80) > 0)
+            catch (Exception ex)
             {
-                return new FunctionServiceResult("Slave responded with an error.");
+                return new FunctionServiceResult(ex.Message);
             }
-
-            FunctionCode functionCode = (FunctionCode)rawFunctionCode;
-
-            if (_functionServices.TryGetValue(functionCode, out service))
-            {
-                return service.Process(samples);
-            }
-
-            return new FunctionServiceResult("Unsupported function code.");
         }
     }
 }

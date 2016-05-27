@@ -186,7 +186,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         public void RemoveSlave(SlaveViewModel slave)
         {
             if (slave == null) 
-                throw new ArgumentNullException("slave");
+                throw new ArgumentNullException(nameof(slave));
 
             if (!_slaves.Contains(slave))
                 return;
@@ -205,14 +205,14 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         {
             get
             {
-                const string AppName = "Slave Explorer";
+                const string AppName = "Structured Slave Explorer";
 
                 if (string.IsNullOrWhiteSpace(_path))
                 {
                     return AppName;
                 }
 
-                return string.Format("{0} [{1}]", AppName, _path);
+                return $"{AppName} [{_path}]";
             }
         }
 

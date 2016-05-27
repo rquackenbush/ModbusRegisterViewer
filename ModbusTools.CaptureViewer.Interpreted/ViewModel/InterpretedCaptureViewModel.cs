@@ -10,7 +10,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
     {
         private readonly string _captureFilePath;
         private double _packetThreshold = 2.5;
-        private readonly ObservableCollection<PacketViewModel> _packets = new ObservableCollection<PacketViewModel>();
+        private PacketViewModel[] _packets;
         private PacketViewModel _selectedPacket;
 
         /// <summary>
@@ -18,12 +18,14 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
         /// </summary>
         public InterpretedCaptureViewModel()
         {
-            _packets.Add(new PacketViewModel(new Sample[]
-            {
-                new Sample(40000, 60), 
-                new Sample(40010, 5), 
-                new Sample(40010, 20), 
-            }));
+            _packets = new PacketViewModel[] 
+                { new PacketViewModel(new Sample[]
+                    {
+                        new Sample(40000, 60), 
+                        new Sample(40010, 5), 
+                        new Sample(40010, 20), 
+                    })
+                };
         }
 
         public InterpretedCaptureViewModel(string captureFilePath)
@@ -36,7 +38,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
         private void Refresh()
         {
             //var output = new StringBuilder();
-            Packets.Clear();
+            var packets = new List<PacketViewModel>();
 
             //Create the reader
             using (var captureReader = new CaptureFileReader(_captureFilePath))
@@ -59,7 +61,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
 
                         if (elapsedMs >= _packetThreshold)
                         {
-                            Packets.Add(new PacketViewModel(buffer.ToArray()));
+                            packets.Add(new PacketViewModel(buffer.ToArray()));
                             buffer.Clear();
                         }
                     }
@@ -76,11 +78,20 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
                     //See if we have any last bits... (might take this out)
                     if (sample == null && buffer.Any())
                     {
-                        Packets.Add(new PacketViewModel(buffer.ToArray()));
+                        packets.Add(new PacketViewModel(buffer.ToArray()));
                         buffer.Clear();
                     }
                 }
+
             }
+
+            //Ditch the first one if it has an error
+            if (packets[0].HasError)
+            {
+                packets.RemoveAt(0);
+            }
+
+            Packets = packets.ToArray();
         }
 
         public double PacketThreshold
@@ -98,9 +109,14 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
             get { return "Interpreted Capture Viewer - " + _captureFilePath; }
         }
 
-        public ObservableCollection<PacketViewModel> Packets
+        public PacketViewModel[] Packets
         {
             get { return _packets; }
+            private set
+            {
+                _packets = value; 
+                RaisePropertyChanged();
+            }
         }
 
         public PacketViewModel SelectedPacket

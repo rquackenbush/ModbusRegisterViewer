@@ -98,6 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="Behaviors\MultiSelectorSelectedItemsBehavior.cs" />
     <Compile Include="CloseableBehavior.cs" />
@@ -154,9 +155,13 @@
     <Compile Include="Services\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="ViewModel\ExceptionViewModel.cs" />
     <Compile Include="ViewModel\ICloseableViewModel.cs" />
     <Compile Include="ViewModel\ModbusAdaptersViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="View\ExceptionView.xaml.cs">
+      <DependentUpon>ExceptionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ModbusAdapterSelector.xaml.cs">
       <DependentUpon>ModbusAdapterSelector.xaml</DependentUpon>
     </Compile>
@@ -173,6 +178,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ExceptionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

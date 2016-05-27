@@ -1,14 +1,12 @@
-﻿<Window x:Class="ModbusTools.Capture.View.CaptureView"
+﻿<UserControl x:Class="ModbusTools.Capture.View.CaptureView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModel="clr-namespace:ModbusTools.Capture.ViewModel"
         xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
-        Title="Modbus Capture" SizeToContent="WidthAndHeight"
-        ResizeMode="NoResize"
+        Background="LightGray"
         DataContext="{x:Static viewModel:Locator.Capture}" 
-        Loaded="CaptureView_OnLoaded"
-        Icon="/ModbusTools.Capture;component/Images/Network_Map.png">
+        Loaded="CaptureView_OnLoaded">
     <Grid>
         
         <Grid.RowDefinitions>
@@ -29,7 +27,6 @@
                     </MenuItem.ItemContainerStyle>
                     
                 </MenuItem>
-                <MenuItem Header="E_xit"/>
             </MenuItem>
             
         </Menu>
@@ -94,4 +91,4 @@
         </StatusBar>
         
     </Grid>
-</Window>
+</UserControl>

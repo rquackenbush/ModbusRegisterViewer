@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14}</ProjectGuid>
+    <ProjectGuid>{484B0AE5-6ED0-4FA5-8A99-16BE8ABA125C}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ModbusTools.CaptureViewer.Interpreted</RootNamespace>
-    <AssemblyName>ModbusTools.CaptureViewer.Interpreted</AssemblyName>
+    <RootNamespace>ModbusTools.Launcher</RootNamespace>
+    <AssemblyName>ModbusTools.Launcher</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -49,10 +49,6 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MiscUtil, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d3c42c4bfacf7596, processorArchitecture=MSIL">
-      <HintPath>..\packages\JonSkeet.MiscUtil.0.1\lib\net35-Client\MiscUtil.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -71,21 +67,35 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.8.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.8\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.8.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.8\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.8.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.8\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.8.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.8\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=2.8.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.8\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.8.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.8\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FunctionCodeDescriptionFactory.cs" />
-    <Compile Include="Model\FunctionServiceBase.cs" />
-    <Compile Include="InterpretedCaptureViewerFactory.cs" />
-    <Compile Include="Model\FunctionServiceManager.cs" />
-    <Compile Include="Model\FunctionServiceResult.cs" />
-    <Compile Include="Model\IFunctionService.cs" />
-    <Compile Include="Model\PacketType.cs" />
-    <Compile Include="Model\ReadHoldingRegistersFunctionService.cs" />
-    <Compile Include="Model\ReadInputRegistersFunctionService.cs" />
-    <Compile Include="Model\ReadRegistersFunctionService.cs" />
-    <Compile Include="Model\RegistersFunctionService.cs" />
-    <Compile Include="Model\SlaveExceptionDescriptionFactory.cs" />
-    <Compile Include="Model\WriteRegistersFunctionService.cs" />
+    <Compile Include="ApplicationView.xaml.cs">
+      <DependentUpon>ApplicationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -99,15 +109,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ViewModel\InterpretedCaptureViewModel.cs" />
-    <Compile Include="ViewModel\Locator.cs" />
-    <Compile Include="ViewModel\PacketViewModel.cs" />
-    <Compile Include="ViewModel\RegistersViewModel.cs" />
-    <Compile Include="View\InterpretedCaptureView.xaml.cs">
-      <DependentUpon>InterpretedCaptureView.xaml</DependentUpon>
+    <Compile Include="ToolType.cs" />
+    <Compile Include="ViewModel\AboutViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\RegistersView.xaml.cs">
-      <DependentUpon>RegistersView.xaml</DependentUpon>
+    <Compile Include="View\LauncherView.xaml.cs">
+      <DependentUpon>LauncherView.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -121,34 +130,84 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ApplicationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AboutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\LauncherView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\WindowIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\caslogo.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\ModbusTools.Capture.Common\ModbusTools.Capture.Common.csproj">
-      <Project>{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}</Project>
+      <Project>{904ddaec-b32f-40f0-bde7-cf509d4825e8}</Project>
       <Name>ModbusTools.Capture.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ModbusTools.Capture.Model\ModbusTools.Capture.Model.csproj">
-      <Project>{F5343276-D294-43FC-954D-66EE6413BD29}</Project>
+      <Project>{f5343276-d294-43fc-954d-66ee6413bd29}</Project>
       <Name>ModbusTools.Capture.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.CaptureViewer.Interpreted\ModbusTools.CaptureViewer.Interpreted.csproj">
+      <Project>{14a55a0e-7bab-4b46-b848-c1b37eeedd14}</Project>
+      <Name>ModbusTools.CaptureViewer.Interpreted</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.CaptureViewer.Simple\ModbusTools.CaptureViewer.Simple.csproj">
+      <Project>{eb096034-f10d-48c7-be3d-ece13b34f04e}</Project>
+      <Name>ModbusTools.CaptureViewer.Simple</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.Capture\ModbusTools.Capture.csproj">
+      <Project>{56814616-a273-4427-8164-ec5533d8b5bb}</Project>
+      <Name>ModbusTools.Capture</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ModbusTools.Common\ModbusTools.Common.csproj">
-      <Project>{12696174-C514-4E69-ABDA-0E926A52BA57}</Project>
+      <Project>{12696174-c514-4e69-abda-0e926a52ba57}</Project>
       <Name>ModbusTools.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.SlaveExplorer\ModbusTools.SlaveExplorer.csproj">
+      <Project>{ec75ebe4-ff4f-4fbd-b7cd-a35890e45b6e}</Project>
+      <Name>ModbusTools.SlaveExplorer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj">
+      <Project>{292371a9-2553-4fc2-8763-a496ab143ce7}</Project>
+      <Name>ModbusTools.SlaveSimulator.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.SlaveSimulator\ModbusTools.SlaveSimulator.csproj">
+      <Project>{4563f1da-9e71-4c2e-a6a3-67aa57414afa}</Project>
+      <Name>ModbusTools.SlaveSimulator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.SlaveViewer\ModbusTools.SlaveViewer.csproj">
+      <Project>{2a3328d7-9854-44c3-9f42-865d2f0f075e}</Project>
+      <Name>ModbusTools.SlaveViewer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Warning.png" />
+    <EmbeddedResource Include="Licenses\Licenses.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\InterpretedCaptureView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\RegistersView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Resource Include="Images\CloseTools.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Network_Map.png" />
+    <Resource Include="Images\SlaveExplorer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\StructuredSlaveExplorer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ModbusCapture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SlaveSimulator.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

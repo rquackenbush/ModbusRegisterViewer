@@ -1,4 +1,4 @@
-﻿<Window x:Class="ModbusTools.SlaveSimulator.View.SlaveSimulatorView"
+﻿<UserControl x:Class="ModbusTools.SlaveSimulator.View.SlaveSimulatorView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
@@ -8,15 +8,14 @@
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         Background="LightGray"
         DataContext="{x:Static viewModel:Locator.SlaveSimulator}"
-        Loaded="OnLoaded"
-        Title="Multiple Slave Simulator" Height="393" Width="577" Icon="/ModbusTools.SlaveSimulator;component/Images/Gear.png">
+        Loaded="OnLoaded">
 
-    <Window.Resources>
+    <UserControl.Resources>
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="Margin" Value="6"/>
         </Style>
-    </Window.Resources>
+    </UserControl.Resources>
 
     <Grid>
 
@@ -126,4 +125,4 @@
         </Grid>
     </Grid>
 
-</Window>
+</UserControl>

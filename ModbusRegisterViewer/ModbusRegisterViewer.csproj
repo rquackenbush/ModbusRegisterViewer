@@ -152,36 +152,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AssemblyExtensions.cs" />
-    <Compile Include="MasterContext.cs" />
-    <Compile Include="ViewModel\AboutViewModel.cs" />
-    <Compile Include="ViewModel\ExceptionViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="Views\AboutView.xaml.cs">
-      <DependentUpon>AboutView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LauncherView.xaml.cs">
-      <DependentUpon>LauncherView.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Views\ExceptionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LauncherView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\ExceptionView.xaml.cs">
-      <DependentUpon>ExceptionView.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Views\AboutView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -216,27 +190,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Record.png" />
-    <Resource Include="Images\Error_16x16_72.png" />
-    <Resource Include="Images\Warning_16x16_72.png" />
     <Resource Include="equipment_zoom_128.ico" />
-    <Resource Include="Images\equipment_zoom_128.ico" />
-    <Resource Include="Images\equipment_zoom_48.png" />
-    <Resource Include="Images\flow_write_48.png" />
-    <Resource Include="Images\126_Edit_16x16_72.png" />
-    <Resource Include="Images\Gear.png" />
     <Resource Include="Gear.ico" />
-    <Resource Include="Images\Gear.ico" />
-    <Resource Include="Images\Network_Map.png" />
-    <Resource Include="Images\305_Close_32x42_72.png" />
-    <Resource Include="Images\305_Close_48x48_72.png" />
-    <Resource Include="Images\Erase.png" />
-    <Resource Include="Images\Play.png" />
-    <Resource Include="Images\Stop.png" />
-    <Resource Include="Images\Refresh.png" />
-    <EmbeddedResource Include="Licenses\Licenses.txt" />
-    <Resource Include="Images\caslogo.png" />
-    <Resource Include="Images\Connection_Manager.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -276,6 +231,10 @@
       <Project>{12696174-c514-4e69-abda-0e926a52ba57}</Project>
       <Name>ModbusTools.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModbusTools.Launcher\ModbusTools.Launcher.csproj">
+      <Project>{484b0ae5-6ed0-4fa5-8a99-16be8aba125c}</Project>
+      <Name>ModbusTools.Launcher</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ModbusTools.SlaveExplorer\ModbusTools.SlaveExplorer.csproj">
       <Project>{ec75ebe4-ff4f-4fbd-b7cd-a35890e45b6e}</Project>
       <Name>ModbusTools.SlaveExplorer</Name>
@@ -290,9 +249,25 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\126_Edit_16x16_72.png" />
+    <Resource Include="Images\305_Close_32x42_72.png" />
+    <Resource Include="Images\305_Close_48x48_72.png" />
+    <Resource Include="Images\caslogo.png" />
+    <Resource Include="Images\Connection_Manager.png" />
+    <Resource Include="Images\equipment_zoom_128.ico" />
+    <Resource Include="Images\equipment_zoom_48.png" />
+    <Resource Include="Images\Erase.png" />
+    <Resource Include="Images\Error_16x16_72.png" />
+    <Resource Include="Images\flow_write_48.png" />
+    <Resource Include="Images\Gear.ico" />
+    <Resource Include="Images\Gear.png" />
     <Resource Include="Images\Help_32x42_72.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="Images\Network_Map.png" />
+    <Resource Include="Images\Play.png" />
+    <Resource Include="Images\Record.png" />
+    <Resource Include="Images\Refresh.png" />
+    <Resource Include="Images\Stop.png" />
+    <Resource Include="Images\Warning_16x16_72.png" />
     <Resource Include="Images\XSLTTransformfile_829_32x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

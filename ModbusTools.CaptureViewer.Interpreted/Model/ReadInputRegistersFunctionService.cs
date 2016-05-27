@@ -3,9 +3,9 @@ using ModbusTools.Common;
 
 namespace ModbusTools.CaptureViewer.Interpreted.Model
 {
-    public class ReadInputRegistersService : ReadRegistersService
+    public class ReadInputRegistersFunctionService : ReadRegistersFunctionService
     {
-        public ReadInputRegistersService() 
+        public ReadInputRegistersFunctionService() 
             : base(FunctionCode.ReadInputRegisters)
         {
         }

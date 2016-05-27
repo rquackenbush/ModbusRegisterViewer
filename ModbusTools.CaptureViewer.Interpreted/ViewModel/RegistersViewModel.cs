@@ -10,9 +10,9 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
         private readonly RegisterViewModel[] _registers;
         private readonly string _hex;
 
-        public RegistersViewModel(ushort[] registers)
+        public RegistersViewModel(ushort[] registers, ushort startingRegisterIndex = 0)
         {
-            ushort registerIndex = 0;
+            ushort registerIndex = startingRegisterIndex;
 
             _registers = registers
                 .Select(r => new RegisterViewModel(registerIndex++, r))

@@ -19,7 +19,7 @@ namespace ModbusTools.SlaveExplorer.View
 
         private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Close();
+            //Close();
         }
 
         private void SlaveExplorerView_OnLoaded(object sender, RoutedEventArgs e)
@@ -126,7 +126,7 @@ namespace ModbusTools.SlaveExplorer.View
 
             var message = string.Format("Delete Modbus slave '{0}'?", viewModel.Name);
 
-            var result = MessageBox.Show(this, message, "Delete?", MessageBoxButton.YesNo);
+            var result = MessageBox.Show(message, "Delete?", MessageBoxButton.YesNo);
 
             if (result != MessageBoxResult.Yes)
             {

@@ -1,11 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using ModbusRegisterViewer.ViewModel;
-using ModbusTools.Capture.View;
-using ModbusTools.SlaveExplorer.View;
-using ModbusTools.SlaveSimulator.View;
 
-namespace ModbusRegisterViewer.Views
+namespace ModbusTools.Launcher.View
 {
     /// <summary>
     /// Interaction logic for LauncherView.xaml
@@ -15,10 +11,6 @@ namespace ModbusRegisterViewer.Views
         public LauncherView()
         {
             InitializeComponent();
-
-            //LaunchView<SlaveExplorerView>();
-
-            //Close();
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
@@ -32,43 +24,34 @@ namespace ModbusRegisterViewer.Views
                 DragMove();
         }
 
-        private void LaunchView<TView>() 
-            where TView : Window, new()
-        {
-            var view = new TView();
+        public ToolType? SelectedToolType { get; private set; }
 
-            view.Show();
+        private void SelectTool(ToolType toolType)
+        {
+            SelectedToolType = toolType;
+
+            DialogResult = true;
+            Close();
         }
 
         private void LaunchRegisterViewer(object sender, RoutedEventArgs e)
         {
-            LaunchView<ModbusTools.SlaveViewer.View.RegisterViewerView>();
+            SelectTool(ToolType.SimpleSlaveExplorer);
         }
       
         private void LaunchCapture(object sender, RoutedEventArgs e)
         {
-            LaunchView<CaptureView>();
+            SelectTool(ToolType.ModbusCapture);
         }
 
         private void LaunchMultipleSlaveSimulator(object sender, RoutedEventArgs e)
         {
-            LaunchView<SlaveSimulatorView>();
-        }
-
-        private void AboutButton_OnClickButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var aboutView = new AboutView()
-            {
-                DataContext = new AboutViewModel(),
-                Owner = this
-            };
-
-            aboutView.ShowDialog();
+            SelectTool(ToolType.SlaveSimulator);
         }
 
         private void LaunchSlaveExplorer(object sender, RoutedEventArgs e)
         {
-            LaunchView<SlaveExplorerView>();
+            SelectTool(ToolType.StructuredSlaveExplorer);
         }
     }
 }
