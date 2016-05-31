@@ -12,7 +12,7 @@ namespace ModbusTools.SlaveSimulator.Model.FunctionHandlers
 
         public ReadInputRegistersFunctionHandler(IRegisterStorage registerStorage)
         {
-            if (registerStorage == null) throw new ArgumentNullException("registerStorage");
+            if (registerStorage == null) throw new ArgumentNullException(nameof(registerStorage));
 
             _registerStorage = registerStorage;
         }

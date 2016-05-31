@@ -6,65 +6,98 @@ namespace ModbusTools.CaptureViewer.Interpreted
     {
         public static string GetFunctionCodeDescription(byte functionCode)
         {
-            switch ((FunctionCode) functionCode)
+            //Stip off the error bit
+            var functionCodeOnly = (FunctionCode)(functionCode & 0x7F);
+
+            string description;
+
+            switch (functionCodeOnly)
             {
                 case FunctionCode.ReadDiscreteInputs:
-                    return $"({functionCode}) - Read Discrete Inputs";
+                    description = "Read Discrete Inputs";
+                    break;
 
                 case FunctionCode.ReadCoils:
-                    return $"({functionCode}) - ReadCoils";
+                    description = "ReadCoils";
+                    break;
 
                 case FunctionCode.ReadInputRegisters:
-                    return $"({functionCode}) - Read Input Registers";
+                    description = "Read Input Registers";
+                    break;
 
                 case FunctionCode.WriteSingleCoil:
-                    return $"({functionCode}) - Write Single Coil";
+                    description = "Write Single Coil";
+                    break;
 
                 case FunctionCode.WriteMultipleCoils:
-                    return $"({functionCode}) - Write Multiple Coils";
+                    description = "Write Multiple Coils";
+                    break;
 
                 case FunctionCode.ReadHoldingRegisters:
-                    return $"({functionCode}) - Read Holding Registers";
+                    description = "Read Holding Registers";
+                    break;
 
                 case FunctionCode.WriteSingleRegister:
-                    return $"({functionCode}) - Write Single Register";
+                    description = "Write Single Register";
+                    break;
 
                 case FunctionCode.MaskWriteRegsiter:
-                    return $"({functionCode}) - Mask Write Regsiter";
+                    description = "Mask Write Regsiter";
+                    break;
 
                 case FunctionCode.ReadFIFOQueue:
-                    return $"({functionCode}) - Read FIFO Queue";
+                    description = "Read FIFO Queue";
+                    break;
 
                 case FunctionCode.ReadFileRecord:
-                    return $"({functionCode}) - Read File Record";
+                    description = "Read File Record";
+                    break;
 
                 case FunctionCode.WriteFileRecord:
-                    return $"({functionCode}) - Write File Record";
+                    description = "Write File Record";
+                    break;
 
                 case FunctionCode.ReadExceptionStatus:
-                    return $"({functionCode}) - Read Exception Status";
+                    description = "Read Exception Status";
+                    break;
 
                 case FunctionCode.Diagnostic:
-                    return $"({functionCode}) - Diagnostic";
+                    description = "Diagnostic";
+                    break;
 
                 case FunctionCode.GetComEventCounter:
-                    return $"({functionCode}) - Get Com Event Counter";
+                    description = "Get Com Event Counter";
+                    break;
 
                 case FunctionCode.GetComEventLog:
-                    return $"({functionCode}) - Get Com Event Log";
+                    description = "Get Com Event Log";
+                    break;
 
                 case FunctionCode.ReportSlaveId:
-                    return $"({functionCode}) - Report Slave Id";
+                    description = "Report Slave Id";
+                    break;
 
                 case FunctionCode.ReadDeviceIdentification:
-                    return $"({functionCode}) - Read Device Identification";
+                    description = "Read Device Identification";
+                    break;
 
                 case FunctionCode.WriteMultipleRegisters:
-                    return $"({functionCode}) - Write Multiple Registers";
+                    description = "Write Multiple Registers";
+                    break;
 
                 default:
-                    return $"({functionCode}) - UNKNOWN";
+                    description = "UNKNOWN";
+                    break;
             }
+
+            bool isError = (functionCode & 0x80) > 0;
+
+            if (isError)
+            {
+                return $"({functionCodeOnly}) - {description} Error";
+            }
+
+            return $"({functionCodeOnly}) - {description}";
         }
     }
 }

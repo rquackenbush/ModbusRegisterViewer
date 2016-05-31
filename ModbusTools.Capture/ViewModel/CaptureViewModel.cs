@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -10,7 +8,6 @@ using Microsoft.Win32;
 using ModbusTools.Capture.Common;
 using ModbusTools.Capture.Model;
 using ModbusTools.CaptureViewer.Interpreted;
-using ModbusTools.CaptureViewer.Interpreted.ViewModel;
 using ModbusTools.CaptureViewer.Simple;
 using ModbusTools.Common.ViewModel;
 

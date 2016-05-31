@@ -19,121 +19,121 @@ namespace ModbusTools.SlaveExplorer.View
 
         private void SlaveExplorerView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.PerformViewModelAction<SlaveExplorerViewModel>(vm =>
-            {
-                vm.SlaveAdded += SlaveAdded;
+            //this.PerformViewModelAction<SlaveExplorerViewModel>(vm =>
+            //{
+            //    vm.SlaveAdded += SlaveAdded;
 
-                vm.SlaveRemoved += SlaveRemoved;
-            });
+            //    vm.SlaveRemoved += SlaveRemoved;
+            //});
         }
 
-        private bool IsSlaveDocument(LayoutDocument layoutDocument, SlaveViewModel slave)
-        {
-            if (layoutDocument == null)
-                return false;
+        //private bool IsSlaveDocument(LayoutDocument layoutDocument, SlaveViewModel slave)
+        //{
+        //    if (layoutDocument == null)
+        //        return false;
 
-            var element = layoutDocument.Content as FrameworkElement;
+        //    var element = layoutDocument.Content as FrameworkElement;
 
-            if (element == null)
-                return false;
+        //    if (element == null)
+        //        return false;
 
-            var viewModel = element.DataContext as SlaveViewModel;
+        //    var viewModel = element.DataContext as SlaveViewModel;
 
-            return viewModel == slave;
-        }
+        //    return viewModel == slave;
+        //}
 
-        private LayoutDocument GetSlaveDocument(SlaveViewModel slave)
-        {
-            return MainDocumentPane.Children.OfType<LayoutDocument>().FirstOrDefault(d => IsSlaveDocument(d, slave));
-        }
+        //private LayoutDocument GetSlaveDocument(SlaveViewModel slave)
+        //{
+        //    return MainDocumentPane.Children.OfType<LayoutDocument>().FirstOrDefault(d => IsSlaveDocument(d, slave));
+        //}
 
-        private void SlaveRemoved(object sender, SlaveViewModel slaveViewModel)
-        {
-            var document = GetSlaveDocument(slaveViewModel);
+        //private void SlaveRemoved(object sender, SlaveViewModel slaveViewModel)
+        //{
+        //    var document = GetSlaveDocument(slaveViewModel);
 
-            if (document == null)
-                return;
+        //    if (document == null)
+        //        return;
 
-            document.Closed -= LayoutDocumentOnClosed;
+        //    document.Closed -= LayoutDocumentOnClosed;
 
-            MainDocumentPane.Children.Remove(document);
-        }
+        //    MainDocumentPane.Children.Remove(document);
+        //}
 
-        private void SlaveAdded(object sender, SlaveViewModel slaveViewModel)
-        {
-            var layoutDocument = new LayoutDocument()
-            {
-                Title = slaveViewModel.DisplayName,
-                Content = new SlaveView()
-                {
-                    DataContext = slaveViewModel
-                },
-            };
+        //private void SlaveAdded(object sender, SlaveViewModel slaveViewModel)
+        //{
+        //    var layoutDocument = new LayoutDocument()
+        //    {
+        //        Title = slaveViewModel.DisplayName,
+        //        Content = new SlaveView()
+        //        {
+        //            DataContext = slaveViewModel
+        //        },
+        //    };
 
-            layoutDocument.Closed += LayoutDocumentOnClosed;
-            layoutDocument.Closing += LayoutDocumentClosing;
+        //    layoutDocument.Closed += LayoutDocumentOnClosed;
+        //    layoutDocument.Closing += LayoutDocumentClosing;
 
-            MainDocumentPane.Children.Add(layoutDocument);
+        //    MainDocumentPane.Children.Add(layoutDocument);
 
-            slaveViewModel.PropertyChanged += slaveViewModel_PropertyChanged;
-        }
+        //    slaveViewModel.PropertyChanged += slaveViewModel_PropertyChanged;
+        //}
 
-        void slaveViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            var slaveViewModel = sender as SlaveViewModel;
+        //void slaveViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        //{
+        //    var slaveViewModel = sender as SlaveViewModel;
 
-            if (slaveViewModel == null)
-                return;
+        //    if (slaveViewModel == null)
+        //        return;
 
-            if (e.PropertyName == "DisplayName")
-            {
-                var layoutDocument = GetSlaveDocument(slaveViewModel);
+        //    if (e.PropertyName == "DisplayName")
+        //    {
+        //        var layoutDocument = GetSlaveDocument(slaveViewModel);
 
-                if (layoutDocument != null)
-                {
-                    layoutDocument.Title = slaveViewModel.DisplayName;
-                }
+        //        if (layoutDocument != null)
+        //        {
+        //            layoutDocument.Title = slaveViewModel.DisplayName;
+        //        }
                     
-            }
-        }
+        //    }
+        //}
 
-        private SlaveViewModel GetSlaveViewModelFromSender(object sender)
-        {
-            var layoutDocument = sender as LayoutDocument;
+        //private SlaveViewModel GetSlaveViewModelFromSender(object sender)
+        //{
+        //    var layoutDocument = sender as LayoutDocument;
 
-            if (layoutDocument == null)
-                return null;
+        //    if (layoutDocument == null)
+        //        return null;
 
-            var element = layoutDocument.Content as FrameworkElement;
+        //    var element = layoutDocument.Content as FrameworkElement;
 
-            return element?.DataContext as SlaveViewModel;
-        }
+        //    return element?.DataContext as SlaveViewModel;
+        //}
 
-        void LayoutDocumentClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            var viewModel = GetSlaveViewModelFromSender(sender);
+        //void LayoutDocumentClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        //{
+        //    var viewModel = GetSlaveViewModelFromSender(sender);
 
-            if (viewModel == null)
-                return;
+        //    if (viewModel == null)
+        //        return;
 
-            var message = $"Delete Modbus slave '{viewModel.Name}'?";
+        //    var message = $"Delete Modbus slave '{viewModel.Name}'?";
 
-            var result = MessageBox.Show(message, "Delete?", MessageBoxButton.YesNo);
+        //    var result = MessageBox.Show(message, "Delete?", MessageBoxButton.YesNo);
 
-            if (result != MessageBoxResult.Yes)
-            {
-                e.Cancel = true;
-            }
-        }
+        //    if (result != MessageBoxResult.Yes)
+        //    {
+        //        e.Cancel = true;
+        //    }
+        //}
 
-        private void LayoutDocumentOnClosed(object sender, EventArgs eventArgs)
-        {
-            var viewModel = GetSlaveViewModelFromSender(sender);
+        //private void LayoutDocumentOnClosed(object sender, EventArgs eventArgs)
+        //{
+        //    var viewModel = GetSlaveViewModelFromSender(sender);
 
-            if (viewModel == null)
-                return;
+        //    if (viewModel == null)
+        //        return;
 
-            this.PerformViewModelAction<SlaveExplorerViewModel>(vm => vm.RemoveSlave(viewModel));
-        }
+        //    this.PerformViewModelAction<SlaveExplorerViewModel>(vm => vm.RemoveSlave(viewModel));
+        //}
     }
 }

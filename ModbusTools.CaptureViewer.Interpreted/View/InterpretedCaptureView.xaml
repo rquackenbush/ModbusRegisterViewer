@@ -35,6 +35,7 @@
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Slave Id" IsReadOnly="True" Binding="{Binding Path=SlaveId}"/>
                     <DataGridTextColumn Header="Function" IsReadOnly="True" Binding="{Binding Path=FunctionCodeDescription}"/>
+                    <DataGridTextColumn Header="Direction" IsReadOnly="True" Binding="{Binding Path=PacketType}"/>
                     <DataGridTextColumn Header="Summary" IsReadOnly="True" Binding="{Binding Path=Summary}"/>
                     <DataGridTextColumn Header="Length" IsReadOnly="True" Binding="{Binding Path=Length}"/>
                     <DataGridTextColumn Header="Error" IsReadOnly="True" Binding="{Binding Path=Error}"/>

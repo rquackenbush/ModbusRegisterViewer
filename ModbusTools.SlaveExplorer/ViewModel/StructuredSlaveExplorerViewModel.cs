@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -13,34 +11,50 @@ using ModbusTools.SlaveExplorer.Model;
 
 namespace ModbusTools.SlaveExplorer.ViewModel
 {
-    public class SlaveExplorerViewModel : ViewModelBase, ICloseableViewModel
+    public class StructuredSlaveExplorerViewModel : ViewModelBase, ICloseableViewModel
     {
         private string _path;
 
         private readonly ModbusAdaptersViewModel _modbusAdapters = new ModbusAdaptersViewModel();
-        private readonly ObservableCollection<SlaveViewModel> _slaves = new ObservableCollection<SlaveViewModel>();
-
-        public EventHandler<SlaveViewModel> SlaveAdded;
-        public EventHandler<SlaveViewModel> SlaveRemoved;
 
         private const string Filter = "Modbus Project Files (*.mbproj)|*.mbproj|All Files (*.*)|*.*";
 
         private readonly Dirty _dirty = new Dirty();
+        private SlaveViewModel _slave;
 
-        public SlaveExplorerViewModel()
+        public StructuredSlaveExplorerViewModel()
         {
-            CreateNewSlaveCommand = new RelayCommand(CreateNewSlave, CanCreateNewSlave);
             ExitCommand = new RelayCommand(Exit, CanExit);
             SaveCommand = new RelayCommand(() => Save());
             SaveAsCommand = new RelayCommand(() => SaveAs());
             OpenCommand = new RelayCommand(Open);
+            NewCommand = new RelayCommand(New, CanNew);
+
+            //Create a new slave
+            New();
         }
 
         public ICommand ExitCommand { get; private set; }
-        public ICommand CreateNewSlaveCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
         public ICommand SaveAsCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
+
+        public ICommand NewCommand { get; private set; }
+
+        private void New()
+        {
+            if (!SaveIfDirty())
+                return;
+
+            Slave = new SlaveViewModel(_modbusAdapters, new SlaveModel(), _dirty);
+
+            _dirty.MarkClean();
+        }
+
+        private bool CanNew()
+        {
+            return true;
+        }
 
         private bool SaveIfDirty()
         {
@@ -48,7 +62,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             if (!_dirty.IsDirty)
                 return true;
 
-            var message = string.Format("Project has changed. Save?");
+            var message = "Project has changed. Save?";
 
             var result = MessageBox.Show(message, "Save?", MessageBoxButton.YesNoCancel);
 
@@ -75,14 +89,20 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             {
                 return SaveAs();
             }
-            
+
+            //Create the project model!
             var projectModel = new ProjectModel()
             {
-                Slaves = Slaves.Select(s => s.GetModel()).ToArray()
+                Slaves = new SlaveModel[]
+                {
+                    Slave.ToModel()
+                }
             };
 
+            //Save it!
             ProjectFactory.SaveProject(projectModel, _path);
 
+            //We're clean
             _dirty.MarkClean();
 
             return true;
@@ -109,6 +129,9 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         private void Open()
         {
+            if (!SaveIfDirty())
+                return;
+
             var dialog = new OpenFileDialog()
             {
                 Filter = Filter
@@ -118,21 +141,16 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             {
                 _path = dialog.FileName;
 
-                //Remove the slaves
-                foreach (var slave in _slaves.ToArray())
-                {
-                    RemoveSlave(slave);
-                }
-
                 //Load up the project
                 var projectModel = ProjectFactory.LoadProject(_path);
 
-                //Now add all of the slaves
-                foreach (var slave in projectModel.Slaves)
-                {
-                    AddSlave(slave);
-                }
+                //Get the slave (we're only going to grab the first one
+                var slaveModel = projectModel?.Slaves?.FirstOrDefault() ?? new SlaveModel();
 
+                //Create the view model
+                Slave = new SlaveViewModel(_modbusAdapters, slaveModel, _dirty);
+
+                //We're clean people.
                 _dirty.MarkClean();
             }
 
@@ -147,53 +165,6 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         private bool CanExit()
         {
             return true;
-        }
-
-        private void AddSlave(SlaveModel slaveModel)
-        {
-            var slaveViewModel = new SlaveViewModel(_modbusAdapters, slaveModel, _dirty);
-
-            _slaves.Add(slaveViewModel);
-
-            SlaveAdded.RaiseEvent(slaveViewModel);
-        }
-
-        private void CreateNewSlave()
-        {
-            var name = Slaves.Select(s => s.Name).CreateUnique("Modbus Slave {0}");
-
-            var slaveModel = new SlaveModel()
-            {
-                SlaveId = 1,
-                Name = name
-            };
-
-            AddSlave(slaveModel);
-
-            _dirty.MarkDirtySafe();
-        }
-
-        private bool CanCreateNewSlave()
-        {
-            return true;
-        }
-
-        public IEnumerable<SlaveViewModel> Slaves
-        {
-            get { return _slaves; }
-        }
-
-        public void RemoveSlave(SlaveViewModel slave)
-        {
-            if (slave == null) 
-                throw new ArgumentNullException(nameof(slave));
-
-            if (!_slaves.Contains(slave))
-                return;
-
-            _slaves.Remove(slave);
-
-            SlaveRemoved.RaiseEvent(slave);
         }
 
         public ModbusAdaptersViewModel ModbusAdapters
@@ -213,6 +184,19 @@ namespace ModbusTools.SlaveExplorer.ViewModel
                 }
 
                 return $"{AppName} [{_path}]";
+            }
+        }
+
+        public SlaveViewModel Slave
+        {
+            get { return _slave; }
+            private set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+
+                _slave = value; 
+                RaisePropertyChanged();
             }
         }
 

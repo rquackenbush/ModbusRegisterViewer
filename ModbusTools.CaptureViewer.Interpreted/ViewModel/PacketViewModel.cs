@@ -51,6 +51,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
                 _serviceResult = FunctionServiceManager.Process(_samples);
 
                 Summary = _serviceResult.Summary;
+                Error = _serviceResult.Error;
             }
            
         }
@@ -83,6 +84,11 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
         public Visual Visual
         {
             get { return _serviceResult?.Visual; }
+        }
+
+        public PacketType? PacketType
+        {
+            get { return _serviceResult?.PacketType; }
         }
     }
 }

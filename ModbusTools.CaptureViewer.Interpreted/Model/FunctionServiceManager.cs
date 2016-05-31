@@ -36,21 +36,21 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
 
                 byte rawFunctionCode = samples[1].Value;
 
+                FunctionCode functionCode = (FunctionCode)(rawFunctionCode & 0x7F);
+
                 if ((rawFunctionCode & 0x80) > 0)
                 {
                     var exceptionDescription = SlaveExceptionDescriptionFactory.GetExceptionDescription(samples[2].Value);
 
-                    return new FunctionServiceResult(exceptionDescription);
+                    return new FunctionServiceResult(error: exceptionDescription);
                 }
-
-                FunctionCode functionCode = (FunctionCode)rawFunctionCode;
 
                 if (_functionServices.TryGetValue(functionCode, out service))
                 {
                     return service.Process(samples);
                 }
 
-                return new FunctionServiceResult("Unsupported function code.");
+                return new FunctionServiceResult(error: "Unsupported function code.");
 
             }
             catch (Exception ex)

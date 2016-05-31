@@ -14,7 +14,7 @@ namespace ModbusTools.Common
         public static byte GetSlaveId(byte[] message)
         {
             if (message == null)
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
 
             if (message.Length < 1)
                 throw new ArgumentException("message must be at least one byte long");
@@ -31,7 +31,7 @@ namespace ModbusTools.Common
         public static FunctionCode GetFunction(byte[] message)
         {
             if (message == null)
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
 
             if (message.Length < 2)
                 throw new ArgumentException("message must be at least two bytes long");
@@ -48,7 +48,7 @@ namespace ModbusTools.Common
         public static ushort GetCRC(byte[] message)
         {
             if (message == null)
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
 
             if (message.Length < 4)
                 throw new ArgumentException("message must be at least four bytes long");

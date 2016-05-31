@@ -38,17 +38,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
                         $"The bytes to follow {bytesToFollow} does not match the number of registers {numberOfRegisters}.");
             }
 
-            //Start at the beginning of the registers area
-            int currentRegisterStartIndex = 7;
-
-            var registers = new List<ushort>(numberOfRegisters);
-
-            for (int registerIndex = 0; registerIndex < numberOfRegisters; registerIndex++)
-            {
-                registers.Add(EndianBitConverter.Big.ToUInt16(messageBytes, currentRegisterStartIndex));
-
-                currentRegisterStartIndex += 2;
-            }
+            var registers = GetRegisters(messageBytes, numberOfRegisters, 7);
 
             Func<Visual> visualFactory = () =>
             {
@@ -62,14 +52,14 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
 
             var summary = $"Write {numberOfRegisters} registers starting at register {dataAddress}";
 
-            return new FunctionServiceResult(summary, visualFactory);
+            return new FunctionServiceResult(summary, visualFactory, PacketType.Request);
         }
 
         public override FunctionServiceResult Process(Sample[] samples)
         {
             if (samples.Length == NumberOfRegistersMessageLength)
             {
-                return ProcessNumberOfRegisters(samples);
+                return ProcessNumberOfRegisters(samples, PacketType.Response);
             }
 
             return ProcessWriteRegisters(samples);

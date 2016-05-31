@@ -11,7 +11,7 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         public SlaveRegisterViewModel(IRegisterStorage registerStorage, ushort registerIndex) 
             : base(registerIndex)
         {
-            if (registerStorage == null) throw new ArgumentNullException("registerStorage");
+            if (registerStorage == null) throw new ArgumentNullException(nameof(registerStorage));
             _registerStorage = registerStorage;
         }
 

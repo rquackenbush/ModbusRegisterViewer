@@ -23,7 +23,7 @@ namespace ModbusTools.Common
         public PromiscuousListener(IStreamResource streamResource)
         {
             if (streamResource == null)
-                throw new ArgumentNullException("streamResource");
+                throw new ArgumentNullException(nameof(streamResource));
 
             _streamResource = streamResource;
         }

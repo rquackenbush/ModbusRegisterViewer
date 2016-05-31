@@ -8,7 +8,7 @@ namespace ModbusTools.Common
         public static void PerformViewModelAction<TViewModel>(this FrameworkElement element, Action<TViewModel> action)
             where TViewModel : class 
         {
-            if (element == null) throw new ArgumentNullException("element");
+            if (element == null) throw new ArgumentNullException(nameof(element));
 
             var viewModel = element.DataContext as TViewModel;
 

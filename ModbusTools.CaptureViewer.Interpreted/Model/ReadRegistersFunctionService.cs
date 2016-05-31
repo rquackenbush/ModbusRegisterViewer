@@ -14,10 +14,10 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
         {
             if (samples.Length == NumberOfRegistersMessageLength)
             {
-                return ProcessNumberOfRegisters(samples);
+                return ProcessNumberOfRegisters(samples, PacketType.Request);
             }
 
-            return ProcessRegisters(samples);
+            return ProcessReadRegisters(samples, PacketType.Response);
         }
     }
 }

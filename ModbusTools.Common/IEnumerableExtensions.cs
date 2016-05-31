@@ -9,7 +9,7 @@ namespace ModbusTools.Common
     {
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> items)
         {
-            if (items == null) throw new ArgumentNullException("items");
+            if (items == null) throw new ArgumentNullException(nameof(items));
 
             var collection = new ObservableCollection<T>();
 

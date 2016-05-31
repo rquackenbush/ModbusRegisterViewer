@@ -12,8 +12,8 @@ namespace ModbusTools.SlaveSimulator.Model
 
         public Slave(byte slaveId, IEnumerable<IModbusFunctionHandler> functionHandlers)
         {
-            if (functionHandlers == null) throw new ArgumentNullException("functionHandlers");
-            if (slaveId == 0) throw new ArgumentOutOfRangeException("slaveId", "slaveId must be greater than zero.");
+            if (functionHandlers == null) throw new ArgumentNullException(nameof(functionHandlers));
+            if (slaveId == 0) throw new ArgumentOutOfRangeException(nameof(slaveId), "slaveId must be greater than zero.");
 
             foreach (var functionHandler in functionHandlers)
             {
@@ -40,8 +40,8 @@ namespace ModbusTools.SlaveSimulator.Model
 
         public byte[] ProcessRequest(byte[] request)
         {
-            if (request == null) throw new ArgumentNullException("request");
-            if (request.Length < 5) throw new ArgumentException("The request must be at least 5 bytes long", "request");
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (request.Length < 5) throw new ArgumentException("The request must be at least 5 bytes long", nameof(request));
 
             var isBroadcast = MessageUtilities.GetSlaveId(request) == 0;
 

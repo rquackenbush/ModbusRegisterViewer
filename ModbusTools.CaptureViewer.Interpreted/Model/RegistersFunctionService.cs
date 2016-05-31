@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 using MiscUtil.Conversion;
 using ModbusTools.Capture.Model;
@@ -18,59 +19,44 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
         {
         }
 
-        protected FunctionServiceResult ProcessNumberOfRegisters(Sample[] samples)
+        protected FunctionServiceResult ProcessNumberOfRegisters(Sample[] samples, PacketType? packetType)
         {
             if (samples.Length != NumberOfRegistersMessageLength)
                 throw new ArgumentException($"The message must be 8 bytes long. It was {samples.Length}.");
 
-            //This is a request
-            byte[] addressBytes = new[]
-            {
-                samples[2].Value,
-                samples[3].Value
-            };
+            //Get the raw bytes
+            var messageBytes = samples
+                .Select(s => s.Value)
+                .ToArray();
 
-            byte[] numberBytes = new[]
-            {
-                samples[4].Value,
-                samples[5].Value
-            };
-
-            ushort address = EndianBitConverter.Big.ToUInt16(addressBytes, 0);
-            ushort number = EndianBitConverter.Big.ToUInt16(numberBytes, 0);
+            ushort address = EndianBitConverter.Big.ToUInt16(messageBytes, 2);
+            ushort number = EndianBitConverter.Big.ToUInt16(messageBytes, 4);
 
             var summary = $"Read {number} registers starting at {address}";
 
-            return new FunctionServiceResult(summary);
+            return new FunctionServiceResult(summary, packetType: packetType);
         }
 
-        protected FunctionServiceResult ProcessRegisters(Sample[] samples)
+        protected FunctionServiceResult ProcessReadRegisters(Sample[] samples, PacketType? packetType)
         {
-            //We'll assume that this is a response
-            byte numberOfBytes = samples[2].Value;
+            //Get the raw bytes
+            var messageBytes = samples
+                .Select(s => s.Value)
+                .ToArray();
 
+            //We'll assume that this is a response
+            byte numberOfBytes = messageBytes[2];
+
+            //Get the number of registers
             var numberOfRegisters = numberOfBytes / 2;
 
-            var registers = new List<ushort>(numberOfRegisters);
+            //Get the registers themselves
+            var registers = GetRegisters(messageBytes, numberOfRegisters, 3);
 
-            int sampleIndex = 4;
-
-            for (int registerIndex = 0; registerIndex < numberOfRegisters; registerIndex++)
-            {
-                var registerBytes = new byte[]
-                {
-                        samples[sampleIndex++].Value,
-                        samples[sampleIndex++].Value,
-                };
-
-                var register = EndianBitConverter.Big.ToUInt16(registerBytes, 0);
-
-                registers.Add(register);
-            }
-
+            //Create the visual factory
             Func<Visual> visualFactory = () =>
             {
-                var viewModel = new RegistersViewModel(registers.ToArray());
+                var viewModel = new RegistersViewModel(registers);
 
                 return new RegistersView()
                 {
@@ -80,7 +66,25 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
 
             var summary = $"{numberOfRegisters} registers.";
 
-            return new FunctionServiceResult(summary, visualFactory);
+            return new FunctionServiceResult(summary, visualFactory, packetType);
+        }
+
+        protected ushort[] GetRegisters(byte[] messageBytes, int numberOfRegisters, int startOffset)
+        {
+            int currentOffset = startOffset;
+
+            var registers = new ushort[numberOfRegisters];
+
+            for (int registerIndex = 0; registerIndex < numberOfRegisters; registerIndex++)
+            {
+                //Convert each register
+                registers[registerIndex] = EndianBitConverter.Big.ToUInt16(messageBytes, currentOffset);
+
+                //Move to the next offset
+                currentOffset += 2;
+            }
+
+            return registers;
         }
     }
 }

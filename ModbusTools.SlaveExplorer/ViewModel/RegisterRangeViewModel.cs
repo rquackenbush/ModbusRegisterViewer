@@ -33,7 +33,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             : base(dirty)
         {
             if (rangeModel == null) 
-                throw new ArgumentNullException("rangeModel");
+                throw new ArgumentNullException(nameof(rangeModel));
 
             _parent = parent;
             _dirty = dirty;

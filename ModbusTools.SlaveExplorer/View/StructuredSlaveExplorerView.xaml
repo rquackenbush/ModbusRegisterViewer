@@ -36,54 +36,28 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
-            <Menu>
-                <MenuItem Header="_File">
-                    <MenuItem Header="_Open..." Command="{Binding Path=OpenCommand}"/>
-                    <Separator />
-                    <MenuItem Header="_Save" Command="{Binding Path=SaveCommand}" />
-                    <MenuItem Header="Save _As..." Command="{Binding Path=SaveAsCommand}"/>
-                    <Separator/>
-                </MenuItem>
-                
-                <MenuItem Header="_Edit">
-                    <MenuItem Command="{Binding Path=CreateNewSlaveCommand}" Header="Create new slave"></MenuItem>
-                </MenuItem>
-            </Menu>
-            
+           
             <ToolBar Grid.Row="1">
-                <Button Command="{Binding Path=CreateNewSlaveCommand}"><common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/New.png" Width="16" ToolTip="Create new slave">
-                    
-                </common:AutoGreyableImage></Button>
+                <Button Command="{Binding Path=NewCommand}" ToolTip="Create a new project.">
+                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/New.png" Width="16"/>
+                </Button>
+                <Button Command="{Binding Path=OpenCommand}" ToolTip="Open an existing project.">
+                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/openHS.png" Width="16"/>
+                </Button>
+                <Button Command="{Binding Path=SaveCommand}" ToolTip="Save">
+                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/saveHS.png" Width="16"/>
+                </Button>
+                <Button Command="{Binding Path=SaveAsCommand}" ToolTip="Save As...">
+                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/saveHS.png" Width="16"/>
+                </Button>
+                <Separator/>
+                <Button Command="{Binding Path=Slave.AddRegistersCommand}" ToolTip="Add a new register range...">
+                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/New.png" Width="16" />
+                </Button>
             </ToolBar>
             
-            <xcad:DockingManager x:Name="dockManager" Grid.Row="2" >
-
-                <xcad:LayoutRoot x:Name="_layoutRoot">
-
-                    <xcad:LayoutPanel Orientation="Horizontal"  >
-                       
-                        <xcad:LayoutPanel Orientation="Vertical" DockWidth="*">
-
-                            <xcad:LayoutDocumentPaneGroup  >
-                                <xcad:LayoutDocumentPane x:Name="MainDocumentPane" >
-                                    
-                                    <!--<xcad:LayoutDocument Title="RTULink [60]" CanClose="true" >
-                                        <view1:SlaveView/>
-                                    </xcad:LayoutDocument>-->
-                                    
-                                </xcad:LayoutDocumentPane>
-                            </xcad:LayoutDocumentPaneGroup >
-
-                            
-                        </xcad:LayoutPanel>
-
-
-                    </xcad:LayoutPanel>
-
-                </xcad:LayoutRoot>
-            </xcad:DockingManager>
-
+            <view1:SlaveView  Grid.Row="2" DataContext="{Binding Path=Slave}" />
+           
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
