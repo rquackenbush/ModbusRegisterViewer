@@ -1,19 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{484B0AE5-6ED0-4FA5-8A99-16BE8ABA125C}</ProjectGuid>
+    <ProjectGuid>{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ModbusTools.Launcher</RootNamespace>
-    <AssemblyName>ModbusTools.Launcher</AssemblyName>
+    <RootNamespace>ModbusTools.StructuredSlaveExplorer</RootNamespace>
+    <AssemblyName>ModbusTools.StructuredSlaveExplorer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,8 +46,19 @@
       <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MiscUtil">
+      <HintPath>..\packages\JonSkeet.MiscUtil.0.1\lib\net35-Client\MiscUtil.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NModbus4, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NModbus4.2.1.0\lib\net40\NModbus4.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -60,7 +72,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -93,9 +104,42 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationView.xaml.cs">
-      <DependentUpon>ApplicationView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="FieldTypeServices\BIT16FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\BIT32FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\BIT8FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\BitFieldTypeServiceBase.cs" />
+    <Compile Include="FieldTypeServices\FieldTypeServiceBase.cs" />
+    <Compile Include="FieldTypeServices\FieldTypeServiceFactory.cs" />
+    <Compile Include="FieldTypeServices\FIXED16FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\FLOAT32FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\INT16FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\INT32FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\INT8FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\UFIXED16FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\UINT16FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\UINT32FieldTypeService.cs" />
+    <Compile Include="FieldTypeServices\UINT8FieldTypeService.cs" />
+    <Compile Include="Interfaces\IDirty.cs" />
+    <Compile Include="Interfaces\IFieldTypeService.cs" />
+    <Compile Include="Interfaces\IRuntimeField.cs" />
+    <Compile Include="Interfaces\IRuntimeFieldEditor.cs" />
+    <Compile Include="Model\BIT16OptionWrapper.cs" />
+    <Compile Include="Model\BIT8OptionWrapper.cs" />
+    <Compile Include="Model\BITOptionWrapper.cs" />
+    <Compile Include="Model\Dirty.cs" />
+    <Compile Include="Model\FieldModel.cs" />
+    <Compile Include="Model\FieldOptionModel.cs" />
+    <Compile Include="Model\FieldOptionWrapper.cs" />
+    <Compile Include="Model\FieldType.cs" />
+    <Compile Include="Model\FieldTypeFactory.cs" />
+    <Compile Include="Model\FixedPointOptionWrapper.cs" />
+    <Compile Include="Model\IDirtyExtensions.cs" />
+    <Compile Include="Model\Mapper.cs" />
+    <Compile Include="Model\ObjectExtensions.cs" />
+    <Compile Include="Model\ProjectFactory.cs" />
+    <Compile Include="Model\ProjectModel.cs" />
+    <Compile Include="Model\RangeModel.cs" />
+    <Compile Include="Model\SlaveModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -109,14 +153,48 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ToolType.cs" />
-    <Compile Include="ViewModel\AboutViewModel.cs" />
+    <Compile Include="Runtime\BIT16RuntimeField.cs" />
+    <Compile Include="Runtime\BIT32RuntimeField.cs" />
+    <Compile Include="Runtime\BIT8RuntimeField.cs" />
+    <Compile Include="Runtime\BITRuntimeFieldBase.cs" />
+    <Compile Include="Runtime\FIXED16RuntimeField.cs" />
+    <Compile Include="Runtime\INT16RuntimeField.cs" />
+    <Compile Include="Runtime\INT32RuntimeField.cs" />
+    <Compile Include="Runtime\INT8RuntimeField.cs" />
+    <Compile Include="Runtime\RuntimeFieldBase.cs" />
+    <Compile Include="Runtime\RuntimeFieldEditor.cs" />
+    <Compile Include="Runtime\FLOAT32RuntimeField.cs" />
+    <Compile Include="Runtime\UFIXED16RuntimeField.cs" />
+    <Compile Include="Runtime\UINT16RuntimeField.cs" />
+    <Compile Include="Runtime\UINT32RuntimeField.cs" />
+    <Compile Include="Runtime\UINT8RuntimeField.cs" />
+    <Compile Include="ViewModel\BitFieldOptionsViewModel.cs" />
+    <Compile Include="ViewModel\BitViewModel.cs" />
+    <Compile Include="ViewModel\FieldEditorViewModel.cs" />
+    <Compile Include="ViewModel\FixedPointOptionsViewModel.cs" />
+    <Compile Include="ViewModel\RangeViewModelBase.cs" />
+    <Compile Include="ViewModel\RegisterRangeEditorViewModel.cs" />
+    <Compile Include="ViewModel\RegisterRangeViewModel.cs" />
+    <Compile Include="ViewModel\StructuredSlaveExplorerViewModel.cs" />
+    <Compile Include="ViewModel\SlaveViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="View\AboutView.xaml.cs">
-      <DependentUpon>AboutView.xaml</DependentUpon>
+    <Compile Include="View\BITFieldOptionsView.xaml.cs">
+      <DependentUpon>BITFieldOptionsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\LauncherView.xaml.cs">
-      <DependentUpon>LauncherView.xaml</DependentUpon>
+    <Compile Include="View\FixedPointOptionsView.xaml.cs">
+      <DependentUpon>FixedPointOptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RegisterRangeEditorView.xaml.cs">
+      <DependentUpon>RegisterRangeEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RegisterRangeView.xaml.cs">
+      <DependentUpon>RegisterRangeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StructuredSlaveExplorerView.xaml.cs">
+      <DependentUpon>StructuredSlaveExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SlaveView.xaml.cs">
+      <DependentUpon>SlaveView.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -130,87 +208,64 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ApplicationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\AboutView.xaml">
+    <Page Include="View\BITFieldOptionsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\LauncherView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="View\FixedPointOptionsView.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RegisterRangeEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RegisterRangeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StructuredSlaveExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SlaveView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\WindowIcon.png" />
+    <Resource Include="Images\XSLTTransformfile_829_32x.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\caslogo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ModbusTools.Capture.Common\ModbusTools.Capture.Common.csproj">
-      <Project>{904ddaec-b32f-40f0-bde7-cf509d4825e8}</Project>
-      <Name>ModbusTools.Capture.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.Capture.Model\ModbusTools.Capture.Model.csproj">
-      <Project>{f5343276-d294-43fc-954d-66ee6413bd29}</Project>
-      <Name>ModbusTools.Capture.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.CaptureViewer.Interpreted\ModbusTools.CaptureViewer.Interpreted.csproj">
-      <Project>{14a55a0e-7bab-4b46-b848-c1b37eeedd14}</Project>
-      <Name>ModbusTools.CaptureViewer.Interpreted</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.CaptureViewer.Simple\ModbusTools.CaptureViewer.Simple.csproj">
-      <Project>{eb096034-f10d-48c7-be3d-ece13b34f04e}</Project>
-      <Name>ModbusTools.CaptureViewer.Simple</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.Capture\ModbusTools.Capture.csproj">
-      <Project>{56814616-a273-4427-8164-ec5533d8b5bb}</Project>
-      <Name>ModbusTools.Capture</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ModbusTools.Common\ModbusTools.Common.csproj">
       <Project>{12696174-c514-4e69-abda-0e926a52ba57}</Project>
       <Name>ModbusTools.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveExplorer\ModbusTools.StructuredSlaveExplorer.csproj">
-      <Project>{ec75ebe4-ff4f-4fbd-b7cd-a35890e45b6e}</Project>
-      <Name>ModbusTools.StructuredSlaveExplorer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj">
-      <Project>{292371a9-2553-4fc2-8763-a496ab143ce7}</Project>
-      <Name>ModbusTools.SlaveSimulator.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveSimulator\ModbusTools.SlaveSimulator.csproj">
-      <Project>{4563f1da-9e71-4c2e-a6a3-67aa57414afa}</Project>
-      <Name>ModbusTools.SlaveSimulator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveViewer\ModbusTools.SimpleSlaveExplorer.csproj">
-      <Project>{2a3328d7-9854-44c3-9f42-865d2f0f075e}</Project>
-      <Name>ModbusTools.SimpleSlaveExplorer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Licenses\Licenses.txt" />
+    <Resource Include="Images\resource_16xLG.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\CloseTools.png" />
+    <Resource Include="Images\Delete.gif" />
+    <Resource Include="Images\Down_16x16.png" />
+    <Resource Include="Images\InfoTooltip_16xLG.png" />
+    <Resource Include="Images\InsertAbove.png" />
+    <Resource Include="Images\InsertBelow.png" />
+    <Resource Include="Images\move_to_bottom.png" />
+    <Resource Include="Images\move_to_top.png" />
+    <Resource Include="Images\Up_16x16.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\SlaveExplorer.png" />
+    <Resource Include="Images\New.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\StructuredSlaveExplorer.png" />
+    <Resource Include="Images\Properties.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ModbusCapture.png" />
+    <Resource Include="Images\saveHS.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\SlaveSimulator.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Insert.png" />
+    <Resource Include="Images\openHS.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

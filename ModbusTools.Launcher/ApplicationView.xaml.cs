@@ -4,9 +4,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using ModbusTools.Capture.View;
 using ModbusTools.Launcher.View;
-using ModbusTools.SlaveExplorer.View;
+using ModbusTools.SimpleSlaveExplorer.View;
 using ModbusTools.SlaveSimulator.View;
-using ModbusTools.SlaveViewer.View;
+using ModbusTools.StructuredSlaveExplorer.View;
 using Xceed.Wpf.AvalonDock.Layout;
 
 namespace ModbusTools.Launcher

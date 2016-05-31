@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="ModbusTools.StructuredSlaveExplorer.View.SlaveView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+             xmlns:viewModel="clr-namespace:ModbusTools.StructuredSlaveExplorer.ViewModel"
+             xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
+             xmlns:viewModel1="clr-namespace:ModbusTools.StructuredSlaveExplorer.ViewModel"
+             xmlns:view="clr-namespace:ModbusTools.StructuredSlaveExplorer.View"
+             mc:Ignorable="d" 
+             d:DataContext="{x:Static viewModel1:ViewModelLocator.Slave}"
+             Background="#EAEAEA"
+             d:DesignHeight="400" d:DesignWidth="900">
+
+
+    <UserControl.Resources>
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <!--<Setter Property="Foreground" Value="White"/>-->
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+
+        <Style TargetType="xctk:IntegerUpDown">
+            <Setter Property="Margin" Value="4" />
+        </Style>
+
+    </UserControl.Resources>
+
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource LabelStyle}">Modbus Slave Id</TextBlock>
+            <xctk:IntegerUpDown Grid.Row="0" Minimum="0" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveId}"/>
+
+                
+                
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Background="Gray" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <ItemsControl ItemsSource="{Binding Path=Ranges}" x:Name="DesignerItemsControl" >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+
+                            <Expander Background="#EAEAEA" Margin="1,1,1,0" IsExpanded="{Binding Path=IsExpanded}">
+                                <Expander.Header>
+                                    <TextBlock Text="{Binding Path=Name}"/>
+                                </Expander.Header>
+                                <view:RegisterRangeView></view:RegisterRangeView>
+                            </Expander>
+
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+                <Button Grid.Row="1" MinWidth="200" Margin="2" HorizontalAlignment="Left" Command="{Binding Path=AddRegistersCommand}">
+                    Add New Range...
+                </Button>
+            </Grid>
+            
+        </ScrollViewer>
+
+    </Grid>
+
+
+        
+    
+</UserControl>
