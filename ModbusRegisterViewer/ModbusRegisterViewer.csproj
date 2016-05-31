@@ -235,7 +235,7 @@
       <Project>{484b0ae5-6ed0-4fa5-8a99-16be8aba125c}</Project>
       <Name>ModbusTools.Launcher</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveExplorer\ModbusTools.StructuredSlaveExplorer.csproj">
+    <ProjectReference Include="..\ModbusTools.StructuredSlaveExplorer\ModbusTools.StructuredSlaveExplorer.csproj">
       <Project>{ec75ebe4-ff4f-4fbd-b7cd-a35890e45b6e}</Project>
       <Name>ModbusTools.StructuredSlaveExplorer</Name>
     </ProjectReference>
@@ -243,7 +243,7 @@
       <Project>{4563f1da-9e71-4c2e-a6a3-67aa57414afa}</Project>
       <Name>ModbusTools.SlaveSimulator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveViewer\ModbusTools.SimpleSlaveExplorer.csproj">
+    <ProjectReference Include="..\ModbusTools.SimpleSlaveViewer\ModbusTools.SimpleSlaveExplorer.csproj">
       <Project>{2a3328d7-9854-44c3-9f42-865d2f0f075e}</Project>
       <Name>ModbusTools.SimpleSlaveExplorer</Name>
     </ProjectReference>

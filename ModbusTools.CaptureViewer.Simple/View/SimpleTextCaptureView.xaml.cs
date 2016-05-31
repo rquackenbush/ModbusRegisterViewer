@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace ModbusTools.CaptureViewer.Simple.View
+﻿namespace ModbusTools.CaptureViewer.Simple.View
 {
     /// <summary>
     /// Interaction logic for SimpleTextView.xaml

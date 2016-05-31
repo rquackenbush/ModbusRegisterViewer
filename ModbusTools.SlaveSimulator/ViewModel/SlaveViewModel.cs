@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Threading;
 using ModbusTools.SlaveSimulator.Model;

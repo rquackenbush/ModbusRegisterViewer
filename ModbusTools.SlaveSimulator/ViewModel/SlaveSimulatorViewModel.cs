@@ -6,8 +6,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using ModbusTools.Common.ViewModel;
 using ModbusTools.SlaveSimulator.Model;
-using ModbusTools.SlaveSimulator.Model.FunctionHandlers;
-using ModbusTools.SlaveSimulator.View;
 
 namespace ModbusTools.SlaveSimulator.ViewModel
 {

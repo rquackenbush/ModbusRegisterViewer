@@ -1,6 +1,5 @@
 ﻿using System;
 using GalaSoft.MvvmLight;
-using ModbusTools.Common;
 
 namespace ModbusTools.SlaveSimulator.ViewModel
 {

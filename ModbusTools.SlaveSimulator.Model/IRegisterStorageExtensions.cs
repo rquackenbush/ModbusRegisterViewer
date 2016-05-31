@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ModbusTools.SlaveSimulator.Model
+﻿namespace ModbusTools.SlaveSimulator.Model
 {
     public static class IRegisterStorageExtensions
     {

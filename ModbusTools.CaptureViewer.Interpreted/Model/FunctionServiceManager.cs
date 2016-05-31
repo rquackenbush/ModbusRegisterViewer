@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ModbusTools.Capture.Model;
-using ModbusTools.CaptureViewer.Interpreted.ViewModel;
 using ModbusTools.Common;
 
 namespace ModbusTools.CaptureViewer.Interpreted.Model

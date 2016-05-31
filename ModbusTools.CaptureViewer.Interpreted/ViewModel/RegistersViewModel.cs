@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using ModbusTools.Common;
 using ModbusTools.Common.ViewModel;
 
