@@ -175,7 +175,7 @@
     <Compile Include="ViewModel\RangeViewModelBase.cs" />
     <Compile Include="ViewModel\RegisterRangeEditorViewModel.cs" />
     <Compile Include="ViewModel\RegisterRangeViewModel.cs" />
-    <Compile Include="ViewModel\SlaveExplorerViewModel.cs" />
+    <Compile Include="ViewModel\StructuredSlaveExplorerViewModel.cs" />
     <Compile Include="ViewModel\SlaveViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\BITFieldOptionsView.xaml.cs">
@@ -190,8 +190,8 @@
     <Compile Include="View\RegisterRangeView.xaml.cs">
       <DependentUpon>RegisterRangeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SlaveExplorerView.xaml.cs">
-      <DependentUpon>SlaveExplorerView.xaml</DependentUpon>
+    <Compile Include="View\StructuredSlaveExplorerView.xaml.cs">
+      <DependentUpon>StructuredSlaveExplorerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SlaveView.xaml.cs">
       <DependentUpon>SlaveView.xaml</DependentUpon>
@@ -224,7 +224,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SlaveExplorerView.xaml">
+    <Page Include="View\StructuredSlaveExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -261,14 +261,14 @@
   <ItemGroup>
     <Resource Include="Images\Properties.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\saveHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\openHS.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
+  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -18,7 +18,7 @@ namespace ModbusTools.Capture.Model
         
         public CaptureHost(string path, IMasterContext masterContext)
         {
-            if (masterContext == null) throw new ArgumentNullException("masterContext");
+            if (masterContext == null) throw new ArgumentNullException(nameof(masterContext));
 
             _masterContext = masterContext;
 

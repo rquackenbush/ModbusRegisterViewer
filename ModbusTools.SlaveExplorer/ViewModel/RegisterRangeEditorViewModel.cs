@@ -43,7 +43,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         public RegisterRangeEditorViewModel(RangeModel originalRangeModel)
         {
             if (originalRangeModel == null)
-                throw new ArgumentNullException("originalRangeModel");
+                throw new ArgumentNullException(nameof(originalRangeModel));
 
             _originalRangeModel = originalRangeModel;
             

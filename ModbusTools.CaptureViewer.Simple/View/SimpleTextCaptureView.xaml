@@ -1,4 +1,4 @@
-﻿<Window x:Class="ModbusTools.CaptureViewer.Simple.View.SimpleTextCaptureView"
+﻿<UserControl x:Class="ModbusTools.CaptureViewer.Simple.View.SimpleTextCaptureView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -6,9 +6,9 @@
         xmlns:viewModel="clr-namespace:ModbusTools.CaptureViewer.Simple.ViewModel"
         xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
         DataContext="{x:Static viewModel:Locator.Main}"
-        Title="{Binding Path=Title}" Height="300" Width="300" Icon="/ModbusTools.CaptureViewer.Simple;component/Images/Network_Map.png">
-    
-    <Window.Resources>
+        >
+
+    <UserControl.Resources>
         
         <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter" />
         
@@ -56,7 +56,7 @@
             
             
         </DataTemplate>
-    </Window.Resources>
+    </UserControl.Resources>
     
     <Grid>
         
@@ -83,4 +83,4 @@
         
         <!--<TextBox Grid.Row="1" Background="#F6F6F6" Text="{Binding Path=Output}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" FontFamily="Courier New"></TextBox>-->
     </Grid>
-</Window>
+</UserControl>

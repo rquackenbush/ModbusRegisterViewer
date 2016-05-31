@@ -32,8 +32,8 @@ namespace ModbusTools.SlaveSimulator.Model
             double characterTimeout,
             double messageTimeout)
         {
-            if (masterContext == null) throw new ArgumentNullException("masterContext");
-            if (slaves == null) throw new ArgumentNullException("slaves");
+            if (masterContext == null) throw new ArgumentNullException(nameof(masterContext));
+            if (slaves == null) throw new ArgumentNullException(nameof(slaves));
 
             _masterContext = masterContext;
             _characterTimeout = characterTimeout;

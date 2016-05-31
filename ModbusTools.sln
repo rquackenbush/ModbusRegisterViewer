@@ -3,15 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{66DD80BC-CBA9-422B-AE71-712AE52F9CF4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7D407AAD-1B3A-496E-B7CE-3DD7FAF9C4D1}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusRegisterViewer", "ModbusRegisterViewer\ModbusRegisterViewer.csproj", "{7EA1062A-DC40-4BD9-86CD-C68D7575DB63}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Common", "ModbusTools.Common\ModbusTools.Common.csproj", "{12696174-C514-4E69-ABDA-0E926A52BA57}"
@@ -32,15 +23,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Capture", "Capture", "{C288
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SlaveSimulator", "SlaveSimulator", "{58985A5A-8ABC-48BB-9C6D-6A819A121E64}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SlaveViewer", "SlaveViewer", "{73F8E660-3106-49E0-A049-E6F5D1C69885}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleSlaveExplorer", "SimpleSlaveExplorer", "{73F8E660-3106-49E0-A049-E6F5D1C69885}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SlaveExplorer", "SlaveExplorer", "{14886183-A7EF-48DC-99CE-CDB91D05D810}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StructuredSlaveExplorer", "StructuredSlaveExplorer", "{14886183-A7EF-48DC-99CE-CDB91D05D810}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveExplorer", "ModbusTools.SlaveExplorer\ModbusTools.SlaveExplorer.csproj", "{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.CaptureViewer.Interpreted", "ModbusTools.CaptureViewer.Interpreted\ModbusTools.CaptureViewer.Interpreted.csproj", "{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Capture.Common", "ModbusTools.Capture.Common\ModbusTools.Capture.Common.csproj", "{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Launcher", "ModbusTools.Launcher\ModbusTools.Launcher.csproj", "{484B0AE5-6ED0-4FA5-8A99-16BE8ABA125C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools", "ModbusTools\ModbusTools.csproj", "{14425E58-A656-495D-AE3E-8B194D2CC365}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,6 +87,14 @@ Global
 		{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{904DDAEC-B32F-40F0-BDE7-CF509D4825E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484B0AE5-6ED0-4FA5-8A99-16BE8ABA125C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484B0AE5-6ED0-4FA5-8A99-16BE8ABA125C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484B0AE5-6ED0-4FA5-8A99-16BE8ABA125C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484B0AE5-6ED0-4FA5-8A99-16BE8ABA125C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14425E58-A656-495D-AE3E-8B194D2CC365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14425E58-A656-495D-AE3E-8B194D2CC365}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14425E58-A656-495D-AE3E-8B194D2CC365}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14425E58-A656-495D-AE3E-8B194D2CC365}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

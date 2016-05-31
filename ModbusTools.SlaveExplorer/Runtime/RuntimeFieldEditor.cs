@@ -13,7 +13,7 @@ namespace ModbusTools.SlaveExplorer.Runtime
         public RuntimeFieldEditor(string name, TVisual visual)
         {
             if (visual == null) 
-                throw new ArgumentNullException("visual");
+                throw new ArgumentNullException(nameof(visual));
 
             _name = name;
             _visual = visual;

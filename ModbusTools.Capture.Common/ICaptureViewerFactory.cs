@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 
 namespace ModbusTools.Capture.Common
 {
@@ -6,6 +7,6 @@ namespace ModbusTools.Capture.Common
     {
         string Name { get; }
 
-        Window Open(string filename);
+        Visual Open(string filename);
     }
 }

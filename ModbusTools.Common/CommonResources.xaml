@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ModbusTools.Common">
+
+
+   
+    <SolidColorBrush x:Key="WindowBackground" Color="#EAEAEA"  />
+
+    <SolidColorBrush Color="#7EC7C6C6" x:Key="ModalBackground"  />
+
+    <Style p4:Key="RowStyle" TargetType="DataGridRow" xmlns:p4="http://schemas.microsoft.com/winfx/2006/xaml">
+        <Setter Property="FontSize" Value="14"></Setter>
+        <Setter Property="FontFamily" Value="Consolas"></Setter>
+    </Style>
+
+    <Style TargetType="DataGridCell">
+        <Setter Property="Padding" Value="4"></Setter>
+    </Style>
+
+    <Style TargetType="DataGridCell" x:Key="RegisterDataGridCellStyle">
+        <!--<Setter Property="Background" Value="#E9F4F7"></Setter>-->
+    </Style>
+
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="FontSize" Value="14"></Setter>
+        <Setter Property="FontWeight" Value="Bold"></Setter>
+    </Style>
+
+</ResourceDictionary>

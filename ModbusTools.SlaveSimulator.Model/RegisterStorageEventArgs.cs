@@ -9,7 +9,7 @@ namespace ModbusTools.SlaveSimulator.Model
 
         public RegisterStorageEventArgs(ushort startingAddress, ushort[] values)
         {
-            if (values == null) throw new ArgumentNullException("values");
+            if (values == null) throw new ArgumentNullException(nameof(values));
 
             _startingAddress = startingAddress;
             _values = values;

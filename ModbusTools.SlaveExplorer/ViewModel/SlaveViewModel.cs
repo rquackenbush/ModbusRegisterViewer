@@ -24,7 +24,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         {
             _modbusAdapterProvider = modbusAdapterProvider;
             _dirty = dirty;
-            if (slaveModel == null) throw new ArgumentNullException("slaveModel");
+            if (slaveModel == null) throw new ArgumentNullException(nameof(slaveModel));
 
             Name = slaveModel.Name;
             SlaveId = slaveModel.SlaveId;
@@ -61,7 +61,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
             return true;
         }
 
-        internal SlaveModel GetModel()
+        internal SlaveModel ToModel()
         {
             return new SlaveModel()
             {
@@ -161,7 +161,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 
         internal void AddRange(RangeViewModelBase range)
         {
-            if (range == null) throw new ArgumentNullException("range");
+            if (range == null) throw new ArgumentNullException(nameof(range));
 
             _ranges.Add(range);
         }

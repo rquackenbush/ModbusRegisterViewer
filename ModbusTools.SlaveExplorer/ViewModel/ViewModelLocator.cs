@@ -11,9 +11,9 @@ namespace ModbusTools.SlaveExplorer.ViewModel
 {
     internal static class ViewModelLocator
     {
-        public static SlaveExplorerViewModel SlaveExplorer
+        public static StructuredSlaveExplorerViewModel SlaveExplorer
         {
-            get {  return new SlaveExplorerViewModel(); }
+            get {  return new StructuredSlaveExplorerViewModel(); }
         }
 
         public static SlaveViewModel Slave

@@ -11,7 +11,7 @@ namespace ModbusTools.SlaveViewer.ViewModel
         internal SlaveExplorerRegisterViewModel(ushort registerIndex, ushort value, DescriptionStore descriptionStore)
          : base(registerIndex, value)
         {
-            if (descriptionStore == null) throw new ArgumentNullException("descriptionStore");
+            if (descriptionStore == null) throw new ArgumentNullException(nameof(descriptionStore));
 
             _descriptionStore = descriptionStore;
         }

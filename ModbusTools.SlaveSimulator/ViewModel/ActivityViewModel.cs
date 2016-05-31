@@ -71,7 +71,7 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             : base(timestamp, operation, startingIndex, isZeroBased)
         {
             if (data == null)
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
 
             _data = data;
         }

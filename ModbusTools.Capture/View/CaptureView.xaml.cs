@@ -6,7 +6,7 @@ namespace ModbusTools.Capture.View
     /// <summary>
     /// Interaction logic for CaptureView.xaml
     /// </summary>
-    public partial class CaptureView : Window
+    public partial class CaptureView
     {
         public CaptureView()
         {
@@ -15,8 +15,7 @@ namespace ModbusTools.Capture.View
 
         private void CaptureView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!FtdiConfiguration.CheckForLatency(this))
-                Close();
+            FtdiConfiguration.CheckForLatency(null);
         }
     }
 }

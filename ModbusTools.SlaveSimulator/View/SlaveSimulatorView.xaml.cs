@@ -9,7 +9,7 @@ namespace ModbusTools.SlaveSimulator.View
     /// <summary>
     /// Interaction logic for SlaveSimulatorView.xaml
     /// </summary>
-    public partial class SlaveSimulatorView : Window
+    public partial class SlaveSimulatorView
     {
         public SlaveSimulatorView()
         {
@@ -94,8 +94,7 @@ namespace ModbusTools.SlaveSimulator.View
                 }
             }
 
-            if (!FtdiConfiguration.CheckForLatency(this))
-                Close();
+            FtdiConfiguration.CheckForLatency(null);
         }
     }
 }

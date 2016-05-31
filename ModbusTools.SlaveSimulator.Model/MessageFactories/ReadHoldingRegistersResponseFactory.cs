@@ -7,8 +7,8 @@ namespace ModbusTools.SlaveSimulator.Model.MessageFactories
     {
         public static byte[] Create(byte slaveAddress, ushort[] registers)
         {
-            if (registers == null) throw new ArgumentNullException("registers");
-            if (registers.Length == 0) throw new ArgumentOutOfRangeException("registers","registers should have at least one value");
+            if (registers == null) throw new ArgumentNullException(nameof(registers));
+            if (registers.Length == 0) throw new ArgumentOutOfRangeException(nameof(registers),"registers should have at least one value");
 
             //Calculate the datasize
             var dataSize = (byte)(2*registers.Length);

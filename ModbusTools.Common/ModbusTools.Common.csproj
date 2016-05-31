@@ -98,6 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="AutoGreyableImage.cs" />
     <Compile Include="Behaviors\MultiSelectorSelectedItemsBehavior.cs" />
     <Compile Include="CloseableBehavior.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="FrameworkElementExtensions.cs" />
     <Compile Include="FtdiConfiguration.cs" />
     <Compile Include="FunctionCode.cs" />
+    <Compile Include="HexFormatter.cs" />
     <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="IMasterContext.cs" />
     <Compile Include="IMasterContextFactory.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="Model\DescriptionStore.cs" />
     <Compile Include="Model\SerialMasterContext.cs" />
     <Compile Include="Model\SerialMasterContextFactory.cs" />
+    <Compile Include="NumericExtensions.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="ObservableCollectionExtensions.cs" />
     <Compile Include="OperationAttempter.cs" />
@@ -152,9 +155,13 @@
     <Compile Include="Services\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="ViewModel\ExceptionViewModel.cs" />
     <Compile Include="ViewModel\ICloseableViewModel.cs" />
     <Compile Include="ViewModel\ModbusAdaptersViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="View\ExceptionView.xaml.cs">
+      <DependentUpon>ExceptionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ModbusAdapterSelector.xaml.cs">
       <DependentUpon>ModbusAdapterSelector.xaml</DependentUpon>
     </Compile>
@@ -174,6 +181,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Resource Include="CommonResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Page Include="View\ExceptionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\ModbusAdapterSelector.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -183,13 +198,6 @@
     <Resource Include="Images\Refresh.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
 using ModbusTools.Capture.Common;
 using ModbusTools.Capture.Model;
 using ModbusTools.CaptureViewer.Interpreted;
-using ModbusTools.CaptureViewer.Interpreted.ViewModel;
 using ModbusTools.CaptureViewer.Simple;
 using ModbusTools.Common.ViewModel;
 
@@ -15,8 +15,7 @@ namespace ModbusTools.Capture.ViewModel
 {
     public class CaptureViewModel : ViewModelBase
     {
-        private readonly OpenActionViewModel[] _openActions;
-        private readonly CaptureCompletedActionViewModel[] _captureCompletedActions;
+        private readonly ICaptureViewerFactory[] _captureViewerFactories;
 
         private readonly ModbusAdaptersViewModel _modbusAdapters = new ModbusAdaptersViewModel();
 
@@ -26,53 +25,42 @@ namespace ModbusTools.Capture.ViewModel
         public CaptureViewModel()
         {
             // These are the different ways to view the capture
-            var captureViewerFactories = new ICaptureViewerFactory[]
+            _captureViewerFactories = new ICaptureViewerFactory[]
             {
                 new InterpretedCaptureViewerFactory(), 
                 new SimpleCaptureViewerFactory(),
             };
 
-            //These are the ways a user can explicitly open a capture file
-            _openActions = captureViewerFactories.Select(f => new OpenActionViewModel(f)).ToArray();
-
-            //These are the actions that can take place after a capture is complete.
-            _captureCompletedActions = new []
-            {
-                new CaptureCompletedActionViewModel("<None>", null), 
-            }.Concat(captureViewerFactories.Select(f => new CaptureCompletedActionViewModel(f.Name, f))).ToArray();
-
-            CaptureCompletedAction = _captureCompletedActions[1];
+            _captureViewerFactory = _captureViewerFactories[0];
 
             StartCommand = new RelayCommand(Start, CanStart);
             StopCommand = new RelayCommand(Stop, CanStop);
+            OpenCommand = new RelayCommand(Open, CanOpen);
         }
 
         public ICommand StartCommand { get; private set; }
         public ICommand StopCommand { get; private set; }
-
-        public OpenActionViewModel[] OpenActions
-        {
-            get { return _openActions; }
-        }
+        public ICommand OpenCommand { get; private set; }
 
         public ModbusAdaptersViewModel ModbusAdapters
         {
             get { return _modbusAdapters; }
         }
 
-        public CaptureCompletedActionViewModel[] CaptureCompletedActions
+        public ICaptureViewerFactory[] CaptureViewerFactories
         {
-            get { return _captureCompletedActions; }
+            get { return _captureViewerFactories; }
         }
 
-        private CaptureCompletedActionViewModel _captureCompleted;
-        public CaptureCompletedActionViewModel CaptureCompletedAction
+        private ICaptureViewerFactory _captureViewerFactory;
+        public ICaptureViewerFactory CaptureViewerFactory
         {
-            get { return _captureCompleted; }
+            get { return _captureViewerFactory; }
             set
             {
-                _captureCompleted = value;
+                _captureViewerFactory = value;
                 RaisePropertyChanged();
+                Refresh();
             }
         }
 
@@ -85,6 +73,34 @@ namespace ModbusTools.Capture.ViewModel
                 _status = value;
                 RaisePropertyChanged();
             }
+        }
+
+        private void Refresh()
+        {
+            CaptureViewer = null;
+
+            if (string.IsNullOrWhiteSpace(_capturePath))
+                return;
+
+            if (CaptureViewerFactory == null)
+                return;
+
+            CaptureViewer = CaptureViewerFactory.Open(_capturePath);
+        }
+
+        private void Open()
+        {
+            var dialog = new OpenFileDialog()
+            {
+                Filter = CaptureConstants.CaptureFilter
+            };
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            _capturePath = dialog.FileName;
+
+            Refresh();
         }
 
         private bool CanOpen()
@@ -120,6 +136,8 @@ namespace ModbusTools.Capture.ViewModel
             if (dialog.ShowDialog() != true)
                 return;
 
+            CaptureViewer = null;
+
             BytesReceived = 0;
 
             //Save the filename
@@ -147,19 +165,14 @@ namespace ModbusTools.Capture.ViewModel
                 {
                     _captureHost.SampleReceived -= OnSampleReceived;
                     _captureHost.Dispose();
+                    _captureHost = null;
                 }
 
-                if (!string.IsNullOrWhiteSpace(_capturePath))
-                {
-                    if (CaptureCompletedAction != null && CaptureCompletedAction.Factory != null)
-                    {
-                        CaptureCompletedAction.Factory.ShowCapture(_capturePath);
-                    }
-                }
+                Refresh();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                MessageBox.Show(ex.ToString(), ex.Source);
             }
         }
 
@@ -169,6 +182,8 @@ namespace ModbusTools.Capture.ViewModel
         }
 
         private int _bytesReceived;
+        private Visual _captureViewer;
+
         public int BytesReceived
         {
             get { return _bytesReceived; }
@@ -179,5 +194,14 @@ namespace ModbusTools.Capture.ViewModel
             }
         }
 
+        public Visual CaptureViewer
+        {
+            get { return _captureViewer; }
+            private set
+            {
+                _captureViewer = value; 
+                RaisePropertyChanged();
+            }
+        }
     }
 }

@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Windows;
 using GalaSoft.MvvmLight.Threading;
+using ModbusRegisterViewer.Views;
 using ModbusTools.Common;
+using ModbusTools.Launcher;
+using ApplicationView = ModbusTools.Launcher.ApplicationView;
+
+//using ModbusTools.Launcher;
 
 namespace ModbusRegisterViewer
 {
@@ -15,6 +20,10 @@ namespace ModbusRegisterViewer
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             DispatcherHelper.Initialize();
+
+            var applicationWindow = new ApplicationView();
+
+            applicationWindow.Show();
 
             //try
             //{

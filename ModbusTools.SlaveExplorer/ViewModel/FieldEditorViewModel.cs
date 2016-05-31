@@ -25,7 +25,7 @@ namespace ModbusTools.SlaveExplorer.ViewModel
         public FieldEditorViewModel(FieldModel fieldModel)
         {
             if (fieldModel == null) 
-                throw new ArgumentNullException("fieldModel");
+                throw new ArgumentNullException(nameof(fieldModel));
 
             _fieldModel = fieldModel;
 
