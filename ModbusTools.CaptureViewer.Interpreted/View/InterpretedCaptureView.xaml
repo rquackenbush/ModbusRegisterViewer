@@ -25,11 +25,23 @@
         
         <Grid Grid.Row="1">
             <DataGrid ItemsSource="{Binding Path=Packets}" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding Path=SelectedPacket}">
+                
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="White"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=HasError}" Value="True">
+                                <Setter Property="Background" Value="LightYellow"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                
                 <DataGrid.Columns >
                     <DataGridTemplateColumn IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="/ModbusTools.CaptureViewer.Interpreted;component/Images/Warning.png" Width="16" Visibility="{Binding Path=HasError, Converter={StaticResource HiddenWhenFalseConverter}}"></Image>
+                                <Image Source="/ModbusTools.CaptureViewer.Interpreted;component/Images/Warning.png" Width="16" Visibility="{Binding Path=HasError, Converter={StaticResource HiddenWhenFalseConverter}}" ToolTip="{Binding Path=Error}"></Image>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

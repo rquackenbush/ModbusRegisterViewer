@@ -6,7 +6,7 @@ namespace ModbusTools.CaptureViewer.Interpreted
     {
         public static string GetFunctionCodeDescription(byte functionCode)
         {
-            //Stip off the error bit
+            //Strip off the error bit
             var functionCodeOnly = (FunctionCode)(functionCode & 0x7F);
 
             string description;
@@ -94,10 +94,10 @@ namespace ModbusTools.CaptureViewer.Interpreted
 
             if (isError)
             {
-                return $"({functionCodeOnly}) - {description} Error";
+                return $"({(byte)functionCodeOnly}) - {description} Error";
             }
 
-            return $"({functionCodeOnly}) - {description}";
+            return $"({(byte)functionCodeOnly}) - {description}";
         }
     }
 }
