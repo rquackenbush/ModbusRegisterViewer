@@ -108,7 +108,18 @@ namespace ModbusTools.Common
                 {
                     const string message = "One or more FTDI ports are configured incorrectly on this computer.\n\nAttempt to auto correct?";
 
-                    var result = MessageBox.Show(window, message, "Incompatible Port Settings", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    MessageBoxResult result;
+
+                    const string caption = "Incompatible Port Settings";
+
+                    if (window == null)
+                    {
+                        result = MessageBox.Show(message, caption, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    }
+                    else
+                    {
+                        result = MessageBox.Show(window, message, caption, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    }
 
                     switch (result)
                     {

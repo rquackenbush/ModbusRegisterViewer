@@ -94,7 +94,9 @@ namespace ModbusTools.SlaveSimulator.View
                 }
             }
 
-            FtdiConfiguration.CheckForLatency(null);
+            Window parentWindow = Window.GetWindow(this);
+
+            FtdiConfiguration.CheckForLatency(parentWindow);
         }
     }
 }
