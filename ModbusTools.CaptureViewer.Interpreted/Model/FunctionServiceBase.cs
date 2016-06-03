@@ -1,6 +1,4 @@
-﻿using System.Windows.Media;
-using ModbusTools.Capture.Model;
-using ModbusTools.CaptureViewer.Interpreted.ViewModel;
+﻿using ModbusTools.Capture.Model;
 using ModbusTools.Common;
 
 namespace ModbusTools.CaptureViewer.Interpreted.Model

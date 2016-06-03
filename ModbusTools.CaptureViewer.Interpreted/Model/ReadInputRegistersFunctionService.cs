@@ -1,5 +1,4 @@
-﻿using ModbusTools.Capture.Model;
-using ModbusTools.Common;
+﻿using ModbusTools.Common;
 
 namespace ModbusTools.CaptureViewer.Interpreted.Model
 {

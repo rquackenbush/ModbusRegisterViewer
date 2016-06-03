@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Capture", "Modb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveSimulator", "ModbusTools.SlaveSimulator\ModbusTools.SlaveSimulator.csproj", "{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveViewer", "ModbusTools.SlaveViewer\ModbusTools.SlaveViewer.csproj", "{2A3328D7-9854-44C3-9F42-865D2F0F075E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SimpleSlaveExplorer", "ModbusTools.SimpleSlaveViewer\ModbusTools.SimpleSlaveExplorer.csproj", "{2A3328D7-9854-44C3-9F42-865D2F0F075E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveSimulator.Model", "ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj", "{292371A9-2553-4FC2-8763-A496AB143CE7}"
 EndProject
@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleSlaveExplorer", "Simp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StructuredSlaveExplorer", "StructuredSlaveExplorer", "{14886183-A7EF-48DC-99CE-CDB91D05D810}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveExplorer", "ModbusTools.SlaveExplorer\ModbusTools.SlaveExplorer.csproj", "{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.StructuredSlaveExplorer", "ModbusTools.StructuredSlaveExplorer\ModbusTools.StructuredSlaveExplorer.csproj", "{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.CaptureViewer.Interpreted", "ModbusTools.CaptureViewer.Interpreted\ModbusTools.CaptureViewer.Interpreted.csproj", "{14A55A0E-7BAB-4B46-B848-C1B37EEEDD14}"
 EndProject

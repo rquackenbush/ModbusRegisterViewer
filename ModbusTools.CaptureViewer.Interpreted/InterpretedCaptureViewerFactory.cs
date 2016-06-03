@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using ModbusTools.Capture.Common;
 using ModbusTools.CaptureViewer.Interpreted.View;
 using ModbusTools.CaptureViewer.Interpreted.ViewModel;
