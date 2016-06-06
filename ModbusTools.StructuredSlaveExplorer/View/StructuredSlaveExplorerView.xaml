@@ -40,20 +40,20 @@
            
             <ToolBar Grid.Row="1">
                 <Button Command="{Binding Path=NewCommand}" ToolTip="Create a new project.">
-                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/New.png" Width="16"/>
+                    <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/New.png" Width="16"/>
                 </Button>
                 <Button Command="{Binding Path=OpenCommand}" ToolTip="Open an existing project.">
-                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/openHS.png" Width="16"/>
+                    <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/openHS.png" Width="16"/>
                 </Button>
                 <Button Command="{Binding Path=SaveCommand}" ToolTip="Save">
-                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/saveHS.png" Width="16"/>
+                    <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/saveHS.png" Width="16"/>
                 </Button>
                 <Button Command="{Binding Path=SaveAsCommand}" ToolTip="Save As...">
-                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/saveHS.png" Width="16"/>
+                    <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/saveHS.png" Width="16"/>
                 </Button>
                 <Separator/>
                 <Button Command="{Binding Path=Slave.AddRegistersCommand}" ToolTip="Add a new register range...">
-                    <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/New.png" Width="16" />
+                    <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/New.png" Width="16" />
                 </Button>
             </ToolBar>
             
