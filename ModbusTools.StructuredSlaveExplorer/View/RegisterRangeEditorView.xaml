@@ -17,7 +17,7 @@
         xmlns:model="clr-namespace:ModbusTools.StructuredSlaveExplorer.Model"
         mc:Ignorable="d"
         x:Name="root"
-        d:DataContext="{x:Static viewModel1:ViewModelLocator.RegisterRangeEditor}" Icon="/ModbusTools.SlaveExplorer;component/Images/resource_16xLG.png">
+        d:DataContext="{x:Static viewModel1:ViewModelLocator.RegisterRangeEditor}" Icon="/ModbusTools.StructuredSlaveExplorer;component/Images/resource_16xLG.png">
 
     <i:Interaction.Behaviors>
         <common:CloseableBehavior />
@@ -103,33 +103,33 @@
         <!-- Toolbar -->
         <ToolBar Grid.Row="1">
             <Button ToolTip="Insert a new item above the currently selected item" Command="{Binding Path=InsertAboveCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/InsertAbove.png" Width="16"  />
+                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/InsertAbove.png" Width="16"  />
             </Button>
 
             <Button ToolTip="Insert a new item below the currenlt selected item" Command="{Binding Path=InsertBelowCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/InsertBelow.png" Width="16"  />
+                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/InsertBelow.png" Width="16"  />
             </Button>
 
             <Separator/>
 
             <Button ToolTip="Move the selected item(s) down" Command="{Binding Path=MoveDownCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/Down_16x16.png" Width="16"  />
+                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Down_16x16.png" Width="16"  />
             </Button>
             <Button ToolTip="Move the selected item(s) up" Command="{Binding Path=MoveUpCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/Up_16x16.png" Width="16"  />
+                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Up_16x16.png" Width="16"  />
             </Button>
 
 
             <Button ToolTip="Move the selected item(s) to the bottom" Command="{Binding Path=MoveToBottomCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/move_to_bottom.png" Width="16"  />
+                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/move_to_bottom.png" Width="16"  />
             </Button>
             <Button ToolTip="Move the selected item(s) to the top" Command="{Binding Path=MoveToTopCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/move_to_top.png" Width="16"  />
+                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/move_to_top.png" Width="16"  />
             </Button>
 
             <Separator/>
             <Button ToolTip="Delete" Command="{Binding Path=DeleteCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.SlaveExplorer;component/Images/Delete.gif" Width="16"  />
+                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Delete.gif" Width="16"  />
             </Button>
         </ToolBar>
 
