@@ -85,7 +85,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
             }
 
             //Ditch the first one if it has an error
-            if (packets[0].HasError)
+            if (packets.Count > 0 && packets[0].HasError)
             {
                 packets.RemoveAt(0);
             }
