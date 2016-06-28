@@ -66,14 +66,14 @@
 
             <ToolBar Grid.Row="0">
                 <Button Command="{Binding Path=OpenCommand}" ToolTip="Open a file...">
-                    <common:AutoGreyableImage Source="/ModbusTools.SlaveViewer;component/Images/openHS.png" Width="16"/>
+                    <common:AutoGreyableImage Source="/ModbusTools.SimpleSlaveExplorer;component/Images/openHS.png" Width="16"/>
                 </Button>
                 <Button Command="{Binding Path=SaveAsCommand}" ToolTip="Save As...">
-                    <common:AutoGreyableImage Source="/ModbusTools.SlaveViewer;component/Images/saveHS.png" Width="16" ></common:AutoGreyableImage>
+                    <common:AutoGreyableImage Source="/ModbusTools.SimpleSlaveExplorer;component/Images/saveHS.png" Width="16" ></common:AutoGreyableImage>
                 </Button>
                 <Separator/>
                 <Button Command="{Binding Path=ExportToCsvCommand}" ToolTip="Export to CSV...">
-                    <common:AutoGreyableImage Source="/ModbusTools.SlaveViewer;component/Images/Export.png" Width="16"></common:AutoGreyableImage>
+                    <common:AutoGreyableImage Source="/ModbusTools.SimpleSlaveExplorer;component/Images/Export.png" Width="16"></common:AutoGreyableImage>
                 </Button>
             </ToolBar>
 
@@ -145,7 +145,7 @@
                                 <DataGridTemplateColumn IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image Source="/ModbusTools.SlaveViewer;component/Images/126_Edit_16x16_72.png" Width="16">
+                                            <Image Source="/ModbusTools.SimpleSlaveExplorer;component/Images/126_Edit_16x16_72.png" Width="16">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
                                                         <Setter Property="Visibility" Value="Hidden"></Setter>
