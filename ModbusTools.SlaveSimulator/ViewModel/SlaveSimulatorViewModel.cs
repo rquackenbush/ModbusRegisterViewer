@@ -63,19 +63,12 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 
         private void RaiseSlaveCreated(SlaveViewModel slave)
         {
-            var handler = SlaveCreated;
-
-            if (handler == null)
-                return;
-
-            handler(this, new SlaveEvent(slave));
+            SlaveCreated?.Invoke(this, new SlaveEvent(slave));
         }
 
         private void Start()
         {
             var factory = _modbusAdapters.GetFactory();
-
-            var holdingRegisters = new SparseRegisterStorage();
 
             _simulator = new SlaveSimulatorHost(factory.Create(), _slaves.Select(s => s.GetSlave())
             , 1.5, 4.0);

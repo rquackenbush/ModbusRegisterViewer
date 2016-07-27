@@ -8,6 +8,8 @@
 
         ModbusCapture,
 
-        SlaveSimulator
+        SlaveSimulator,
+        
+        SlaveScanner
     }
 }
