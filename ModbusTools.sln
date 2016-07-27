@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusRegisterViewer", "ModbusRegisterViewer\ModbusRegisterViewer.csproj", "{7EA1062A-DC40-4BD9-86CD-C68D7575DB63}"
 EndProject
@@ -36,6 +36,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Launcher", "ModbusTools.Launcher\ModbusTools.Launcher.csproj", "{484B0AE5-6ED0-4FA5-8A99-16BE8ABA125C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools", "ModbusTools\ModbusTools.csproj", "{14425E58-A656-495D-AE3E-8B194D2CC365}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.Scanner", "ModbusTools.Scanner\ModbusTools.Scanner.csproj", "{8EC30D2A-E5FA-43BD-A174-FF1378E03E39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +97,10 @@ Global
 		{14425E58-A656-495D-AE3E-8B194D2CC365}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14425E58-A656-495D-AE3E-8B194D2CC365}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14425E58-A656-495D-AE3E-8B194D2CC365}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EC30D2A-E5FA-43BD-A174-FF1378E03E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EC30D2A-E5FA-43BD-A174-FF1378E03E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EC30D2A-E5FA-43BD-A174-FF1378E03E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EC30D2A-E5FA-43BD-A174-FF1378E03E39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

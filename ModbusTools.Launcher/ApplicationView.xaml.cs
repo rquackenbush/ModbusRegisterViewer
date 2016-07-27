@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using ModbusTools.Capture.View;
 using ModbusTools.Launcher.View;
+using ModbusTools.Scanner.View;
 using ModbusTools.SimpleSlaveExplorer.View;
 using ModbusTools.SlaveSimulator.View;
 using ModbusTools.StructuredSlaveExplorer.View;
@@ -59,6 +60,10 @@ namespace ModbusTools.Launcher
 
                 case ToolType.SlaveSimulator:
                     AddTool<SlaveSimulatorView>("Slave Simulator");
+                    break;
+
+                case ToolType.SlaveScanner:
+                    AddTool<SlaveScannerView>("Slave Scanner");
                     break;
             }
         }

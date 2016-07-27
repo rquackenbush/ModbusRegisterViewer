@@ -132,7 +132,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -199,8 +200,20 @@
                     </Button>
                 </Grid>
 
+                    <!-- Slave Scanner -->
+                    <Image Grid.Row="4" Grid.Column="0" Margin="5" Source="/ModbusTools.Launcher;component/Images/Search_48x.png"/>
+                    <Grid Grid.Row="4"  Grid.Column="1" Style="{StaticResource ToolDescription}" >
+                        <Button Click="LaunchSlaveScanner" Cursor="Hand" Template="{StaticResource ToolButtonTemplate}">
+                            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  Margin="4">
+                            <TextBlock FontWeight="Bold" FontFamily="Arial">Slave Scanner</TextBlock>
+                            <LineBreak/>
+                            <TextBlock>Simulate one or more Modbus slave devices.</TextBlock>
+                         </TextBlock>
+                        </Button>
+                    </Grid>
 
-            </Grid>
+
+                </Grid>
             
         </Grid>
     </Grid>

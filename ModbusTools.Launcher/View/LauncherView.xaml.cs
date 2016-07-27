@@ -53,5 +53,10 @@ namespace ModbusTools.Launcher.View
         {
             SelectTool(ToolType.StructuredSlaveExplorer);
         }
+
+        private void LaunchSlaveScanner(object sender, RoutedEventArgs e)
+        {
+            SelectTool(ToolType.SlaveScanner);
+        }
     }
 }

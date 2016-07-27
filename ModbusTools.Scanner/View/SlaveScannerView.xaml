@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="ModbusTools.Scanner.View.SlaveScannerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModbusTools.Scanner.View"
+             xmlns:viewModel="clr-namespace:ModbusTools.Scanner.ViewModel"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:scanner="clr-namespace:ModbusTools.Scanner"
+             xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
+             xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
+             mc:Ignorable="d" 
+             Background="LightGray"
+             DataContext="{x:Static viewModel:ScannerViewModelLocator.Scanner}"
+             d:DataContext="{d:DesignInstance viewModel:SlaveScannerViewModel, d:IsDesignTimeCreatable=False}"
+             d:DesignHeight="500" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
+        <converters:CollapsedWhenTrueConverter x:Key="CollapsedWhenTrueConverter"/>
+        <converters:CollapsedWhenFalseConverter x:Key="CollapsedWhenFalseConverter"/>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <Grid.Resources>
+                <Style TargetType="FrameworkElement" x:Key="BaseStyle">
+                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}"/>
+                <Style TargetType="xctk:ByteUpDown" BasedOn="{StaticResource BaseStyle}"/>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="1">Slave Address Range</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="2">Slave Address Range</TextBlock>
+
+            <TextBlock Grid.Row="1" Grid.Column="0">Slave Address Range</TextBlock>
+            <xctk:ByteUpDown Grid.Row="1" Grid.Column="1" Value="{Binding Path=StartAddress}" Minimum="{x:Static scanner:ModbusConstants.MinSlaveAddress}"  Maximum="{x:Static scanner:ModbusConstants.MaxSlaveAddress}"/>
+            <xctk:ByteUpDown Grid.Row="1" Grid.Column="2" Value="{Binding Path=EndAddress}" Minimum="{x:Static scanner:ModbusConstants.MinSlaveAddress}"  Maximum="{x:Static scanner:ModbusConstants.MaxSlaveAddress}"/>
+            
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="MinWidth" Value="80"/>
+                        <Setter Property="Margin" Value="4"/>
+                    </Style>
+                </StackPanel.Resources>
+                
+                <Button Command="{Binding Path=ScanCommand}">Scan</Button>
+                <Button Command="{Binding Path=CancelCommand}">Cancel</Button>
+            </StackPanel>
+        </Grid>
+        
+        <ListBox Grid.Row="2" ItemsSource="{Binding Path=Results}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/ModbusTools.Scanner;component/Images/TestPassed.png" VerticalAlignment="Center" Margin="1" Visibility="{Binding Path=WasFound, Converter={StaticResource CollapsedWhenFalseConverter}}" />
+                        <Image Source="/ModbusTools.Scanner;component/Images/TestFailed.png" VerticalAlignment="Center" Margin="1" Visibility="{Binding Path=WasFound, Converter={StaticResource CollapsedWhenTrueConverter}}" />
+                        <TextBlock Text="{Binding Path=SlaveAddress}" VerticalAlignment="Center" Margin="1"/>
+                        <TextBlock Text="-" VerticalAlignment="Center" Margin="1"/>
+                        <TextBlock Text="{Binding Path=Reason}" VerticalAlignment="Center" Margin="1" FontStyle="Italic"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <view:ModbusAdapterSelector HorizontalAlignment="Left" DataContext="{Binding Path=ModbusAdapters}" />
+
+            <Grid Grid.Column="1" Visibility="{Binding Path=IsRunning, Converter={StaticResource HiddenWhenFalseConverter}}">
+                <ProgressBar Margin="4"  Minimum="0" Maximum="{Binding Path=ProgressMax}" Value="{Binding Path=ProgressValue}" />
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Scanning: "></TextBlock>
+                    <TextBlock Text="{Binding Path=CurrentSlaveAddress}"></TextBlock>
+                </TextBlock>
+            </Grid>
+        </Grid>
+        
+    </Grid>
+</UserControl>
