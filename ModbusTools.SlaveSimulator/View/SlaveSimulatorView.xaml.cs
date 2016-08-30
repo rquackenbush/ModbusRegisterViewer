@@ -11,6 +11,8 @@ namespace ModbusTools.SlaveSimulator.View
     /// </summary>
     public partial class SlaveSimulatorView
     {
+        private bool _hasLoaded;
+
         public SlaveSimulatorView()
         {
             InitializeComponent();
@@ -82,6 +84,11 @@ namespace ModbusTools.SlaveSimulator.View
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            if (_hasLoaded)
+                return;
+
+            _hasLoaded = true;
+
             var viewModel = DataContext as SlaveSimulatorViewModel;
 
             if (viewModel != null)
