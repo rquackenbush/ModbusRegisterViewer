@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Modbus.IO;
+using NModbus.IO;
 
 namespace ModbusTools.Common
 {

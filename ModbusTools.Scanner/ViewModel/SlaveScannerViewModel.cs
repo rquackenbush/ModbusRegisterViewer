@@ -7,9 +7,8 @@ using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using Modbus;
-using ModbusTools.Common;
 using ModbusTools.Common.ViewModel;
+using NModbus;
 
 namespace ModbusTools.Scanner.ViewModel
 {
@@ -78,9 +77,11 @@ namespace ModbusTools.Scanner.ViewModel
                 {
                     try
                     {
-                        var stream = master.Master.Transport.GetStreamResource();
+                        //TODO: Migrate
+
+                        //var stream = master.Master.Transport.GetStreamResource();
                         
-                        stream.DiscardInBuffer();
+                        //stream.DiscardInBuffer();
                     }
                     catch (Exception ex)
                     {

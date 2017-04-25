@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO.Ports;
+using NModbus;
+using NModbus.IO;
+using NModbus.Serial;
 
 namespace ModbusTools.Common.Model
 {
@@ -43,7 +46,7 @@ namespace ModbusTools.Common.Model
             _writeTimeout = writeTimeout;
         }
 
-        public IMasterContext Create()
+        private SerialPort CreateSerialPort()
         {
             SerialPort serialPort;
 
@@ -57,7 +60,25 @@ namespace ModbusTools.Common.Model
                 serialPort.Open();
             }
 
+            return serialPort;
+        }
+
+        public IMasterContext Create()
+        {
+            SerialPort serialPort = CreateSerialPort();
+
             return new SerialMasterContext(serialPort, _readTimeout, _writeTimeout);
+        }
+
+        public IModbusSlaveNetwork CreateSlaveNetwork()
+        {
+            SerialPort serialPort = CreateSerialPort();
+
+            IStreamResource adapter = new SerialPortAdapter(serialPort);
+
+            IModbusFactory factory = new ModbusFactory();
+
+            return factory.CreateRtuSlaveNetwork(adapter);
         }
     }
 }

@@ -1,19 +1,19 @@
-﻿namespace ModbusTools.SlaveSimulator.Model
-{
-    public static class IRegisterStorageExtensions
-    {
-        public static void WriteSingle(this IRegisterStorage registerStorage, ushort address, ushort value)
-        {
-            registerStorage.Write(address,
-                new []
-                {
-                    value
-                });
-        }
+﻿//namespace ModbusTools.SlaveSimulator.Model
+//{
+//    public static class IRegisterStorageExtensions
+//    {
+//        public static void WriteSingle<TPoint>(this IPointStorage<TPoint> registerStorage, ushort address, TPoint value)
+//        {
+//            registerStorage.Write(address,
+//                new []
+//                {
+//                    value
+//                });
+//        }
 
-        public static ushort ReadSingle(this IRegisterStorage registerStorage, ushort address)
-        {
-            return registerStorage.Read(address, 1)[0];
-        }
-    }
-}
+//        public static TPoint ReadSingle<TPoint>(this IPointStorage<TPoint> registerStorage, ushort address)
+//        {
+//            return registerStorage.Read(address, 1)[0];
+//        }
+//    }
+//}

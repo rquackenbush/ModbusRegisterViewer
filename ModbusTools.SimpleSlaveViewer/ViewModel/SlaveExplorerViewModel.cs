@@ -10,12 +10,12 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Win32;
-using Modbus.Device;
 using ModbusTools.Common;
 using ModbusTools.Common.Model;
 using ModbusTools.Common.Services;
 using ModbusTools.Common.ViewModel;
 using ModbusTools.SimpleSlaveExplorer.Model;
+using NModbus;
 
 namespace ModbusTools.SimpleSlaveExplorer.ViewModel
 {

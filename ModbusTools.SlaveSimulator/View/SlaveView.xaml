@@ -7,7 +7,7 @@
              xmlns:viewModel="clr-namespace:ModbusTools.SlaveSimulator.ViewModel"
              DataContext="{x:Static viewModel:Locator.Slave}"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="700">
 
     <UserControl.Resources>
         <Style x:Key="RowStyle" TargetType="DataGridRow">
@@ -39,13 +39,10 @@
             <TextBlock VerticalAlignment="Center" Margin="4">Slave Id</TextBlock>
             <xctk:ByteUpDown VerticalAlignment="Center" Minimum="{Binding Path=SlaveIdMin}" Value="{Binding Path=SlaveId}" Maximum="{Binding Path=SlaveIdMax}" Margin="2" />
             <Separator/>
-            <Grid>
-                <CheckBox IsChecked="{Binding Path=IsZeroBased}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display registers with zero based numbering.">Is Zero Based?</CheckBox>
-            </Grid>
         </ToolBar>
         
         <TabControl Grid.Row="1">
-            <TabItem Header="Holding">
+            <TabItem Header="Holding Registers">
                 <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=HoldingRegisters}"  HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" RowStyle="{StaticResource RowStyle}" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" />
@@ -59,7 +56,7 @@
                 </DataGrid>
             </TabItem>
 
-            <TabItem Header="Input">
+            <TabItem Header="Input Registers">
                 <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=InputRegisters}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"  RowStyle="{StaticResource RowStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True"  />
@@ -72,6 +69,12 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
+            
+            <TabItem Header="Discrete Coils">
+            </TabItem>
+
+            <TabItem Header="Input Coils">
+            </TabItem>
 
             <TabItem Header="Activity">
                 <DataGrid ItemsSource="{Binding Path=Activities}" IsReadOnly="True" AutoGenerateColumns="False"  RowStyle="{StaticResource RowStyle}">
@@ -80,7 +83,7 @@
                         <DataGridTextColumn Header="Operation" Binding="{Binding Path=Operation}" />
                         <DataGridTextColumn Header="Starting Address" Binding="{Binding Path=StartingAddress}" />
                         <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" />
-                        <DataGridTextColumn Header="Summary" Binding="{Binding Path=Summary}" />
+                        <DataGridTextColumn Header="Values" Binding="{Binding Path=Values}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>

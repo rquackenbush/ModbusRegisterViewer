@@ -34,13 +34,6 @@
             </Button>
             <Separator/>
 
-            <!--<Grid>
-                <CheckBox IsChecked="{Binding Path=OnlyShowTouched}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display only registers that have been requested / written to.">Active Only?</CheckBox>
-            </Grid>-->
-            <!--<Grid>
-                <CheckBox IsChecked="{Binding Path=IsZeroBased}" VerticalAlignment="Center" Margin="2" ToolTip="Check this box to display registers with zero based numbering.">Is Zero Based?</CheckBox>
-            </Grid>-->
-            
             <Button Command="{Binding Path=AddSlaveCommand}">
                 Add Slave
             </Button>
@@ -64,54 +57,6 @@
                 
             </xcad:LayoutRoot>
         </xcad:DockingManager>
-
-
-        <!--<Grid Grid.Row="1">
-                <TabControl Margin="5">
-
-                    <TabItem Header="Holding">
-                        <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=HoldingRegisters}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
-                                <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
-                                <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
-                                <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
-                                <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
-                                <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
-                                <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </TabItem>
-
-                    <TabItem Header="Input">
-                        <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=InputRegisters}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridlCellStyle}" />
-                                <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
-                                <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
-                                <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
-                                <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
-                                <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
-                                <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </TabItem>
-
-                    <TabItem Header="Activity">
-                        <DataGrid ItemsSource="{Binding Path=ActivityLog}" IsReadOnly="True" RowStyle="{StaticResource RowStyle}" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Timestamp" Binding="{Binding Path=Timestamp}"  />
-                                <DataGridTextColumn Header="Type" Binding="{Binding Path=Type}" />
-                                <DataGridTextColumn Header="R/W" Binding="{Binding Path=ReadWrite}" />
-                                <DataGridTextColumn Header="Starting Address" Binding="{Binding Path=StartingAddress}" />
-                                <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" />
-                                <DataGridTextColumn Header="Data" Binding="{Binding Path=Data}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </TabItem>
-                </TabControl>
-            </Grid>-->
-
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

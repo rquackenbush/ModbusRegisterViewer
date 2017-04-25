@@ -92,7 +92,7 @@ namespace ModbusTools.Common.ViewModel
 
         public string Hex
         {
-            get { return string.Format("0x{0:x4}", Value); }
+            get { return $"0x{Value:x4}"; }
             set
             {
                 ushort converted;
