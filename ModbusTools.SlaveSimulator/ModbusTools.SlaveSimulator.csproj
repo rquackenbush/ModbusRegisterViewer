@@ -99,6 +99,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\PointOperation.cs" />
+    <Compile Include="Model\SlaveStorage.cs" />
+    <Compile Include="Model\SparsePointSource.cs" />
+    <Compile Include="Model\StorageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -113,6 +117,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModel\ActivityViewModel.cs" />
+    <Compile Include="ViewModel\CoilViewModel.cs" />
     <Compile Include="ViewModel\Locator.cs" />
     <Compile Include="ViewModel\SlaveEvent.cs" />
     <Compile Include="ViewModel\SlaveRegisterViewModel.cs" />
@@ -140,10 +145,6 @@
     <ProjectReference Include="..\ModbusTools.Common\ModbusTools.Common.csproj">
       <Project>{12696174-c514-4e69-abda-0e926a52ba57}</Project>
       <Name>ModbusTools.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj">
-      <Project>{292371a9-2553-4fc2-8763-a496ab143ce7}</Project>
-      <Name>ModbusTools.SlaveSimulator.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

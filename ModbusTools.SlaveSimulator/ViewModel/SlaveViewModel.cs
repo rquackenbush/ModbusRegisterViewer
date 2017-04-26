@@ -10,10 +10,14 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 {
     public class SlaveViewModel : ViewModelBase
     {
+        private byte _slaveId;
+
         private readonly SlaveStorage _slaveStorage = new SlaveStorage();
 
         private readonly ObservableCollection<SlaveRegisterViewModel> _holdingRegisters = new ObservableCollection<SlaveRegisterViewModel>();
         private readonly ObservableCollection<SlaveRegisterViewModel> _inputRegisters = new ObservableCollection<SlaveRegisterViewModel>();
+        private readonly ObservableCollection<CoilViewModel> _coilDiscretes = new ObservableCollection<CoilViewModel>();
+        private readonly ObservableCollection<CoilViewModel> _coilInputs = new ObservableCollection<CoilViewModel>();
 
         public readonly ObservableCollection<ActivityViewModel> _activities = new ObservableCollection<ActivityViewModel>();
 
@@ -24,15 +28,14 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             _slaveStorage.CoilDiscretes.StorageOperationOccurred += CoilDiscreteOperation;
             _slaveStorage.CoilInputs.StorageOperationOccurred += CoilInputOperation;
 
-            for (ushort registerIndex = 0; registerIndex < ushort.MaxValue; registerIndex++)
+            for (ushort pointIndex = 0; pointIndex < ushort.MaxValue; pointIndex++)
             {
-                _holdingRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.HoldingRegisters, registerIndex) { IsZeroBased = true });
+                _holdingRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.HoldingRegisters, pointIndex) { IsZeroBased = true });
+                _inputRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.InputRegisters, pointIndex) { IsZeroBased = true });
+                _coilDiscretes.Add(new CoilViewModel(_slaveStorage.CoilDiscretes, pointIndex));
+                _coilInputs.Add(new CoilViewModel(_slaveStorage.CoilInputs, pointIndex));
             }
-
-            for (ushort registerIndex = 0; registerIndex < ushort.MaxValue; registerIndex++)
-            {
-                _inputRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.InputRegisters, registerIndex) { IsZeroBased = true });
-            }
+           
         }
 
         private void AddActivity(string pointType, PointOperation operation, ushort startingAddress, ushort[] values)
@@ -41,9 +44,7 @@ namespace ModbusTools.SlaveSimulator.ViewModel
                 .Select(r => Convert.ToString(r, 16).PadLeft(4, '0'))
                 .ToArray();
 
-            string formattedValue = string.Join(" ", hexNumbers);
-
-            AddActivity($"{operation} {pointType}", startingAddress, formattedValue);
+            AddActivity($"{operation} {pointType}", startingAddress, hexNumbers);
         }
 
         private void AddActivity(string pointType, PointOperation operation, ushort startingAddress, bool[] values)
@@ -52,12 +53,10 @@ namespace ModbusTools.SlaveSimulator.ViewModel
                 .Select(r => r ? "1" : "0")
                 .ToArray();
 
-            string formattedValue = string.Join(" ", individualValues);
-
-            AddActivity($"{operation} {pointType}", startingAddress, formattedValue);
+            AddActivity($"{operation} {pointType}", startingAddress, individualValues);
         }
 
-        private void AddActivity(string operation, ushort startingAddress, string values)
+        private void AddActivity(string operation, ushort startingAddress, string[] values)
         {
             var activity = new ActivityViewModel(DateTime.Now, operation, startingAddress, values);
 
@@ -67,21 +66,53 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         void HoldingRegisterOperation(object sender, StorageEventArgs<ushort> e)
         {
             AddActivity("Holding Register", e.Operation, e.StartingAddress, e.Points);
+
+            if (e.Operation == PointOperation.Write)
+            {
+                for (int index = 0; index < e.Points.Length; index++)
+                {
+                    _holdingRegisters[index + e.StartingAddress].OnValueChanged();
+                }
+            }
         }
 
         void InputRegisterOperation(object sender, StorageEventArgs<ushort> e)
         {
             AddActivity("Input Register", e.Operation, e.StartingAddress, e.Points);
+
+            if (e.Operation == PointOperation.Write)
+            {
+                for (int index = 0; index < e.Points.Length; index++)
+                {
+                    _inputRegisters[index + e.StartingAddress].OnValueChanged();
+                }
+            }
         }
 
         void CoilDiscreteOperation(object sender, StorageEventArgs<bool> e)
         {
             AddActivity("Discrete Coil", e.Operation, e.StartingAddress, e.Points);
+
+            if (e.Operation == PointOperation.Write)
+            {
+                for (int index = 0; index < e.Points.Length; index++)
+                {
+                    _coilDiscretes[index + e.StartingAddress].OnValueChanged();
+                }
+            }
         }
 
         void CoilInputOperation(object sender, StorageEventArgs<bool> e)
         {
             AddActivity("Discrete Input", e.Operation, e.StartingAddress, e.Points);
+
+            if (e.Operation == PointOperation.Write)
+            {
+                for (int index = 0; index < e.Points.Length; index++)
+                {
+                    _coilInputs[index + e.StartingAddress].OnValueChanged();
+                }
+            }
         }
 
         public ObservableCollection<ActivityViewModel> Activities
@@ -98,8 +129,7 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         {
             get { return 247; }
         }
-
-        private byte _slaveId;
+        
         public byte SlaveId
         {
             get { return _slaveId; }
@@ -120,6 +150,16 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             get { return _inputRegisters; }
         }
 
+        public ObservableCollection<CoilViewModel> CoilDiscretes
+        {
+            get { return _coilDiscretes; }
+        }
+
+        public ObservableCollection<CoilViewModel> CoilInputs
+        {
+            get { return _coilInputs; }
+        }
+
         public IModbusSlave CreateModbusSlave()
         {
             var factory = new ModbusFactory();
@@ -129,3 +169,4 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         }
     }
 }
+

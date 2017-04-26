@@ -8,9 +8,9 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         private readonly DateTime _timestamp;
         private readonly string _operation;
         private readonly ushort? _startingIndex;
-        private readonly string _values;
+        private readonly string[] _values;
 
-        public ActivityViewModel(DateTime timestamp, string operation, ushort? startingIndex = null, string values = null)
+        public ActivityViewModel(DateTime timestamp, string operation, ushort? startingIndex = null, string[] values = null)
         {
             _timestamp = timestamp;
             _operation = operation;
@@ -33,14 +33,20 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             get { return _startingIndex; }
         }
 
-        public virtual int? Count
+        public int? Count
         {
-            get { return null; }
+            get
+            {
+                if (_values == null)
+                    return null;
+
+                return _values.Length;
+            }
         }
 
         public string Values
         {
-            get { return _values; }
+            get { return string.Join(" ", _values); }
         }
     }
 }

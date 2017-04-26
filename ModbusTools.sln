@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusRegisterViewer", "ModbusRegisterViewer\ModbusRegisterViewer.csproj", "{7EA1062A-DC40-4BD9-86CD-C68D7575DB63}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveSimulator", "ModbusTools.SlaveSimulator\ModbusTools.SlaveSimulator.csproj", "{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SimpleSlaveExplorer", "ModbusTools.SimpleSlaveViewer\ModbusTools.SimpleSlaveExplorer.csproj", "{2A3328D7-9854-44C3-9F42-865D2F0F075E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.SlaveSimulator.Model", "ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj", "{292371A9-2553-4FC2-8763-A496AB143CE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusTools.CaptureViewer.Simple", "ModbusTools.CaptureViewer.Simple\ModbusTools.CaptureViewer.Simple.csproj", "{EB096034-F10D-48C7-BE3D-ECE13B34F04E}"
 EndProject
@@ -65,10 +63,6 @@ Global
 		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A3328D7-9854-44C3-9F42-865D2F0F075E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{292371A9-2553-4FC2-8763-A496AB143CE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{292371A9-2553-4FC2-8763-A496AB143CE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{292371A9-2553-4FC2-8763-A496AB143CE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{292371A9-2553-4FC2-8763-A496AB143CE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB096034-F10D-48C7-BE3D-ECE13B34F04E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB096034-F10D-48C7-BE3D-ECE13B34F04E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB096034-F10D-48C7-BE3D-ECE13B34F04E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -109,7 +103,6 @@ Global
 		{56814616-A273-4427-8164-EC5533D8B5BB} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
 		{4563F1DA-9E71-4C2E-A6A3-67AA57414AFA} = {58985A5A-8ABC-48BB-9C6D-6A819A121E64}
 		{2A3328D7-9854-44C3-9F42-865D2F0F075E} = {73F8E660-3106-49E0-A049-E6F5D1C69885}
-		{292371A9-2553-4FC2-8763-A496AB143CE7} = {58985A5A-8ABC-48BB-9C6D-6A819A121E64}
 		{EB096034-F10D-48C7-BE3D-ECE13B34F04E} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
 		{F5343276-D294-43FC-954D-66EE6413BD29} = {C288D7B0-F717-49B1-9174-889F38FC8EF5}
 		{EC75EBE4-FF4F-4FBD-B7CD-A35890E45B6E} = {14886183-A7EF-48DC-99CE-CDB91D05D810}

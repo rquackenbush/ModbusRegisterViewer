@@ -1,11 +1,9 @@
-﻿using System.Windows.Controls;
-
-namespace ModbusTools.SlaveSimulator.View
+﻿namespace ModbusTools.SlaveSimulator.View
 {
     /// <summary>
     /// Interaction logic for SlaveView.xaml
     /// </summary>
-    public partial class SlaveView : UserControl
+    public partial class SlaveView 
     {
         public SlaveView()
         {

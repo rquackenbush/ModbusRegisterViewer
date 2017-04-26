@@ -5,7 +5,7 @@ using NModbus;
 namespace ModbusTools.SlaveSimulator.Model
 {
     /// <summary>
-    /// Sparse storage for registers
+    /// Sparse storage for points.
     /// </summary>
     public class SparsePointSource<TPoint> : IPointSource<TPoint>
     {

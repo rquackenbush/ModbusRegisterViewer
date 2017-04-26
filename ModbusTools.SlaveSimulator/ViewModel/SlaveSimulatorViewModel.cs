@@ -13,13 +13,12 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 {
     public class SlaveSimulatorViewModel : ViewModelBase
     {
-        public event EventHandler<SlaveEvent> SlaveCreated;
-
         private readonly ModbusAdaptersViewModel _modbusAdapters = new ModbusAdaptersViewModel();
         private readonly ObservableCollection<SlaveViewModel> _slaves = new ObservableCollection<SlaveViewModel>();
 
         private IModbusSlaveNetwork _slaveNetwork;
 
+        //We have to hold a reference to the running listen task or it will get garbage collected.
         private Task _listenTask;
         
         public SlaveSimulatorViewModel()
@@ -31,9 +30,9 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             AddSlave();
         }
 
-        public ICommand StartCommand { get; private set; }
-        public ICommand StopCommand { get; private set; }
-        public ICommand AddSlaveCommand { get; private set; }
+        public ICommand StartCommand { get; }
+        public ICommand StopCommand { get; }
+        public ICommand AddSlaveCommand { get; }
 
         private void AddSlave()
         {
@@ -53,9 +52,6 @@ namespace ModbusTools.SlaveSimulator.ViewModel
                 SlaveId = slaveId
             };
 
-            //Let the world know that we have a new slave! Wait...
-            RaiseSlaveCreated(slave);
-
             //Add it
             _slaves.Add(slave);
         }
@@ -64,11 +60,6 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         {
             //We can only add a slave when we're NOT running
             return _slaveNetwork == null;
-        }
-
-        private void RaiseSlaveCreated(SlaveViewModel slave)
-        {
-            SlaveCreated?.Invoke(this, new SlaveEvent(slave));
         }
 
         private void Start()

@@ -6,9 +6,13 @@
         xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
         xmlns:viewModel="clr-namespace:ModbusTools.SlaveSimulator.ViewModel"
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        mc:Ignorable="d" 
+        xmlns:view1="clr-namespace:ModbusTools.SlaveSimulator.View"
         Background="LightGray"
         DataContext="{x:Static viewModel:Locator.SlaveSimulator}"
-        Loaded="OnLoaded">
+        d:DesignHeight="300">
 
     <UserControl.Resources>
         <Style x:Key="LabelStyle" TargetType="TextBlock">
@@ -39,7 +43,22 @@
             </Button>
         </ToolBar>
 
-        <xcad:DockingManager x:Name="dockManager" Grid.Row="1">
+        <xcad:DockingManager x:Name="dockManager" Grid.Row="1" DocumentsSource="{Binding Path=Slaves}">
+            
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock Text="Slave "/>
+                        <TextBlock Text="{Binding Path=Content.SlaveId}"></TextBlock>
+                    </TextBlock>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentHeaderTemplate>
+            
+            <xcad:DockingManager.Resources>
+                <DataTemplate DataType="{x:Type viewModel:SlaveViewModel}">
+                    <view1:SlaveView />
+                </DataTemplate>
+            </xcad:DockingManager.Resources>
 
             <xcad:LayoutRoot x:Name="_layoutRoot">
 

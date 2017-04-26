@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:viewModel="clr-namespace:ModbusTools.SlaveSimulator.ViewModel"
-             DataContext="{x:Static viewModel:Locator.Slave}"
+             d:DataContext="{x:Static viewModel:Locator.Slave}"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="700">
 
@@ -30,6 +30,17 @@
 
 
     <Grid>
+        <Grid.Resources>
+            <Style TargetType="DataGrid">
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="AutoGenerateColumns" Value="False"/>
+                <Setter Property="HorizontalGridLinesBrush" Value="LightGray"/>
+                <Setter Property="VerticalGridLinesBrush" Value="LightGray"/>
+                <Setter Property="RowStyle" Value="{StaticResource RowStyle}"/>
+                <Setter Property="CanUserSortColumns" Value="False"/>
+            </Style>
+        </Grid.Resources>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -43,7 +54,7 @@
         
         <TabControl Grid.Row="1">
             <TabItem Header="Holding Registers">
-                <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=HoldingRegisters}"  HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" RowStyle="{StaticResource RowStyle}" >
+                <DataGrid IsReadOnly="False" ItemsSource="{Binding Path=HoldingRegisters}" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" />
                         <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
@@ -57,7 +68,7 @@
             </TabItem>
 
             <TabItem Header="Input Registers">
-                <DataGrid Grid.Row="2" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=InputRegisters}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"  RowStyle="{StaticResource RowStyle}">
+                <DataGrid IsReadOnly="False" ItemsSource="{Binding Path=InputRegisters}" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True"  />
                         <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
@@ -71,9 +82,21 @@
             </TabItem>
             
             <TabItem Header="Discrete Coils">
+                <DataGrid ItemsSource="{Binding Path=CoilDiscretes}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" IsReadOnly="True" />
+                        <DataGridCheckBoxColumn Header="Value" Binding="{Binding Path=Value}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Input Coils">
+                <DataGrid ItemsSource="{Binding Path=CoilInputs}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" IsReadOnly="True" />
+                        <DataGridCheckBoxColumn Header="Value" Binding="{Binding Path=Value}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Activity">

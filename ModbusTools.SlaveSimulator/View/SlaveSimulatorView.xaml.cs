@@ -11,8 +11,6 @@ namespace ModbusTools.SlaveSimulator.View
     /// </summary>
     public partial class SlaveSimulatorView
     {
-        private bool _hasLoaded;
-
         public SlaveSimulatorView()
         {
             InitializeComponent();
@@ -77,33 +75,8 @@ namespace ModbusTools.SlaveSimulator.View
             });
         }
 
-        private void OnSlaveCreated(object sender, SlaveEvent slaveEvent)
-        {
-            AddSlave(slaveEvent.Slave);            
-        }
+       
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            if (_hasLoaded)
-                return;
-
-            _hasLoaded = true;
-
-            var viewModel = DataContext as SlaveSimulatorViewModel;
-
-            if (viewModel != null)
-            {
-                viewModel.SlaveCreated += OnSlaveCreated;
-
-                foreach (var slave in viewModel.Slaves)
-                {
-                    AddSlave(slave);
-                }
-            }
-
-            Window parentWindow = Window.GetWindow(this);
-
-            FtdiConfiguration.CheckForLatency(parentWindow);
-        }
+      
     }
 }
