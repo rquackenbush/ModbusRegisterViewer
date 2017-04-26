@@ -7,5 +7,7 @@ namespace ModbusTools.Common
         IMasterContext Create();
 
         IModbusSlaveNetwork CreateSlaveNetwork();
+
+        IModbusMaster CreateMaster();
     }
 }

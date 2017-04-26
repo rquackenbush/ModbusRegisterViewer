@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModbusTools.CaptureViewer.Interpreted.View"
         xmlns:viewModel="clr-namespace:ModbusTools.CaptureViewer.Interpreted.ViewModel"
-        xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
+        xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
         mc:Ignorable="d"
         d:DesignHeight="200"
         DataContext="{x:Static viewModel:Locator.Interpreted}">

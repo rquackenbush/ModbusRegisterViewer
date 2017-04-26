@@ -56,7 +56,7 @@
             <TabItem Header="Holding Registers">
                 <DataGrid IsReadOnly="False" ItemsSource="{Binding Path=HoldingRegisters}" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Register" Binding="{Binding Path=Address}" IsReadOnly="True" />
                         <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
                         <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
                         <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
@@ -70,7 +70,7 @@
             <TabItem Header="Input Registers">
                 <DataGrid IsReadOnly="False" ItemsSource="{Binding Path=InputRegisters}" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True"  />
+                        <DataGridTextColumn Header="Register" Binding="{Binding Path=Address}" IsReadOnly="True"  />
                         <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
                         <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
                         <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />

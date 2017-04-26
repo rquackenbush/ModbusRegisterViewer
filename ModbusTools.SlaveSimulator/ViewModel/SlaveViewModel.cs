@@ -30,8 +30,8 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 
             for (ushort pointIndex = 0; pointIndex < ushort.MaxValue; pointIndex++)
             {
-                _holdingRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.HoldingRegisters, pointIndex) { IsZeroBased = true });
-                _inputRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.InputRegisters, pointIndex) { IsZeroBased = true });
+                _holdingRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.HoldingRegisters, pointIndex));
+                _inputRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.InputRegisters, pointIndex));
                 _coilDiscretes.Add(new CoilViewModel(_slaveStorage.CoilDiscretes, pointIndex));
                 _coilInputs.Add(new CoilViewModel(_slaveStorage.CoilInputs, pointIndex));
             }

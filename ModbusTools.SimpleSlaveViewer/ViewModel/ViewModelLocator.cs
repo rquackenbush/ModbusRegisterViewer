@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
+using Cas.Common.WPF;
 using ModbusTools.Common;
-using ModbusTools.Common.Services;
 
 namespace ModbusTools.SimpleSlaveExplorer.ViewModel
 {

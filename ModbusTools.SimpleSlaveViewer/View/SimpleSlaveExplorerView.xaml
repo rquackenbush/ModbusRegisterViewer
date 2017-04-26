@@ -3,10 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
-             xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
-             xmlns:viewModel="clr-namespace:ModbusTools.SimpleSlaveExplorer.ViewModel"
-             DataContext="{x:Static viewModel:ViewModelLocator.SlaveExplorer}"
-        Background="LightGray">
+        xmlns:viewModel="clr-namespace:ModbusTools.SimpleSlaveExplorer.ViewModel"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
+        mc:Ignorable="d" 
+        DataContext="{x:Static viewModel:ViewModelLocator.SlaveExplorer}"
+        Background="#F4F4F4"
+        d:DesignHeight="400">
 
     <UserControl.InputBindings>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding Path=SaveCommand}"></KeyBinding>
@@ -21,6 +25,13 @@
                 <ResourceDictionary  Source="pack://application:,,,/ModbusTools.Common;component/CommonResources.xaml" />
 
                 <ResourceDictionary>
+                    
+                    <converters:HiddenWhenFalseConverter x:Key="HiddenWhenFalseConverter"/>
+
+                    <Style x:Key="BaseStyle" TargetType="FrameworkElement">
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
 
                     <Style x:Key="LabelStyle" TargetType="TextBlock">
                         <Setter Property="Margin" Value="6"/>
@@ -29,8 +40,100 @@
                     <Style TargetType="xctk:IntegerUpDown">
                         <Setter Property="Margin" Value="4" />
                     </Style>
+
+                    <Style x:Key="ButtonBase"  TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+                        <Setter Property="MinWidth" Value="100"></Setter>
+                    </Style>
+
+                    <Style x:Key="ReadButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+                        <Setter Property="Content" Value="Read"/>
+                        <Setter Property="Command" Value="{Binding Path=ReadCommand}"/>
+                    </Style>
+
+                    <Style x:Key="WriteButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+                        <Setter Property="Content" Value="Write"/>
+                        <Setter Property="Command" Value="{Binding Path=WriteCommand}"/>
+                        <Setter Property="Visibility" Value="{Binding Path=IsWriteable, Converter={StaticResource HiddenWhenFalseConverter}}"></Setter>
+                    </Style>
+
+                    <DataTemplate x:Key="IsDirtyCellTemplate">
+                        <Image Source="/ModbusTools.SimpleSlaveExplorer;component/Images/126_Edit_16x16_72.png" Width="16">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Hidden"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsDirty}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </DataTemplate>
+
+                    <!-- Coils Grid -->
+                    <ControlTemplate x:Key="CoilsGridTemplate">
+                        <DataGrid d:DataContext="{d:DesignInstance viewModel:CoilsViewModel}" ItemsSource="{Binding Path=Points}" AutoGenerateColumns="False" CanUserSortColumns="False" CanUserAddRows="False" RowStyle="{StaticResource RowStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn IsReadOnly="True" CellTemplate="{StaticResource IsDirtyCellTemplate}"/>
+                                <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" IsReadOnly="True"/>
+                                <DataGridCheckBoxColumn Header="Value" Binding="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ControlTemplate>
+
+                    <!-- Points Header -->
+                    <ControlTemplate x:Key="PointsHeaderTemplate">
+                        <Grid d:DataContext="{d:DesignInstance viewModel:CoilsViewModel}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelStyle}">Starting Address</TextBlock>
+                            <xctk:IntegerUpDown  Grid.Row="0" Grid.Column="1" Minimum="{Binding Path=StartAddress}" Maximum="65536"   MinWidth="60" Value="{Binding Path=StartAddress}" />
+
+                            <TextBlock  Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}" >Number</TextBlock>
+                            <xctk:IntegerUpDown  Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="4000" MinWidth="60" Value="{Binding Path=NumberOfPoints}" />
+
+                            <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource ReadButtonStyle}"/>
+                            <Button Grid.Row="1" Grid.Column="2"  Style="{StaticResource WriteButtonStyle}"/>
+
+                            <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="0"                                                Visibility="{Binding Path=SupportsBlockSize, Converter={StaticResource HiddenWhenFalseConverter}}">Block Size</TextBlock>
+                            <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="5" Grid.Row="0" MinWidth="60" Value="{Binding Path=BlockSize}" Visibility="{Binding Path=SupportsBlockSize, Converter={StaticResource HiddenWhenFalseConverter}}"/>
+
+                        </Grid>
+                    </ControlTemplate>
                     
-                    </ResourceDictionary>
+                    <!-- Registers Grid -->
+                    <ControlTemplate x:Key="RegistersGridTemplate">
+                        <DataGrid d:DataContext="{d:DesignInstance viewModel:SlaveExplorerRegisterViewModel}" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Points}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" CanUserDeleteRows="False" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn IsReadOnly="True" CellTemplate="{StaticResource IsDirtyCellTemplate}"/>
+                                <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridCellStyle}" />
+                                <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
+                                <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
+                                <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
+                                <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
+                                <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
+                                <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ControlTemplate>
+                    
+               
+                </ResourceDictionary>
                 </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>
 
@@ -38,141 +141,103 @@
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         
+        <Grid.Resources>
+            
+            <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}">  
+            </Style>
 
+            <Style TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+            </Style>
+
+            <Style TargetType="ComboBox" BasedOn="{StaticResource BaseStyle}">
+            </Style>
+
+            <Style TargetType="xctk:IntegerUpDown" BasedOn="{StaticResource BaseStyle}">
+            </Style>
+
+            <Style TargetType="xctk:ByteUpDown" BasedOn="{StaticResource BaseStyle}">
+            </Style>
+        </Grid.Resources>
+        
         <Grid Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Style="{StaticResource LabelStyle}">Modbus Slave Id</TextBlock>
+                <xctk:ByteUpDown Grid.Row="0" Minimum="0" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveAddress}"/>
+
+            </Grid>
             
 
-            <Menu>
-                <MenuItem Header="_File">
-                    <MenuItem Header="_Open..." Command="{Binding Path=OpenCommand}"></MenuItem>
-                    <Separator />
-                    <MenuItem Header="_Save" Command="{Binding Path=SaveCommand}" Visibility="Collapsed"/>
-                    <MenuItem Header="Save _As..." Command="{Binding Path=SaveAsCommand}"/>
-                    <MenuItem Header="Export" >
-                        <MenuItem  Header="Export to CSV..." Command="{Binding Path=ExportToCsvCommand}" />
-                    </MenuItem>
-                    <Separator />
-                </MenuItem>
-                <MenuItem Header="_View">
-                    <MenuItem Header="Refresh" Command="{Binding Path=ReadCommand}" InputGestureText="F5" />
-                </MenuItem>
-            </Menu>
+            <TabControl Grid.Row="3">
+                
 
-            <ToolBar Grid.Row="0">
-                <Button Command="{Binding Path=OpenCommand}" ToolTip="Open a file...">
-                    <common:AutoGreyableImage Source="/ModbusTools.SimpleSlaveExplorer;component/Images/openHS.png" Width="16"/>
-                </Button>
-                <Button Command="{Binding Path=SaveAsCommand}" ToolTip="Save As...">
-                    <common:AutoGreyableImage Source="/ModbusTools.SimpleSlaveExplorer;component/Images/saveHS.png" Width="16" ></common:AutoGreyableImage>
-                </Button>
-                <Separator/>
-                <Button Command="{Binding Path=ExportToCsvCommand}" ToolTip="Export to CSV...">
-                    <common:AutoGreyableImage Source="/ModbusTools.SimpleSlaveExplorer;component/Images/Export.png" Width="16"></common:AutoGreyableImage>
-                </Button>
-            </ToolBar>
-
-            <TabControl Grid.Row="1">
-                <TabItem Header="Registers">
-
+                <TabItem Header="Holding Registers" DataContext="{Binding Path=HoldingRegisters}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Style="{StaticResource LabelStyle}">Modbus Slave Id</TextBlock>
-                            <xctk:IntegerUpDown Grid.Row="0" Minimum="0" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveAddress}"/>
-
-                            <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="0" Grid.Row="1">Starting Address</TextBlock>
-                            <xctk:IntegerUpDown Minimum="{Binding Path=StartingRegisterNumberMin}" Maximum="65536"  Grid.Column="1" Grid.Row="1" MinWidth="60" Value="{Binding Path=StartingRegisterNumber}" />
-
-                            <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="0">Block Size</TextBlock>
-                            <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="5" Grid.Row="0" MinWidth="60" Value="{Binding Path=BlockSize}" />
-
-                            <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="1">Number</TextBlock>
-                            <xctk:IntegerUpDown Minimum="1" Maximum="4000"  Grid.Column="5" Grid.Row="1" MinWidth="60" x:Name="NumberOfRegistersUpDown" Value="{Binding Path=NumberOfRegisters}" />
-
-                            <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="6" Grid.Row="0">Type</TextBlock>
-                            <ComboBox x:Name="RegisterTypeComboBox" DisplayMemberPath="Display" Grid.Column="7" Margin="2" ItemsSource="{Binding Path=RegisterTypes}" SelectedItem="{Binding Path=RegisterType}" />
-
-                            <Button Grid.Column="8" Margin="4" MinWidth="100" Command="{Binding Path=ReadCommand}">Read</Button>
-                            <Button Grid.Column="8" Grid.Row="1" Margin="4" MinWidth="100" Command="{Binding Path=WriteCommand}">Write</Button>
-
-
-                            <CheckBox Grid.Column="9" Margin="4" VerticalAlignment="Center" IsChecked="{Binding Path=IsAutoRefresh}" ToolTip="If checked, will only write the items that have been changed using individual write commands.">Auto Refresh</CheckBox>
-                            <xctk:DoubleUpDown Grid.Row="1" Grid.Column="9" Margin="4" VerticalAlignment="Center" Value="{Binding Path=AutoRefreshInterval}" Minimum="0"/>
-                            
-                            <CheckBox Grid.Column="10" VerticalAlignment="Center" IsChecked="{Binding Path=IsZeroBased}">Is Zero Based?</CheckBox>
-                            <CheckBox Grid.Column="10" Grid.Row="1" Margin="4" VerticalAlignment="Center" IsChecked="{Binding Path=WriteIndividually}" Content="Write Individually">
-                                <CheckBox.ToolTip>
-                                    <TextBlock>
-                            If checked, only items that have been changed will be written.  Otherwise, all items in the current range will be written.
-                                    </TextBlock>
-                                </CheckBox.ToolTip>
-                            </CheckBox>
-
-
-                        </Grid>
-
-                        <DataGrid Grid.Row="1" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Registers}" RowStyle="{StaticResource RowStyle}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" CanUserDeleteRows="False">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn IsReadOnly="True">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Image Source="/ModbusTools.SimpleSlaveExplorer;component/Images/126_Edit_16x16_72.png" Width="16">
-                                                <Image.Style>
-                                                    <Style TargetType="Image">
-                                                        <Setter Property="Visibility" Value="Hidden"></Setter>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Path=IsDirty}" Value="True">
-                                                                <Setter Property="Visibility" Value="Visible"></Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Image.Style>
-                                            </Image>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Register" Binding="{Binding Path=RegisterNumber}" IsReadOnly="True" CellStyle="{StaticResource RegisterDataGridCellStyle}" />
-                                <DataGridTextColumn Header="HEX" Binding="{Binding Path=Hex}" />
-                                <DataGridTextColumn Header="Decimal" Binding="{Binding Path=Value}" />
-                                <DataGridTextColumn Header="MSB" Binding="{Binding Path=MSB}" />
-                                <DataGridTextColumn Header="LSB" Binding="{Binding Path=LSB}" />
-                                <DataGridTextColumn Header="Binary" Binding="{Binding Path=Binary}" />
-                                <DataGridTextColumn Header="Signed" Binding="{Binding Path=Signed}" />
-                                <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <ContentControl Template="{StaticResource PointsHeaderTemplate}"/>
+                        <ContentControl Grid.Row="1" Template="{StaticResource RegistersGridTemplate}"/>
                     </Grid>
-                    
                 </TabItem>
+
+                <TabItem Header="Input Registers" DataContext="{Binding Path=InputRegisters}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <ContentControl Template="{StaticResource PointsHeaderTemplate}"/>
+                        <ContentControl Grid.Row="1" Template="{StaticResource RegistersGridTemplate}"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="Coils" DataContext="{Binding Path=Coils}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <ContentControl Template="{StaticResource PointsHeaderTemplate}"/>
+                        <ContentControl Grid.Row="1" Template="{StaticResource CoilsGridTemplate}"/>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Inputs" DataContext="{Binding Path=Inputs}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <ContentControl Template="{StaticResource PointsHeaderTemplate}"/>
+                        <ContentControl Grid.Row="1" Template="{StaticResource CoilsGridTemplate}"/>
+                    </Grid>
+                </TabItem>
+
                 <TabItem Header="Error Log">
                     <ListBox ItemsSource="{Binding Path=LogEntries}"/>
                 </TabItem>
@@ -180,7 +245,7 @@
 
            
 
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -193,7 +258,7 @@
 
                 <view:ModbusAdapterSelector Grid.Column="1" DataContext="{Binding Path=ModbusAdapters}" VerticalAlignment="Center" />
 
-                <TextBlock Grid.Column="3" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" ToolTip="Shows the number of successful reads when 'Auto Refresh' is enabled.">
+                <!--<TextBlock Grid.Column="3" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" ToolTip="Shows the number of successful reads when 'Auto Refresh' is enabled.">
                     <TextBlock Text=" Reads: "/>
                     <TextBlock Text="{Binding Path=ReadCount}"/>
                 </TextBlock>
@@ -201,9 +266,10 @@
                 <TextBlock Grid.Column="4" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" ToolTip="Shows the number of read failures when 'Auto Refresh' is enabled.">
                     <TextBlock Text=" Errors: "/>
                     <TextBlock Text="{Binding Path=ErrorCount}"/>
-                </TextBlock>
+                </TextBlock>-->
                 
             </Grid>
         </Grid>
     </Grid>
 </UserControl>
+

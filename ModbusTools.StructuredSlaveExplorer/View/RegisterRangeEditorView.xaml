@@ -12,9 +12,9 @@
         xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:behaviors="clr-namespace:ModbusTools.Common.Behaviors;assembly=ModbusTools.Common"
-        xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
         xmlns:viewModel1="clr-namespace:ModbusTools.StructuredSlaveExplorer.ViewModel"
         xmlns:model="clr-namespace:ModbusTools.StructuredSlaveExplorer.Model"
+        xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
         mc:Ignorable="d"
         x:Name="root"
         d:DataContext="{x:Static viewModel1:ViewModelLocator.RegisterRangeEditor}" Icon="/ModbusTools.StructuredSlaveExplorer;component/Images/resource_16xLG.png">

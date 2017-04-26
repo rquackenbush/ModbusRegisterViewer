@@ -8,8 +8,8 @@ namespace ModbusTools.SlaveSimulator.ViewModel
     {
         private readonly SparsePointSource<ushort> _source;
 
-        public SlaveRegisterViewModel(SparsePointSource<ushort> source, ushort registerIndex) 
-            : base(registerIndex)
+        public SlaveRegisterViewModel(SparsePointSource<ushort> source, ushort address) 
+            : base(address)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             _source = source;
@@ -17,10 +17,10 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 
         public override ushort Value
         {
-            get { return _source[RegisterIndex]; }
+            get { return _source[Address]; }
             set
             {
-                _source[RegisterIndex] = value;
+                _source[Address] = value;
                 OnValueUpdated();
             }
         }

@@ -19,6 +19,8 @@ namespace ModbusTools.Common.Model
         private readonly int _readTimeout;
         private readonly int _writeTimeout;
 
+        private static readonly IModbusFactory ModbusFactory = new ModbusFactory();
+
         public SerialMasterContextFactory(string portName, int baudRate = 19200, int dataBits = 8, Parity parity = Parity.Even, StopBits stopBits = StopBits.One, int readTimeout = DefaultReadTimeout, int writeTimeout = DefaultWriteTiemout)
             : this(readTimeout, writeTimeout)
         {
@@ -70,15 +72,33 @@ namespace ModbusTools.Common.Model
             return new SerialMasterContext(serialPort, _readTimeout, _writeTimeout);
         }
 
-        public IModbusSlaveNetwork CreateSlaveNetwork()
+        private IModbusRtuTransport CreateTransport()
         {
             SerialPort serialPort = CreateSerialPort();
 
             IStreamResource adapter = new SerialPortAdapter(serialPort);
 
-            IModbusFactory factory = new ModbusFactory();
+            IModbusRtuTransport transport = ModbusFactory.CreateRtuTransport(adapter);
 
-            return factory.CreateRtuSlaveNetwork(adapter);
+            transport.ReadTimeout = _readTimeout;
+            transport.WriteTimeout = _writeTimeout;
+            transport.Retries = 0;
+
+            return transport;
+        }
+
+        public IModbusSlaveNetwork CreateSlaveNetwork()
+        {
+            IModbusRtuTransport transport = CreateTransport();
+
+            return ModbusFactory.CreateSlaveNetwork(transport);
+        }
+
+        public IModbusMaster CreateMaster()
+        {
+            IModbusRtuTransport transport = CreateTransport();
+
+            return ModbusFactory.CreateMaster(transport);
         }
     }
 }

@@ -1,34 +1,19 @@
-﻿using System;
-using ModbusTools.Common.Model;
-using ModbusTools.Common.ViewModel;
+﻿using ModbusTools.Common.ViewModel;
 
 namespace ModbusTools.SimpleSlaveExplorer.ViewModel
 {
-    public class SlaveExplorerRegisterViewModel : RegisterViewModel
+    public class SlaveExplorerRegisterViewModel : RegisterViewModel, IPointViewModel<ushort>
     {
-        private readonly DescriptionStore _descriptionStore;
-
-        internal SlaveExplorerRegisterViewModel(ushort registerIndex, ushort value, DescriptionStore descriptionStore)
-         : base(registerIndex, value)
+        public void SetValue(ushort value)
         {
-            if (descriptionStore == null) throw new ArgumentNullException(nameof(descriptionStore));
-
-            _descriptionStore = descriptionStore;
+            Value = value;
+            IsDirty = false;
         }
 
-        public string Description
+        public void Initialize(ushort address, ushort value)
         {
-            get { return _descriptionStore[RegisterIndex]; }
-            set
-            {
-                _descriptionStore[RegisterIndex] = value;
-                RaisePropertyChanged(() => Description);
-            }
-        }
-
-        internal void RaiseDescriptionPropertyChanged()
-        {
-            RaisePropertyChanged(() => Description);
+            Address = address;
+            Value = value;
         }
     }
 }
