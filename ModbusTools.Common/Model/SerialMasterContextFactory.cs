@@ -72,13 +72,20 @@ namespace ModbusTools.Common.Model
             return new SerialMasterContext(serialPort, _readTimeout, _writeTimeout);
         }
 
-        private IModbusRtuTransport CreateTransport()
+        public IStreamResource CreateStreamResource()
         {
             SerialPort serialPort = CreateSerialPort();
 
             IStreamResource adapter = new SerialPortAdapter(serialPort);
 
-            IModbusRtuTransport transport = ModbusFactory.CreateRtuTransport(adapter);
+            return adapter;
+        }
+
+        private IModbusRtuTransport CreateTransport()
+        {
+            IStreamResource streamResource = CreateStreamResource();
+
+            IModbusRtuTransport transport = ModbusFactory.CreateRtuTransport(streamResource);
 
             transport.ReadTimeout = _readTimeout;
             transport.WriteTimeout = _writeTimeout;

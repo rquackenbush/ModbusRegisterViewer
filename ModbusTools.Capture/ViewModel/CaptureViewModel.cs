@@ -143,7 +143,7 @@ namespace ModbusTools.Capture.ViewModel
             //Save the filename
             _capturePath = dialog.FileName;
 
-            _captureHost = new CaptureHost(dialog.FileName, ModbusAdapters.GetFactory().Create());
+            _captureHost = new CaptureHost(dialog.FileName, ModbusAdapters.GetFactory().CreateStreamResource());
 
             _captureHost.SampleReceived += OnSampleReceived;
 
