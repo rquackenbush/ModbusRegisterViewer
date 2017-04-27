@@ -8,7 +8,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:scanner="clr-namespace:ModbusTools.Scanner"
              xmlns:view="clr-namespace:ModbusTools.Common.View;assembly=ModbusTools.Common"
-             xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
+             xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
              mc:Ignorable="d" 
              Background="LightGray"
              DataContext="{x:Static viewModel:ScannerViewModelLocator.Scanner}"

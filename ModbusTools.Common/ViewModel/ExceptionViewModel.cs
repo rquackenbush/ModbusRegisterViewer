@@ -11,7 +11,6 @@ namespace ModbusRegisterViewer.ViewModel
     {
         private string _title;
         private string _message;
-        //private string _details;
         private Visibility _visibility;
         private Exception _exception;
 
@@ -50,7 +49,7 @@ namespace ModbusRegisterViewer.ViewModel
 
             var content = new StringBuilder();
 
-            content.AppendLine(string.Format("Exception Type: {0}",  _exception.GetType().Name));
+            content.AppendLine($"Exception Type: {_exception.GetType().Name}");
             content.AppendLine();
             content.AppendLine("Message:");
             content.AppendLine(_exception.Message);

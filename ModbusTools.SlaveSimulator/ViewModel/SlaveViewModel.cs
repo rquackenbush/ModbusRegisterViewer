@@ -1,77 +1,118 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Threading;
 using ModbusTools.SlaveSimulator.Model;
-using ModbusTools.SlaveSimulator.Model.FunctionHandlers;
+using NModbus;
 
 namespace ModbusTools.SlaveSimulator.ViewModel
 {
     public class SlaveViewModel : ViewModelBase
     {
-        private readonly SparseRegisterStorage _holdingRegisterStorage = new SparseRegisterStorage();
-        private readonly SparseRegisterStorage _inputRegisterStorage = new SparseRegisterStorage();
+        private byte _slaveId;
 
-        private readonly RegisterStorageNotifier _holdingRegisterNotifier;
-        private readonly RegisterStorageNotifier _inputRegisterNotifier;
+        private readonly SlaveStorage _slaveStorage = new SlaveStorage();
 
         private readonly ObservableCollection<SlaveRegisterViewModel> _holdingRegisters = new ObservableCollection<SlaveRegisterViewModel>();
         private readonly ObservableCollection<SlaveRegisterViewModel> _inputRegisters = new ObservableCollection<SlaveRegisterViewModel>();
+        private readonly ObservableCollection<CoilViewModel> _coilDiscretes = new ObservableCollection<CoilViewModel>();
+        private readonly ObservableCollection<CoilViewModel> _coilInputs = new ObservableCollection<CoilViewModel>();
 
         public readonly ObservableCollection<ActivityViewModel> _activities = new ObservableCollection<ActivityViewModel>();
 
         public SlaveViewModel()
         {
-            //Set up the holding registers
-            _holdingRegisterNotifier = new RegisterStorageNotifier(_holdingRegisterStorage);
+            _slaveStorage.HoldingRegisters.StorageOperationOccurred += HoldingRegisterOperation;
+            _slaveStorage.InputRegisters.StorageOperationOccurred += InputRegisterOperation;
+            _slaveStorage.CoilDiscretes.StorageOperationOccurred += CoilDiscreteOperation;
+            _slaveStorage.CoilInputs.StorageOperationOccurred += CoilInputOperation;
 
-            _holdingRegisterNotifier.DataWasRead += HoldingRegister_DataWasRead;
-            _holdingRegisterNotifier.DataWasWritten += HoldingRegister_DataWasWritten;
-
-            //Set up the input registers
-            _inputRegisterNotifier = new RegisterStorageNotifier(_inputRegisterStorage);
-
-            _inputRegisterNotifier.DataWasRead += InputRegister_DataWasRead;
-
-
-            for (ushort registerIndex = 0; registerIndex < ushort.MaxValue; registerIndex++)
+            for (ushort pointIndex = 0; pointIndex < ushort.MaxValue; pointIndex++)
             {
-                _holdingRegisters.Add(new SlaveRegisterViewModel(_holdingRegisterStorage, registerIndex) {IsZeroBased = IsZeroBased});
+                _holdingRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.HoldingRegisters, pointIndex));
+                _inputRegisters.Add(new SlaveRegisterViewModel(_slaveStorage.InputRegisters, pointIndex));
+                _coilDiscretes.Add(new CoilViewModel(_slaveStorage.CoilDiscretes, pointIndex));
+                _coilInputs.Add(new CoilViewModel(_slaveStorage.CoilInputs, pointIndex));
             }
-
-            for (ushort registerIndex = 0; registerIndex < ushort.MaxValue; registerIndex++)
-            {
-                _inputRegisters.Add(new SlaveRegisterViewModel(_inputRegisterStorage, registerIndex) {IsZeroBased = IsZeroBased});
-            }
+           
         }
 
-        private void InputRegister_DataWasRead(object sender, RegisterStorageEventArgs e)
+        private void AddActivity(string pointType, PointOperation operation, ushort startingAddress, ushort[] values)
         {
-            var activity = new RegisterActivityViewModel(DateTime.Now, "Input Register Read", e.StartingAddress, e.Values, false);
+            var hexNumbers = values
+                .Select(r => Convert.ToString(r, 16).PadLeft(4, '0'))
+                .ToArray();
+
+            AddActivity($"{operation} {pointType}", startingAddress, hexNumbers);
+        }
+
+        private void AddActivity(string pointType, PointOperation operation, ushort startingAddress, bool[] values)
+        {
+            var individualValues = values
+                .Select(r => r ? "1" : "0")
+                .ToArray();
+
+            AddActivity($"{operation} {pointType}", startingAddress, individualValues);
+        }
+
+        private void AddActivity(string operation, ushort startingAddress, string[] values)
+        {
+            var activity = new ActivityViewModel(DateTime.Now, operation, startingAddress, values);
 
             DispatcherHelper.CheckBeginInvokeOnUI(() => Activities.Add(activity));
         }
 
-        void HoldingRegister_DataWasWritten(object sender, RegisterStorageEventArgs e)
+        void HoldingRegisterOperation(object sender, StorageEventArgs<ushort> e)
         {
-            var activity = new RegisterActivityViewModel(DateTime.Now, "Holding Register Write", e.StartingAddress, e.Values, false);
+            AddActivity("Holding Register", e.Operation, e.StartingAddress, e.Points);
 
-            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            if (e.Operation == PointOperation.Write)
             {
-                Activities.Add(activity);
-
-                for (int index = 0; index < e.Values.Length; index++)
+                for (int index = 0; index < e.Points.Length; index++)
                 {
-                    HoldingRegisters[index + e.StartingAddress].OnValueChanged();
+                    _holdingRegisters[index + e.StartingAddress].OnValueChanged();
                 }
-            });
+            }
         }
 
-        void HoldingRegister_DataWasRead(object sender, RegisterStorageEventArgs e)
+        void InputRegisterOperation(object sender, StorageEventArgs<ushort> e)
         {
-            var activity = new RegisterActivityViewModel(DateTime.Now, "Holding Register Read", e.StartingAddress, e.Values, false);
+            AddActivity("Input Register", e.Operation, e.StartingAddress, e.Points);
 
-            DispatcherHelper.CheckBeginInvokeOnUI(() => Activities.Add(activity));
+            if (e.Operation == PointOperation.Write)
+            {
+                for (int index = 0; index < e.Points.Length; index++)
+                {
+                    _inputRegisters[index + e.StartingAddress].OnValueChanged();
+                }
+            }
+        }
+
+        void CoilDiscreteOperation(object sender, StorageEventArgs<bool> e)
+        {
+            AddActivity("Discrete Coil", e.Operation, e.StartingAddress, e.Points);
+
+            if (e.Operation == PointOperation.Write)
+            {
+                for (int index = 0; index < e.Points.Length; index++)
+                {
+                    _coilDiscretes[index + e.StartingAddress].OnValueChanged();
+                }
+            }
+        }
+
+        void CoilInputOperation(object sender, StorageEventArgs<bool> e)
+        {
+            AddActivity("Discrete Input", e.Operation, e.StartingAddress, e.Points);
+
+            if (e.Operation == PointOperation.Write)
+            {
+                for (int index = 0; index < e.Points.Length; index++)
+                {
+                    _coilInputs[index + e.StartingAddress].OnValueChanged();
+                }
+            }
         }
 
         public ObservableCollection<ActivityViewModel> Activities
@@ -88,8 +129,7 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         {
             get { return 247; }
         }
-
-        private byte _slaveId;
+        
         public byte SlaveId
         {
             get { return _slaveId; }
@@ -97,32 +137,6 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             {
                 _slaveId = value; 
                 RaisePropertyChanged();
-            }
-        }
-
-        private bool _isZeroBased;
-        public bool IsZeroBased
-        {
-            get { return _isZeroBased; }
-            set
-            {
-                _isZeroBased = value;
-                RaisePropertyChanged();
-
-                foreach (var register in HoldingRegisters)
-                {
-                    register.IsZeroBased = value;
-                }
-
-                foreach (var register in InputRegisters)
-                {
-                    register.IsZeroBased = value;
-                }
-
-                foreach (var activity in Activities)
-                {
-                    activity.IsZeroBased = value;
-                }               
             }
         }
 
@@ -136,15 +150,23 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             get { return _inputRegisters; }
         }
 
-        public ISlave GetSlave()
+        public ObservableCollection<CoilViewModel> CoilDiscretes
         {
-            return new Slave(SlaveId,
-                new IModbusFunctionHandler[]
-                {
-                    new ReadHoldingRegistersFunctionHandler(_holdingRegisterNotifier), 
-                    new WriteHoldingRegistersFunctionHandler(_holdingRegisterNotifier), 
-                    new ReadInputRegistersFunctionHandler(_inputRegisterNotifier)
-                });
+            get { return _coilDiscretes; }
+        }
+
+        public ObservableCollection<CoilViewModel> CoilInputs
+        {
+            get { return _coilInputs; }
+        }
+
+        public IModbusSlave CreateModbusSlave()
+        {
+            var factory = new ModbusFactory();
+
+            //Attach our custom storage
+            return factory.CreateSlave(SlaveId, _slaveStorage);
         }
     }
 }
+

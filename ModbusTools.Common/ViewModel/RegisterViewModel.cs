@@ -6,42 +6,35 @@ namespace ModbusTools.Common.ViewModel
 {
     public class RegisterViewModel : ViewModelBase 
     {
-        private readonly ushort _registerIndex;
         private ushort _value;
         private bool _isDirty;
+        private ushort _address;
 
-        public RegisterViewModel(ushort registerIndex)
+        public RegisterViewModel()
         {
-            _registerIndex = registerIndex;
+        }
+
+        public RegisterViewModel(ushort address)
+        {
+            Address = address;
         }
         
-        public RegisterViewModel(ushort registerIndex, ushort value) 
-            : this(registerIndex)
+        public RegisterViewModel(ushort address, ushort value) 
+            : this(address)
         {
             _value = value;
         }
 
-        /// <summary>
-        /// Gets the 0 based index of the register.
-        /// </summary>
-        public ushort RegisterIndex
+        public ushort Address
         {
-            get { return _registerIndex; }
-        }
-
-        /// <summary>
-        /// Gets the 0 or 1 based register number based on preferences.
-        /// </summary>
-        public int RegisterNumber
-        {
-            get
+            get { return _address; }
+            set
             {
-                if (IsZeroBased)
-                    return _registerIndex;
-
-                return _registerIndex + 1;
+                _address = value; 
+                RaisePropertyChanged();
             }
         }
+
 
         public virtual ushort Value
         {
@@ -92,7 +85,7 @@ namespace ModbusTools.Common.ViewModel
 
         public string Hex
         {
-            get { return string.Format("0x{0:x4}", Value); }
+            get { return $"0x{Value:x4}"; }
             set
             {
                 ushort converted;
@@ -152,18 +145,7 @@ namespace ModbusTools.Common.ViewModel
             }
         }
 
-        private bool _isZeroBased;
-        public bool IsZeroBased
-        {
-            get { return _isZeroBased; }
-            set
-            {
-                _isZeroBased = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => RegisterNumber);
-            }
-        }
-
+       
        
     }
 }

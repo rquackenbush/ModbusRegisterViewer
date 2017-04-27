@@ -1,5 +1,5 @@
 ﻿using System;
-using Modbus.Device;
+using NModbus;
 
 namespace ModbusTools.Common
 {

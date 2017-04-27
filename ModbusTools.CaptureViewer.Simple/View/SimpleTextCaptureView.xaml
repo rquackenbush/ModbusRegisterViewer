@@ -4,7 +4,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         xmlns:viewModel="clr-namespace:ModbusTools.CaptureViewer.Simple.ViewModel"
-        xmlns:converters="clr-namespace:ModbusTools.Common.Converters;assembly=ModbusTools.Common"
+        xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
         DataContext="{x:Static viewModel:Locator.Main}"
         >
 

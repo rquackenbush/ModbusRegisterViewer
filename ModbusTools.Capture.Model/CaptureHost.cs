@@ -23,20 +23,22 @@ namespace ModbusTools.Capture.Model
                 {
                     using (var writer = new CaptureFileWriter(path))
                     {
-                        //Get the port
-                        var port = masterContext.Master.Transport.GetStreamResource();
+                        //TODO: Migrate
 
-                        using (_listener = new PromiscuousListener(port))
-                        {
-                            _listener.Sample += (sender, args) =>
-                            {
-                                writer.WriteSample(args.Sample);
+                        ////Get the port
+                        //var port = masterContext.Master.Transport.GetStreamResource();
 
-                                OnSampleReceived();
-                            };
+                        //using (_listener = new PromiscuousListener(port))
+                        //{
+                        //    _listener.Sample += (sender, args) =>
+                        //    {
+                        //        writer.WriteSample(args.Sample);
 
-                            _listener.Listen();
-                        }
+                        //        OnSampleReceived();
+                        //    };
+
+                        //    _listener.Listen();
+                        //}
                     }
                 }
                 catch (Exception ex)

@@ -1,9 +1,11 @@
-﻿namespace ModbusTools.Common
-{
-    public interface IModbusAdapterFactory
-    {
-        string DisplayName { get; }
+﻿//using NModbus;
 
-        IMasterContextFactory CreateMasterContext();
-    }
-}
+//namespace ModbusTools.Common
+//{
+//    public interface IModbusAdapterFactory
+//    {
+//        string DisplayName { get; }
+
+//        IMasterContextFactory CreateMasterContext();
+//    }
+//}

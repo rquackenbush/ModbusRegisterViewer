@@ -50,9 +50,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="NModbus4, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NModbus4.2.1.0\lib\net40\NModbus4.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NModbus, Version=3.0.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NModbus.3.0.15\lib\net45\NModbus.dll</HintPath>
+    </Reference>
+    <Reference Include="NModbus.Serial, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NModbus.Serial.3.0.15\lib\net45\NModbus.Serial.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -97,6 +99,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\PointOperation.cs" />
+    <Compile Include="Model\SlaveStorage.cs" />
+    <Compile Include="Model\SparsePointSource.cs" />
+    <Compile Include="Model\StorageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -111,8 +117,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModel\ActivityViewModel.cs" />
+    <Compile Include="ViewModel\CoilViewModel.cs" />
     <Compile Include="ViewModel\Locator.cs" />
-    <Compile Include="ViewModel\RegisterActivityViewModel.cs" />
     <Compile Include="ViewModel\SlaveEvent.cs" />
     <Compile Include="ViewModel\SlaveRegisterViewModel.cs" />
     <Compile Include="ViewModel\SlaveSimulatorViewModel.cs" />
@@ -139,10 +145,6 @@
     <ProjectReference Include="..\ModbusTools.Common\ModbusTools.Common.csproj">
       <Project>{12696174-c514-4e69-abda-0e926a52ba57}</Project>
       <Name>ModbusTools.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj">
-      <Project>{292371a9-2553-4fc2-8763-a496ab143ce7}</Project>
-      <Name>ModbusTools.SlaveSimulator.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

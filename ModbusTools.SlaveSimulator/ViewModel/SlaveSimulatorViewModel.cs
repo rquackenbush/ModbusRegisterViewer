@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using ModbusTools.Common;
 using ModbusTools.Common.ViewModel;
-using ModbusTools.SlaveSimulator.Model;
+using NModbus;
 
 namespace ModbusTools.SlaveSimulator.ViewModel
 {
     public class SlaveSimulatorViewModel : ViewModelBase
     {
-        public event EventHandler<SlaveEvent> SlaveCreated;
-
         private readonly ModbusAdaptersViewModel _modbusAdapters = new ModbusAdaptersViewModel();
         private readonly ObservableCollection<SlaveViewModel> _slaves = new ObservableCollection<SlaveViewModel>();
 
-        private SlaveSimulatorHost _simulator;
+        private IModbusSlaveNetwork _slaveNetwork;
+
+        //We have to hold a reference to the running listen task or it will get garbage collected.
+        private Task _listenTask;
         
         public SlaveSimulatorViewModel()
         {
@@ -27,9 +30,9 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             AddSlave();
         }
 
-        public ICommand StartCommand { get; private set; }
-        public ICommand StopCommand { get; private set; }
-        public ICommand AddSlaveCommand { get; private set; }
+        public ICommand StartCommand { get; }
+        public ICommand StopCommand { get; }
+        public ICommand AddSlaveCommand { get; }
 
         private void AddSlave()
         {
@@ -49,34 +52,56 @@ namespace ModbusTools.SlaveSimulator.ViewModel
                 SlaveId = slaveId
             };
 
-            //Let the world know that we have a new slave! Wait...
-            RaiseSlaveCreated(slave);
-
             //Add it
             _slaves.Add(slave);
         }
 
         private bool CanAddSlave()
         {
-            return _simulator == null;
-        }
-
-        private void RaiseSlaveCreated(SlaveViewModel slave)
-        {
-            SlaveCreated?.Invoke(this, new SlaveEvent(slave));
+            //We can only add a slave when we're NOT running
+            return _slaveNetwork == null;
         }
 
         private void Start()
         {
-            var factory = _modbusAdapters.GetFactory();
+            IMasterContextFactory factory = _modbusAdapters.GetFactory();
 
-            _simulator = new SlaveSimulatorHost(factory.Create(), _slaves.Select(s => s.GetSlave())
-            , 1.5, 4.0);
+            _slaveNetwork = factory.CreateSlaveNetwork();
+
+            foreach (var slave in _slaves)
+            {
+                _slaveNetwork.AddSlave(slave.CreateModbusSlave());
+            }
+
+            _listenTask = Task.Factory.StartNew(async () => 
+            {
+                while (_slaveNetwork != null)
+                {
+                    try
+                    {
+                        var slaveNetwork = _slaveNetwork;
+
+                        if (slaveNetwork != null)
+                        {
+                            await slaveNetwork.ListenAsync();
+                        }
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        return;
+                    }
+                    catch (Exception)
+                    {
+                        //TODO: Log this
+
+                    }
+                }
+            }, TaskCreationOptions.LongRunning);
         }
 
         public bool CanCloseSlave()
         {
-            return _simulator == null;
+            return _slaveNetwork == null;
         }
 
         public void OnSlaveClosed(SlaveViewModel slave)
@@ -89,7 +114,7 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 
         private bool CanStart()
         {
-            if (_simulator != null)
+            if (_slaveNetwork != null)
                 return false;
 
             if (!_modbusAdapters.IsItemSelected)
@@ -103,17 +128,19 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 
         private void Stop()
         {
-            if (_simulator != null)
+            if (_slaveNetwork != null)
             {
-                _simulator.Dispose();
+                _slaveNetwork.Dispose();
 
-                _simulator = null;
+                _slaveNetwork = null;
             }
+
+            _listenTask = null;
         }
 
         private bool CanStop()
         {
-            return _simulator != null;
+            return _slaveNetwork != null;
         }
 
         public ModbusAdaptersViewModel ModbusAdapters

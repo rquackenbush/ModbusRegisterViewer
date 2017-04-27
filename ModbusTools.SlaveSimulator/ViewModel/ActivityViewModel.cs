@@ -3,17 +3,19 @@ using GalaSoft.MvvmLight;
 
 namespace ModbusTools.SlaveSimulator.ViewModel
 {
-    public abstract class ActivityViewModel : ViewModelBase
+    public class ActivityViewModel : ViewModelBase
     {
         private readonly DateTime _timestamp;
         private readonly string _operation;
-        private readonly int? _startingIndex;
+        private readonly ushort? _startingIndex;
+        private readonly string[] _values;
 
-        protected ActivityViewModel(DateTime timestamp, string operation, int? startingIndex = null, bool isZeroBased = false)
+        public ActivityViewModel(DateTime timestamp, string operation, ushort? startingIndex = null, string[] values = null)
         {
             _timestamp = timestamp;
             _operation = operation;
             _startingIndex = startingIndex;
+            _values = values;
         }
 
         public string Operation
@@ -26,67 +28,25 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             get { return _timestamp; }
         }
 
-        public int? StartingAddress
+        public ushort? StartingAddress
+        {
+            get { return _startingIndex; }
+        }
+
+        public int? Count
         {
             get
             {
-                if (_startingIndex == null)
+                if (_values == null)
                     return null;
 
-                if (IsZeroBased)
-                    return _startingIndex;
-
-                return _startingIndex + 1;
+                return _values.Length;
             }
         }
 
-        public virtual int? Count
+        public string Values
         {
-            get { return null; }
+            get { return string.Join(" ", _values); }
         }
-
-        public abstract string Summary { get; }
-
-        private bool _isZeroBased;
-        public bool IsZeroBased
-        {
-            get { return _isZeroBased; }
-            set
-            {
-                _isZeroBased = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => StartingAddress);
-            }
-        }
-    }
-
-    public abstract class ActivityViewModel<TData> : ActivityViewModel
-        where TData : struct
-    {
-        
-        private readonly TData[] _data;
-
-        protected ActivityViewModel(DateTime timestamp, string operation,  int startingIndex, TData[] data, bool isZeroBased)
-            : base(timestamp, operation, startingIndex, isZeroBased)
-        {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-
-            _data = data;
-        }
-
-        public TData[] Data
-        {
-            get { return _data; }
-        }
-
-        public override int? Count
-        {
-            get { return _data.Length; }
-        }
-
-        
-
-        
     }
 }

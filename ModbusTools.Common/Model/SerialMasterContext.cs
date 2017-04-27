@@ -1,13 +1,28 @@
 ﻿using System;
 using System.IO.Ports;
-using Modbus.Device;
+using NModbus;
+using NModbus;
+using NModbus.Serial;
 
 namespace ModbusTools.Common.Model
 {
     internal class SerialMasterContext : IMasterContext
     {
         private SerialPort _serialPort;
-        private ModbusSerialMaster _master;
+        private IModbusSerialMaster _master;
+
+        internal SerialMasterContext(SerialPort serialPort, int readTimeout, int writeTimeout)
+        {
+            var factory = new ModbusFactory();
+
+            var adapter = new SerialPortAdapter(serialPort);
+
+            _serialPort = serialPort;
+            _master = factory.CreateRtuMaster(adapter);
+            _master.Transport.ReadTimeout = readTimeout;
+            _master.Transport.WriteTimeout = writeTimeout;
+            _master.Transport.Retries = 0;
+        }
 
         public IModbusMaster Master
         {
@@ -19,16 +34,7 @@ namespace ModbusTools.Common.Model
                 return _master;
             }
         }
-
-        internal SerialMasterContext(SerialPort serialPort, int readTimeout, int writeTimeout)
-        {
-            _serialPort = serialPort;
-            _master = ModbusSerialMaster.CreateRtu(_serialPort);
-            _master.Transport.ReadTimeout = readTimeout;
-            _master.Transport.WriteTimeout = writeTimeout;
-            _master.Transport.Retries = 0;
-        }
-
+        
         public void Dispose()
         {
             if (_serialPort != null)

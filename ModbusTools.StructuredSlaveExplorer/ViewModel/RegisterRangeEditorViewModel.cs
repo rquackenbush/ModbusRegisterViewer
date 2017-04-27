@@ -310,24 +310,8 @@ namespace ModbusTools.StructuredSlaveExplorer.ViewModel
 
         public ushort StartingRegisterNumber
         {
-            get
-            {
-                if (IsZeroBased)
-                    return StartingRegisterIndex;
-
-                return (ushort)(StartingRegisterIndex + 1);
-            }
-            set
-            {
-                if (IsZeroBased)
-                {
-                    StartingRegisterIndex = value;
-                }
-                else
-                {
-                    StartingRegisterIndex = (ushort)(value - 1);
-                }
-            }
+            get { return StartingRegisterIndex; }
+            set { StartingRegisterIndex = value; }
         }
 
         public ushort StartingRegisterIndex
@@ -368,13 +352,7 @@ namespace ModbusTools.StructuredSlaveExplorer.ViewModel
 
         public ushort StartingRegisterNumberMin
         {
-            get
-            {
-                if (IsZeroBased)
-                    return 0;
-
-                return 1;
-            }
+            get { return 0; }
         }
 
         public byte BlockSize
@@ -387,18 +365,6 @@ namespace ModbusTools.StructuredSlaveExplorer.ViewModel
             }
         }
         
-        public bool IsZeroBased
-        {
-            get { return _isZeroBased; }
-            set
-            {
-                _isZeroBased = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => StartingRegisterNumber);
-                RaisePropertyChanged(() => StartingRegisterNumberMin);
-            }
-        }
-
         public ObservableCollection<FieldEditorViewModel> Fields
         {
             get { return _fields; }

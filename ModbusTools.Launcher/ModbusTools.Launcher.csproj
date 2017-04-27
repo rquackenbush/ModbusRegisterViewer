@@ -182,10 +182,6 @@
       <Project>{ec75ebe4-ff4f-4fbd-b7cd-a35890e45b6e}</Project>
       <Name>ModbusTools.StructuredSlaveExplorer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ModbusTools.SlaveSimulator.Model\ModbusTools.SlaveSimulator.Model.csproj">
-      <Project>{292371a9-2553-4fc2-8763-a496ab143ce7}</Project>
-      <Name>ModbusTools.SlaveSimulator.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ModbusTools.SlaveSimulator\ModbusTools.SlaveSimulator.csproj">
       <Project>{4563f1da-9e71-4c2e-a6a3-67aa57414afa}</Project>
       <Name>ModbusTools.SlaveSimulator</Name>

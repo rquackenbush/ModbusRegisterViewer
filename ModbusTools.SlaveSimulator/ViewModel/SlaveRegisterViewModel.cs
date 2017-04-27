@@ -6,21 +6,21 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 {
     public class SlaveRegisterViewModel : RegisterViewModel
     {
-        private readonly IRegisterStorage _registerStorage;
+        private readonly SparsePointSource<ushort> _source;
 
-        public SlaveRegisterViewModel(IRegisterStorage registerStorage, ushort registerIndex) 
-            : base(registerIndex)
+        public SlaveRegisterViewModel(SparsePointSource<ushort> source, ushort address) 
+            : base(address)
         {
-            if (registerStorage == null) throw new ArgumentNullException(nameof(registerStorage));
-            _registerStorage = registerStorage;
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            _source = source;
         }
 
         public override ushort Value
         {
-            get { return _registerStorage.ReadSingle(RegisterIndex); }
+            get { return _source[Address]; }
             set
             {
-                _registerStorage.WriteSingle(RegisterIndex, value);
+                _source[Address] = value;
                 OnValueUpdated();
             }
         }

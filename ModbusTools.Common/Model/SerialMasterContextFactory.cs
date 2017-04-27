@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO.Ports;
+using NModbus;
+using NModbus.IO;
+using NModbus.Serial;
 
 namespace ModbusTools.Common.Model
 {
@@ -15,6 +18,8 @@ namespace ModbusTools.Common.Model
         private readonly StopBits _stopBits;
         private readonly int _readTimeout;
         private readonly int _writeTimeout;
+
+        private static readonly IModbusFactory ModbusFactory = new ModbusFactory();
 
         public SerialMasterContextFactory(string portName, int baudRate = 19200, int dataBits = 8, Parity parity = Parity.Even, StopBits stopBits = StopBits.One, int readTimeout = DefaultReadTimeout, int writeTimeout = DefaultWriteTiemout)
             : this(readTimeout, writeTimeout)
@@ -43,7 +48,7 @@ namespace ModbusTools.Common.Model
             _writeTimeout = writeTimeout;
         }
 
-        public IMasterContext Create()
+        private SerialPort CreateSerialPort()
         {
             SerialPort serialPort;
 
@@ -57,7 +62,43 @@ namespace ModbusTools.Common.Model
                 serialPort.Open();
             }
 
+            return serialPort;
+        }
+
+        public IMasterContext Create()
+        {
+            SerialPort serialPort = CreateSerialPort();
+
             return new SerialMasterContext(serialPort, _readTimeout, _writeTimeout);
+        }
+
+        private IModbusRtuTransport CreateTransport()
+        {
+            SerialPort serialPort = CreateSerialPort();
+
+            IStreamResource adapter = new SerialPortAdapter(serialPort);
+
+            IModbusRtuTransport transport = ModbusFactory.CreateRtuTransport(adapter);
+
+            transport.ReadTimeout = _readTimeout;
+            transport.WriteTimeout = _writeTimeout;
+            transport.Retries = 0;
+
+            return transport;
+        }
+
+        public IModbusSlaveNetwork CreateSlaveNetwork()
+        {
+            IModbusRtuTransport transport = CreateTransport();
+
+            return ModbusFactory.CreateSlaveNetwork(transport);
+        }
+
+        public IModbusMaster CreateMaster()
+        {
+            IModbusRtuTransport transport = CreateTransport();
+
+            return ModbusFactory.CreateMaster(transport);
         }
     }
 }

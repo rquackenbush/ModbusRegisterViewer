@@ -1,6 +1,7 @@
 ﻿using System;
+using Cas.Common.WPF.Interfaces;
 
-namespace ModbusTools.Common.Services
+namespace ModbusTools.Common
 {
     public static class IMessageBoxServiceExtensions
     {

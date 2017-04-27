@@ -1,4 +1,4 @@
-﻿using Modbus.IO;
+﻿using NModbus.IO;
 
 namespace ModbusTools.Common
 {
