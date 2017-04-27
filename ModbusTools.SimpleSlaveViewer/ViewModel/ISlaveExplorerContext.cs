@@ -11,5 +11,9 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
         IModbusAdapterProvider ModbusAdapterProvider { get; }
 
         IMessageBoxService MessageBoxService { get; }
+
+        void StartPolling(IPoints points);
+
+        bool IsPolling { get; }
     }
 }

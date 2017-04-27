@@ -10,7 +10,7 @@ using NModbus;
 
 namespace ModbusTools.SimpleSlaveExplorer.ViewModel
 {
-    public abstract class PointsViewModelBase<TPointViewModel, TPointValue> : ViewModelBase
+    public abstract class PointsViewModelBase<TPointViewModel, TPointValue> : ViewModelBase, IPoints
         where TPointViewModel : class, IPointViewModel<TPointValue>, new()
     {
         private const byte DefaultBlockSize = 125;
@@ -29,6 +29,7 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
 
             ReadCommand = new RelayCommand(Read, CanRead);
             WriteCommand = new RelayCommand(Write, CanWrite);
+            PollCommand = new RelayCommand(Poll, CanPoll);
 
             NumberOfPoints = 10;
         }
@@ -37,21 +38,33 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
 
         public ICommand WriteCommand { get; }
 
+        public ICommand PollCommand { get; }
+
+        private void ReadCore()
+        {
+            IMasterContextFactory factory = _context.ModbusAdapterProvider.GetFactory();
+
+            using (IModbusMaster master = factory.CreateMaster())
+            {
+                TPointValue[] values = ReadCore(master, _context.SlaveId, StartAddress, NumberOfPoints);
+
+                for (int index = 0; index < values.Length; index++)
+                {
+                    Points[index].SetValue(values[index]);
+                }
+            }
+        }
+
+        void IPoints.Read()
+        {
+            ReadCore();
+        }
+
         private void Read()
         {
             try
             {
-                IMasterContextFactory factory = _context.ModbusAdapterProvider.GetFactory();
-
-                using (IModbusMaster master = factory.CreateMaster())
-                {
-                    TPointValue[] values = ReadCore(master, _context.SlaveId, StartAddress, NumberOfPoints);
-
-                    for (int index = 0; index < values.Length; index++)
-                    {
-                        Points[index].SetValue(values[index]);
-                    }
-                }
+                ReadCore();
             }
             catch (Exception ex)
             {
@@ -96,6 +109,18 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
             }
         }
 
+        private void Poll()
+        {
+            _context.StartPolling(this);
+        }
+
+        private bool CanPoll()
+        {
+            return 
+                CanRead() && 
+                !_context.IsPolling;
+        }
+
         private bool CanWrite()
         {
             return 
@@ -111,16 +136,21 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
                 && NumberOfPoints > 0;
         }
 
+        /// <summary>
+        /// Creates the point view models for the given number of points. Attempts to reuse existing instances where possible.
+        /// </summary>
         private void FillInPoints()
         {
             Dictionary<ushort, TPointViewModel> existingValues;
 
             if (_points == null)
             {
+                //There are no existing values, so just create a new dictionary
                 existingValues = new Dictionary<ushort, TPointViewModel>();
             }
             else
             {
+                //There are existing values - use them to create a dictionary of values to reuse.
                 existingValues = _points.ToDictionary(r => r.Address, r => r);
             }
 
@@ -157,7 +187,6 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
             }
         }
 
-
         public ushort StartAddress
         {
             get { return _startAddress; }
@@ -189,7 +218,4 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
             }
         }
     }
-
-    
-    
 }

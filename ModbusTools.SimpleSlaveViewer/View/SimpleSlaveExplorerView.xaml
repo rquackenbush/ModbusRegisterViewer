@@ -96,9 +96,9 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
-                                
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelStyle}">Starting Address</TextBlock>
@@ -110,9 +110,10 @@
                             <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource ReadButtonStyle}"/>
                             <Button Grid.Row="1" Grid.Column="2"  Style="{StaticResource WriteButtonStyle}"/>
 
-                            <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="4" Grid.Row="0"                                                Visibility="{Binding Path=SupportsBlockSize, Converter={StaticResource HiddenWhenFalseConverter}}">Block Size</TextBlock>
-                            <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="5" Grid.Row="0" MinWidth="60" Value="{Binding Path=BlockSize}" Visibility="{Binding Path=SupportsBlockSize, Converter={StaticResource HiddenWhenFalseConverter}}"/>
+                            <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource ButtonBase}" Command="{Binding Path=PollCommand}">Poll</Button>
 
+                            <TextBlock Style="{StaticResource LabelStyle}" Grid.Column="6" Grid.Row="0"                                                          Visibility="{Binding Path=SupportsBlockSize, Converter={StaticResource HiddenWhenFalseConverter}}">Block Size</TextBlock>
+                            <xctk:IntegerUpDown Minimum="1" Maximum="150"  Grid.Column="7" Grid.Row="0" MinWidth="60" Value="{Binding Path=BlockSize}" Visibility="{Binding Path=SupportsBlockSize, Converter={StaticResource HiddenWhenFalseConverter}}" ToolTip="Can be used to break large register ranges into smaller blocks of reads / writes."/>
                         </Grid>
                     </ControlTemplate>
                     
@@ -143,20 +144,12 @@
         
         <Grid.Resources>
             
-            <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}">  
-            </Style>
-
-            <Style TargetType="Button" BasedOn="{StaticResource BaseStyle}">
-            </Style>
-
-            <Style TargetType="ComboBox" BasedOn="{StaticResource BaseStyle}">
-            </Style>
-
-            <Style TargetType="xctk:IntegerUpDown" BasedOn="{StaticResource BaseStyle}">
-            </Style>
-
-            <Style TargetType="xctk:ByteUpDown" BasedOn="{StaticResource BaseStyle}">
-            </Style>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}"/>
+            <Style TargetType="Button" BasedOn="{StaticResource BaseStyle}"/>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource BaseStyle}"/>
+            <Style TargetType="xctk:IntegerUpDown" BasedOn="{StaticResource BaseStyle}"/>
+            <Style TargetType="xctk:DoubleUpDown" BasedOn="{StaticResource BaseStyle}"/>
+            <Style TargetType="xctk:ByteUpDown" BasedOn="{StaticResource BaseStyle}"/>
         </Grid.Resources>
         
         <Grid Grid.ColumnSpan="2">
@@ -177,13 +170,19 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Style="{StaticResource LabelStyle}">Modbus Slave Id</TextBlock>
-                <xctk:ByteUpDown Grid.Row="0" Minimum="0" Maximum="247"  Grid.Column="1" MinWidth="60" Value="{Binding Path=SlaveAddress}"/>
+                <TextBlock         Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelStyle}">Modbus Slave Id</TextBlock>
+                <xctk:ByteUpDown   Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="247" MinWidth="60" Value="{Binding Path=SlaveAddress}"/>
 
+                <TextBlock         Grid.Row="0" Grid.Column="3" Style="{StaticResource LabelStyle}">Polling Interval</TextBlock>
+                <xctk:DoubleUpDown Grid.Row="0" Grid.Column="4" Minimum="0" Maximum="247"  MinWidth="60" Value="{Binding Path=PollingInterval}"/>
+
+                <Button            Grid.Row="0" Grid.Column="5" Style="{StaticResource ButtonBase}" Command="{Binding Path=StopPollingCommand}">Stop Polling</Button>
             </Grid>
             
 
@@ -238,9 +237,9 @@
                     </Grid>
                 </TabItem>
 
-                <!--<TabItem Header="Error Log">
+                <TabItem Header="Error Log">
                     <ListBox ItemsSource="{Binding Path=LogEntries}"/>
-                </TabItem>-->
+                </TabItem>
             </TabControl>
 
            
@@ -258,7 +257,7 @@
 
                 <view:ModbusAdapterSelector Grid.Column="1" DataContext="{Binding Path=ModbusAdapters}" VerticalAlignment="Center" />
 
-                <!--<TextBlock Grid.Column="3" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" ToolTip="Shows the number of successful reads when 'Auto Refresh' is enabled.">
+                <TextBlock Grid.Column="3" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" ToolTip="Shows the number of successful reads when 'Auto Refresh' is enabled.">
                     <TextBlock Text=" Reads: "/>
                     <TextBlock Text="{Binding Path=ReadCount}"/>
                 </TextBlock>
@@ -266,7 +265,7 @@
                 <TextBlock Grid.Column="4" Style="{StaticResource LabelStyle}" VerticalAlignment="Center" ToolTip="Shows the number of read failures when 'Auto Refresh' is enabled.">
                     <TextBlock Text=" Errors: "/>
                     <TextBlock Text="{Binding Path=ErrorCount}"/>
-                </TextBlock>-->
+                </TextBlock>
                 
             </Grid>
         </Grid>

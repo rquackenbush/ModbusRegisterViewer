@@ -1,6 +1,11 @@
+using System;
 using System.Collections.ObjectModel;
+using System.Timers;
+using System.Windows.Input;
 using Cas.Common.WPF.Interfaces;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Threading;
 using ModbusTools.Common;
 using ModbusTools.Common.Model;
 using ModbusTools.Common.ViewModel;
@@ -29,6 +34,11 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
         private readonly HoldingRegistersViewModel _holdingRegisters;
         private readonly InputRegistersViewModel _inputRegisters;
 
+        private readonly Timer _pollingTimer;
+        private bool _isPollingCancelled;
+        private IPoints _pointsToPoll;
+        private double _pollingInterval = 2.0;
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -47,6 +57,27 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
             SlaveAddress = _registerViewerPreferences.SlaveAddress;
             
             ModbusAdapters.ApplyPreferences(_preferences, RegisterViewerPreferences.Keys.ModbusAdapter);
+
+            _pollingTimer = new Timer()
+            {
+                AutoReset = false
+            };
+
+            _pollingTimer.Elapsed += PollingTimerEllapsed;
+
+            StopPollingCommand = new RelayCommand(StopPolling, CanStopPolling);
+        }
+
+        public ICommand StopPollingCommand { get; }
+
+        private void StopPolling()
+        {
+            _isPollingCancelled = true;
+        }
+
+        private bool CanStopPolling()
+        {
+            return _pointsToPoll != null && !_isPollingCancelled;
         }
         
         public ModbusAdaptersViewModel ModbusAdapters
@@ -59,15 +90,18 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
             _descriptionStore.Save();        
         }
 
-        //private void AddLogEntry(string message)
-        //{
-        //    var now = DateTime.Now;
+        private void AddLogEntry(string message)
+        {
+            var now = DateTime.Now;
 
-        //    var formatted = $"{now.ToShortDateString()} {now.ToShortTimeString()} - {message}";
+            var formatted = $"{now.ToShortDateString()} {now.ToShortTimeString()} - {message}";
 
-        //    LogEntries.Add(formatted);
-        //}
- 
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                LogEntries.Add(formatted);
+            });
+        }
+
         public int ErrorCount
         {
             get { return _errorCount; }
@@ -116,6 +150,73 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
         public IMessageBoxService MessageBoxService
         {
             get { return _messageBoxService; }
+        }
+
+        /// <summary>
+        /// Gets or sets the number of seconds to wait in between polling attempts.
+        /// </summary>
+        public double PollingInterval
+        {
+            get { return _pollingInterval; }
+            set
+            {
+                _pollingInterval = value; 
+                RaisePropertyChanged();
+            }
+        }
+
+        public void StartPolling(IPoints points)
+        {
+            if (points == null) throw new ArgumentNullException(nameof(points));
+
+            if (_pointsToPoll != null)
+                return;
+
+            _pointsToPoll = points;
+            _isPollingCancelled = false;
+            ReadCount = 0;
+            ErrorCount = 0;
+
+            _pointsToPoll = points;
+
+            _pollingTimer.Interval = PollingInterval * 1000;
+            _pollingTimer.Elapsed += PollingTimerEllapsed;
+            _pollingTimer.Enabled = true;
+        }
+
+        private void PollingTimerEllapsed(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                if (_isPollingCancelled)
+                {
+                    _pointsToPoll = null;
+                }
+                else
+                {
+                    _pointsToPoll.Read();
+
+                    ReadCount++;
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry(ex.Message);
+
+                ErrorCount++;
+            }
+            finally
+            {
+                if (!_isPollingCancelled && _pointsToPoll != null)
+                {
+                    _pollingTimer.Start();
+                }
+            }
+        }
+
+        public bool IsPolling
+        {
+            get { return _pointsToPoll != null; }
         }
 
         public CoilsViewModel Coils

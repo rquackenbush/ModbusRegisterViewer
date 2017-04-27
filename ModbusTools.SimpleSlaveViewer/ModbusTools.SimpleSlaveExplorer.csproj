@@ -117,6 +117,7 @@
     <Compile Include="ViewModel\HoldingRegistersViewModel.cs" />
     <Compile Include="ViewModel\InputRegistersViewModel.cs" />
     <Compile Include="ViewModel\InputsViewModel.cs" />
+    <Compile Include="ViewModel\IPoints.cs" />
     <Compile Include="ViewModel\IPointViewModel.cs" />
     <Compile Include="ViewModel\ISlaveExplorerContext.cs" />
     <Compile Include="ViewModel\PointsViewModelBase.cs" />
