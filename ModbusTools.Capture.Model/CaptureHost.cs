@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ModbusTools.Common;
+using NModbus.IO;
 
 namespace ModbusTools.Capture.Model
 {
@@ -8,14 +9,14 @@ namespace ModbusTools.Capture.Model
     {
         public event EventHandler SampleReceived;
 
-        private readonly IMasterContext _masterContext;
+        private readonly IStreamResource _streamResource;
         private PromiscuousListener _listener;
         
-        public CaptureHost(string path, IMasterContext masterContext)
+        public CaptureHost(string path, IStreamResource streamResource)
         {
-            if (masterContext == null) throw new ArgumentNullException(nameof(masterContext));
+            if (streamResource == null) throw new ArgumentNullException(nameof(streamResource));
 
-            _masterContext = masterContext;
+            _streamResource = streamResource;
 
             var task = new Task(() =>
             {
@@ -23,22 +24,17 @@ namespace ModbusTools.Capture.Model
                 {
                     using (var writer = new CaptureFileWriter(path))
                     {
-                        //TODO: Migrate
+                        using (_listener = new PromiscuousListener(streamResource))
+                        {
+                            _listener.Sample += (sender, args) =>
+                            {
+                                writer.WriteSample(args.Sample);
 
-                        ////Get the port
-                        //var port = masterContext.Master.Transport.GetStreamResource();
+                                OnSampleReceived();
+                            };
 
-                        //using (_listener = new PromiscuousListener(port))
-                        //{
-                        //    _listener.Sample += (sender, args) =>
-                        //    {
-                        //        writer.WriteSample(args.Sample);
-
-                        //        OnSampleReceived();
-                        //    };
-
-                        //    _listener.Listen();
-                        //}
+                            _listener.Listen();
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -70,7 +66,7 @@ namespace ModbusTools.Capture.Model
                 listener.Dispose();
             }
 
-            _masterContext.Dispose();
+            //streamResource.Dispose();
         }
     }
 }
