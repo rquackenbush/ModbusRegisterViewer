@@ -238,9 +238,9 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem Header="Error Log">
+                <!--<TabItem Header="Error Log">
                     <ListBox ItemsSource="{Binding Path=LogEntries}"/>
-                </TabItem>
+                </TabItem>-->
             </TabControl>
 
            

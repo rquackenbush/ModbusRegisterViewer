@@ -1,5 +1,6 @@
 ﻿using System;
 using NModbus;
+using ModbusTools.Common;
 
 namespace ModbusTools.SimpleSlaveExplorer.ViewModel
 {
@@ -11,7 +12,7 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
 
         protected override ushort[] ReadCore(IModbusMaster modbusMaster, byte slaveId, ushort startAddress, ushort numberOfPoints)
         {
-            return modbusMaster.ReadInputRegisters(slaveId, startAddress, numberOfPoints);
+            return modbusMaster.ReadInputRegisters(slaveId, startAddress, numberOfPoints, BlockSize);
         }
 
         protected override void WriteCore(IModbusMaster modbusMaster, byte slaveId, ushort startAddress, ushort[] values)

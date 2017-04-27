@@ -121,7 +121,6 @@
     <Compile Include="ViewModel\ISlaveExplorerContext.cs" />
     <Compile Include="ViewModel\PointsViewModelBase.cs" />
     <Compile Include="ViewModel\CoilViewModel.cs" />
-    <Compile Include="ViewModel\RegisterTypeViewModel.cs" />
     <Compile Include="ViewModel\SlaveExplorerViewModel.cs" />
     <Compile Include="ViewModel\SlaveExplorerRegisterViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
