@@ -102,7 +102,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelStyle}">Starting Address</TextBlock>
-                            <xctk:IntegerUpDown  Grid.Row="0" Grid.Column="1" Minimum="{Binding Path=StartAddress}" Maximum="65536"   MinWidth="60" Value="{Binding Path=StartAddress}" />
+                            <xctk:IntegerUpDown  Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="65536"   MinWidth="60" Value="{Binding Path=StartAddress}" />
 
                             <TextBlock  Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}" >Number</TextBlock>
                             <xctk:IntegerUpDown  Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="4000" MinWidth="60" Value="{Binding Path=NumberOfPoints}" />
