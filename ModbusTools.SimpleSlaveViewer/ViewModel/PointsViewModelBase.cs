@@ -194,6 +194,7 @@ namespace ModbusTools.SimpleSlaveExplorer.ViewModel
             {
                 _startAddress = value; 
                 RaisePropertyChanged();
+                FillInPoints();
             }
         }
 
