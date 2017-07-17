@@ -62,10 +62,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>E27BFCC3333DDCACC1388E72850FC195D8EE3E13</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>A45C04C8B0BBBB6D98C148801B029EC3634BC5B5</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>ModbusRegisterViewer_3_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>ModbusRegisterViewer_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -177,9 +177,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="ModbusRegisterViewer_1_TemporaryKey.pfx" />
-    <None Include="ModbusRegisterViewer_2_TemporaryKey.pfx" />
-    <None Include="ModbusRegisterViewer_3_TemporaryKey.pfx" />
     <None Include="ModbusRegisterViewer_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
