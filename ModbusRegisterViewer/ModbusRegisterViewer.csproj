@@ -36,7 +36,7 @@
     <SuiteName>CAS Embedded Tools</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>46</ApplicationRevision>
+    <ApplicationRevision>47</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -62,10 +62,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>A45C04C8B0BBBB6D98C148801B029EC3634BC5B5</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>5C6DEA030E9F82CB5FC9E6129260BD8EFA7640A8</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>ModbusRegisterViewer_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>MyKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -177,7 +177,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="ModbusRegisterViewer_TemporaryKey.pfx" />
+    <None Include="MyKey.cer" />
+    <None Include="MyKey.pfx" />
+    <None Include="MyKey.pvk" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
