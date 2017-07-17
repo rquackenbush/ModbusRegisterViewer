@@ -52,7 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>58060F1C4FC2968057D0A70344C1EDFBF3126837</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>432410A345D58868C62F4F3B7846BE3A289C1569</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>ModbusTools_TemporaryKey.pfx</ManifestKeyFile>
