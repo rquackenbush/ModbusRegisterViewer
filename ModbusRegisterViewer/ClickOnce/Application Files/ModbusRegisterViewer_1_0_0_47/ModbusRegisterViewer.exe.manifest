@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="ModbusRegisterViewer.exe" version="1.0.0.47" publicKeyToken="7616438e1d6cfc84" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="ModbusRegisterViewer.exe" version="1.0.0.47" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <description asmv2:iconFile="equipment_zoom_128.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
@@ -115,14 +115,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ModbusRegisterViewer.exe" size="466448">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ModbusRegisterViewer.exe" size="465408">
       <assemblyIdentity name="ModbusRegisterViewer" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>/zEhJUeSFOUAucRA2htwgoqAPE/SQ5fZGAPGTZZ2kxk=</dsig:DigestValue>
+        <dsig:DigestValue>0pmuJaxQLqvsdO353n/SQr+r2PQBZEJFrEuY+4zzQS8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -522,7 +522,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>jkwEUFQTd2PodIQb9kQ8G3lJUCgxl8rBZ0ms/LCxGas=</dsig:DigestValue>
+      <dsig:DigestValue>FpbM/iBvALB34ZGLFw97kf0ApkBHFA0tk41NHjj2lyo=</dsig:DigestValue>
     </hash>
   </file>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
@@ -539,4 +539,4 @@
       <!--<supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/>-->
     </application>
   </compatibility>
-<publisherIdentity name="CN=CAPTIVE_AIRE\rich.quackenbush" issuerKeyHash="a1c7d62a824db3372174e4190fed6c5154e93c96" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>FQ1NeKUIjyTqYBDOJXobAqFJp1RTKg+Q+TpmQVIA2ms=</DigestValue></Reference></SignedInfo><SignatureValue>i16aQXFyT7Mr8NLFNZr9irMGHM9we6S/kylo45+YNW40Mi9M0Li1bm052fUlBPz6GeIBq0Ch77LHnAmTlqhAIaqZD43m7btCwQxq5i/0QTG1/lFBK2rImMiY57wu4n40oAlMPQeENR10/s705ZsAof2oSW3eHqa2jqEetnK9eX0=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>jb835onzcc3Qs7yaJ9VijyGJlQRqTRZrFR4J0P5br+muxPNQFfPBzPz12ioXPzqV5hHcrPM2LDkg3lnm+FHdGCiIqcjCjNIUdzbTealJ+BPcX9zxwj6Tkdag1Mg5wWdKj8C+Cr5SWFVb+uEdKlKCa8rq+WHY6YTKtXVbqwTu4Qk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="6bda005241663af9900f2a5354a749a1021b7a25ce1060ea248f08a5784d0d15" Description="" Url=""><as:assemblyIdentity name="ModbusRegisterViewer.exe" version="1.0.0.47" publicKeyToken="7616438e1d6cfc84" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=CAPTIVE_AIRE\rich.quackenbush</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>xTwvzvZgVr7UbAnNcZr8vVxVyLcAEShQzLF2FCBfKiE=</DigestValue></Reference></SignedInfo><SignatureValue>M0Tmqxbt6b6XQ4VFPDFpRmGeheEdMy6zqZabycUPcFHpsSFn07iJlATdfx091RRvp3TywFSGlHVvW2OYtptrBDSNa0uaEEkhIgaacZa3Ew1+/it4uYiq1+b9EY6rdGMN2/CCLK0smDXe5m0V+AAW+60t2WgrdQucf6NEZZbwD2E=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>jb835onzcc3Qs7yaJ9VijyGJlQRqTRZrFR4J0P5br+muxPNQFfPBzPz12ioXPzqV5hHcrPM2LDkg3lnm+FHdGCiIqcjCjNIUdzbTealJ+BPcX9zxwj6Tkdag1Mg5wWdKj8C+Cr5SWFVb+uEdKlKCa8rq+WHY6YTKtXVbqwTu4Qk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIICDTCCAXagAwIBAgIQIX1sGlnuVJVHY3IfbWeHBzANBgkqhkiG9w0BAQsFADBFMUMwQQYDVQQDHjoAQwBBAFAAVABJAFYARQBfAEEASQBSAEUAXAByAGkAYwBoAC4AcQB1AGEAYwBrAGUAbgBiAHUAcwBoMB4XDTE3MDcxNzE3MTMwMFoXDTE4MDcxNzIzMTMwMFowRTFDMEEGA1UEAx46AEMAQQBQAFQASQBWAEUAXwBBAEkAUgBFAFwAcgBpAGMAaAAuAHEAdQBhAGMAawBlAG4AYgB1AHMAaDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAjb835onzcc3Qs7yaJ9VijyGJlQRqTRZrFR4J0P5br+muxPNQFfPBzPz12ioXPzqV5hHcrPM2LDkg3lnm+FHdGCiIqcjCjNIUdzbTealJ+BPcX9zxwj6Tkdag1Mg5wWdKj8C+Cr5SWFVb+uEdKlKCa8rq+WHY6YTKtXVbqwTu4QkCAwEAATANBgkqhkiG9w0BAQsFAAOBgQAtnLW9GI1+N7qX+WkiN6+zP1LLLLtmFf0Wms5j69ScBhB7gn3nQpXKlxsL6pAI428NUwxrdwHVaYcXNiuWJBMSnCsYnfmybDbf9KYqwf+25nyJU7JLxnByW/9oP5krBivaAiHuSk7O5hU7P8cWH0nn2hM6fwAqSGj2JHrC0H+zSA==</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
+</asmv1:assembly>
