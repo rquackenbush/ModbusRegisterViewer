@@ -21,7 +21,7 @@
     <RestorePackages>true</RestorePackages>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>\\tools.captiveaire.com\Tools\ModbusTools\</PublishUrl>
+    <PublishUrl>ClickOnce\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -31,13 +31,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://tools.captiveaire.com/ModbusTools/</InstallUrl>
+    <InstallUrl>https://raw.githubusercontent.com/CaptiveAire/ModbusRegisterViewer/master/ClickOnce/</InstallUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/CaptiveAire/ModbusRegisterViewer/master/ClickOnce/</UpdateUrl>
     <ProductName>Modbus Tools</ProductName>
     <PublisherName>CaptiveAire Systems</PublisherName>
     <SuiteName>Modbus Tools</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>default.htm</WebPage>
-    <ApplicationRevision>47</ApplicationRevision>
+    <ApplicationRevision>48</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
