@@ -31,8 +31,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://raw.githubusercontent.com/CaptiveAire/ModbusRegisterViewer/master/ClickOnce/</InstallUrl>
-    <UpdateUrl>https://raw.githubusercontent.com/CaptiveAire/ModbusRegisterViewer/master/ClickOnce/</UpdateUrl>
+    <InstallUrl>https://raw.githubusercontent.com/CaptiveAire/ModbusRegisterViewer/master/ModbusRegisterViewer/ClickOnce/</InstallUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/CaptiveAire/ModbusRegisterViewer/master/ModbusRegisterViewer/ClickOnce/</UpdateUrl>
     <ProductName>Modbus Tools</ProductName>
     <PublisherName>CaptiveAire Systems</PublisherName>
     <SuiteName>Modbus Tools</SuiteName>
