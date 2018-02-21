@@ -34,8 +34,8 @@
             <ComboBox Grid.Column="4" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Parity" SelectedValue="{Binding Path=Parity}" ItemsSource="{Binding Path=Parities}" />
             <ComboBox Grid.Column="5" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Stop Bits" ItemsSource="{Binding Path=StopBitChoices}" SelectedValue="{Binding Path=StopBits}" SelectedValuePath="Key" DisplayMemberPath="Value" />
             <TextBlock Grid.Column="6" Text=":" VerticalAlignment="Center" Margin="1,0,1,0"/>
-            <xctk:DecimalUpDown Grid.Column="7" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Read Timeout (seconds)" Value="{Binding Path=ReadTimeout}" FormatString="0.0" Minimum="0" Maximum="5" />
-            <xctk:DecimalUpDown Grid.Column="8" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Write Timeout (seconds)" Value="{Binding Path=WriteTimeout}" FormatString="0.0" Minimum="0" Maximum="5" />
+            <xctk:DecimalUpDown Grid.Column="7" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Read Timeout (seconds)" Value="{Binding Path=ReadTimeout}" FormatString="0.000" Minimum="0" Maximum="5" />
+            <xctk:DecimalUpDown Grid.Column="8" VerticalAlignment="Center" Margin="1,0,1,0" ToolTip="Write Timeout (seconds)" Value="{Binding Path=WriteTimeout}" FormatString="0.000" Minimum="0" Maximum="5" />
         </Grid>
     </Grid>
     

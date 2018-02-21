@@ -115,6 +115,11 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             }
         }
 
+        public void ClearActivity()
+        {
+            _activities.Clear();
+        }
+
         public ObservableCollection<ActivityViewModel> Activities
         {
             get { return _activities; }

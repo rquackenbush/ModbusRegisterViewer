@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:viewModel="clr-namespace:ModbusTools.StructuredSlaveExplorer.ViewModel"
-             xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
              xmlns:viewModel1="clr-namespace:ModbusTools.StructuredSlaveExplorer.ViewModel"
+             xmlns:controls="clr-namespace:Cas.Common.WPF.Controls;assembly=Cas.Common.WPF"
              mc:Ignorable="d" 
              d:DataContext="{x:Static viewModel1:ViewModelLocator.RegisterRange}"
              d:DesignWidth="800">
@@ -51,7 +51,7 @@
 
                 <Button Grid.Row="0" Grid.Column="3" Margin="4" MinWidth="100" Command="{Binding Path=EditCommand}">Edit</Button>
                 
-                <Button Grid.Row="0" Grid.Column="4" Margin="4" Command="{Binding Path=DeleteCommand}"><common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Delete.gif" /></Button>
+                <Button Grid.Row="0" Grid.Column="4" Margin="4" Command="{Binding Path=DeleteCommand}"><controls:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Delete.gif" /></Button>
             </Grid>
 
             <DataGrid Grid.Row="1" Margin="4" AutoGenerateColumns="False" IsReadOnly="False" ItemsSource="{Binding Path=Fields}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" CanUserDeleteRows="True" CanUserAddRows="True">

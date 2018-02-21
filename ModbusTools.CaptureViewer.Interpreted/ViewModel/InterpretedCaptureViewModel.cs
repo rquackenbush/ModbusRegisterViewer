@@ -81,7 +81,6 @@ namespace ModbusTools.CaptureViewer.Interpreted.ViewModel
                         buffer.Clear();
                     }
                 }
-
             }
 
             //Ditch the first one if it has an error

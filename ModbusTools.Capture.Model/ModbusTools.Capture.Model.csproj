@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ModbusTools.Capture.Model</RootNamespace>
     <AssemblyName>ModbusTools.Capture.Model</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,11 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NModbus, Version=3.0.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NModbus.3.0.15\lib\net45\NModbus.dll</HintPath>
+    <Reference Include="NModbus, Version=3.0.50.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NModbus.3.0.50\lib\net46\NModbus.dll</HintPath>
     </Reference>
-    <Reference Include="NModbus.Serial, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NModbus.Serial.3.0.15\lib\net45\NModbus.Serial.dll</HintPath>
+    <Reference Include="NModbus.Serial, Version=3.0.48.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NModbus.Serial.3.0.48\lib\net45\NModbus.Serial.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

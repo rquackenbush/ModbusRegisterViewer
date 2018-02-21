@@ -13,7 +13,6 @@ namespace ModbusTools.Capture.Model
 
         public long _sampleCount;
         private readonly Stopwatch _stopWatch = new Stopwatch();
-        
 
         public CaptureFileWriter(string path)
         {
@@ -46,11 +45,8 @@ namespace ModbusTools.Capture.Model
             if (_stopWatch.IsRunning)
                 _stopWatch.Stop();
 
-            if (_file != null)
-                _file.Dispose();
-            
-            if (_writer != null)
-                _writer.Dispose();
+            _file?.Dispose();
+            _writer?.Dispose();
         }
     }
 }

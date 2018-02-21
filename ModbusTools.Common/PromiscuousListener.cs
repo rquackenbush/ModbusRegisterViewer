@@ -11,7 +11,7 @@ namespace ModbusTools.Common
             this.Sample = sample;
         }
 
-        public byte Sample { get; private set; }
+        public byte Sample { get; }
     }
 
     public class PromiscuousListener : IDisposable
@@ -52,10 +52,7 @@ namespace ModbusTools.Common
                     }
                     catch (TimeoutException)
                     {
-                        if (_streamResource != null)
-                        {
-                            _streamResource.DiscardInBuffer();
-                        }
+                        _streamResource?.DiscardInBuffer();
                     }
                 }
                 catch (InvalidOperationException)
@@ -68,20 +65,12 @@ namespace ModbusTools.Common
 
         private void RaiseSampleEvent(byte data)
         {
-            var sample = Sample;
-
-            if (sample == null)
-                return;
-
-            sample(this, new SampleEventArgs(data));
+            Sample?.Invoke(this, new SampleEventArgs(data));
         }
         
         public void Dispose()
         {
-            if (_streamResource != null)
-            {
-                _streamResource.Dispose();
-            }
+            _streamResource.Dispose();            
         }
     }
 }
