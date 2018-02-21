@@ -71,6 +71,9 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             foreach (var slave in _slaves)
             {
                 _slaveNetwork.AddSlave(slave.CreateModbusSlave());
+
+                //Clear activity for each one.
+                slave.ClearActivity();
             }
 
             _listenTask = Task.Factory.StartNew(async () => 

@@ -25,9 +25,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
         public static FunctionServiceResult Process(Sample[] samples)
         {
             try
-            {  
-                IFunctionService service;
-
+            {
                 if (samples.Length < 5)
                 {
                     return new FunctionServiceResult("Packet not long enough.");
@@ -44,7 +42,7 @@ namespace ModbusTools.CaptureViewer.Interpreted.Model
                     return new FunctionServiceResult(error: exceptionDescription);
                 }
 
-                if (_functionServices.TryGetValue(functionCode, out service))
+                if (_functionServices.TryGetValue(functionCode, out var service))
                 {
                     return service.Process(samples);
                 }

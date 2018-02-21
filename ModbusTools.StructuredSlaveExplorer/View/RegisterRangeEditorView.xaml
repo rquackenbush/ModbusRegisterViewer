@@ -9,18 +9,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel="clr-namespace:ModbusTools.StructuredSlaveExplorer.ViewModel"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:behaviors="clr-namespace:ModbusTools.Common.Behaviors;assembly=ModbusTools.Common"
         xmlns:viewModel1="clr-namespace:ModbusTools.StructuredSlaveExplorer.ViewModel"
         xmlns:model="clr-namespace:ModbusTools.StructuredSlaveExplorer.Model"
         xmlns:converters="clr-namespace:Cas.Common.WPF.Converters;assembly=Cas.Common.WPF"
+        xmlns:behaviors1="clr-namespace:Cas.Common.WPF.Behaviors;assembly=Cas.Common.WPF"
+        xmlns:controls="clr-namespace:Cas.Common.WPF.Controls;assembly=Cas.Common.WPF"
         mc:Ignorable="d"
         x:Name="root"
         d:DataContext="{x:Static viewModel1:ViewModelLocator.RegisterRangeEditor}" Icon="/ModbusTools.StructuredSlaveExplorer;component/Images/resource_16xLG.png">
 
     <i:Interaction.Behaviors>
-        <common:CloseableBehavior />
+        <behaviors1:CloseableBehavior />
     </i:Interaction.Behaviors>
 
     <Window.Resources>
@@ -103,40 +103,40 @@
         <!-- Toolbar -->
         <ToolBar Grid.Row="1">
             <Button ToolTip="Insert a new item above the currently selected item" Command="{Binding Path=InsertAboveCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/InsertAbove.png" Width="16"  />
+                <controls:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/InsertAbove.png" Width="16"  />
             </Button>
 
             <Button ToolTip="Insert a new item below the currenlt selected item" Command="{Binding Path=InsertBelowCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/InsertBelow.png" Width="16"  />
+                <controls:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/InsertBelow.png" Width="16"  />
             </Button>
 
             <Separator/>
 
             <Button ToolTip="Move the selected item(s) down" Command="{Binding Path=MoveDownCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Down_16x16.png" Width="16"  />
+                <controls:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Down_16x16.png" Width="16"  />
             </Button>
             <Button ToolTip="Move the selected item(s) up" Command="{Binding Path=MoveUpCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Up_16x16.png" Width="16"  />
+                <controls:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Up_16x16.png" Width="16"  />
             </Button>
 
 
             <Button ToolTip="Move the selected item(s) to the bottom" Command="{Binding Path=MoveToBottomCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/move_to_bottom.png" Width="16"  />
+                <controls:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/move_to_bottom.png" Width="16"  />
             </Button>
             <Button ToolTip="Move the selected item(s) to the top" Command="{Binding Path=MoveToTopCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/move_to_top.png" Width="16"  />
+                <controls:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/move_to_top.png" Width="16"  />
             </Button>
 
             <Separator/>
             <Button ToolTip="Delete" Command="{Binding Path=DeleteCommand}">
-                <common:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Delete.gif" Width="16"  />
+                <controls:AutoGreyableImage Source="/ModbusTools.StructuredSlaveExplorer;component/Images/Delete.gif" Width="16"  />
             </Button>
         </ToolBar>
 
         <!-- Fields -->
         <DataGrid Grid.Row="2" AutoGenerateColumns="False" ItemsSource="{Binding Path=Fields}" CanUserSortColumns="False">
             <i:Interaction.Behaviors>
-                <behaviors:MultiSelectorSelectedItemsBehavior SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
+                <behaviors1:MultiSelectorSelectedItemsBehavior SelectedItems="{Binding SelectedItems, Mode=TwoWay}" />
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Offset" IsReadOnly="True" Binding="{Binding Path=Offset}"></DataGridTextColumn>

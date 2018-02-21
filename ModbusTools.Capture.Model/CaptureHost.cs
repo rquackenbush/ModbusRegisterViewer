@@ -9,14 +9,11 @@ namespace ModbusTools.Capture.Model
     {
         public event EventHandler SampleReceived;
 
-        private readonly IStreamResource _streamResource;
         private PromiscuousListener _listener;
         
         public CaptureHost(string path, IStreamResource streamResource)
         {
             if (streamResource == null) throw new ArgumentNullException(nameof(streamResource));
-
-            _streamResource = streamResource;
 
             var task = new Task(() =>
             {
@@ -49,24 +46,12 @@ namespace ModbusTools.Capture.Model
 
         protected void OnSampleReceived()
         {
-            var handler = SampleReceived;
-
-            if (handler == null)
-                return;
-
-            handler(this, EventArgs.Empty);
+            SampleReceived?.Invoke(this, EventArgs.Empty);
         }
 
         public void Dispose()
         {
-            var listener = _listener;
-
-            if (listener != null)
-            {
-                listener.Dispose();
-            }
-
-            //streamResource.Dispose();
+            _listener?.Dispose();
         }
     }
 }

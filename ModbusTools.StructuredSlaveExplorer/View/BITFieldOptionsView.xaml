@@ -1,8 +1,8 @@
 ﻿<Window x:Class="ModbusTools.StructuredSlaveExplorer.View.BITFieldOptionsView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:common="clr-namespace:ModbusTools.Common;assembly=ModbusTools.Common"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviors="clr-namespace:Cas.Common.WPF.Behaviors;assembly=Cas.Common.WPF"
         Background="#EAEAEA"
         ResizeMode="NoResize"
         Title="{Binding Path=Title}"  Width="400" SizeToContent="Height">
@@ -20,7 +20,7 @@
     </Window.Resources>
 
     <i:Interaction.Behaviors>
-        <common:CloseableBehavior />
+        <behaviors:CloseableBehavior />
     </i:Interaction.Behaviors>
     <Grid>
         
