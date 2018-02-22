@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <configSections>
+        <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+            <section name="ModbusRegisterViewer.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false"/>
+        </sectionGroup>
+    </configSections>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.6"/>
+    </startup>
+    <userSettings>
+        <ModbusRegisterViewer.Properties.Settings>
+            <setting name="SlaveAddress" serializeAs="String">
+                <value>1</value>
+            </setting>
+            <setting name="StartingRegister" serializeAs="String">
+                <value>1000</value>
+            </setting>
+            <setting name="NumberOfRegisters" serializeAs="String">
+                <value>1</value>
+            </setting>
+            <setting name="RegisterType" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="AdapterSerialNumber" serializeAs="String">
+                <value/>
+            </setting>
+            <setting name="SlaveSimulatorSerialPortName" serializeAs="String">
+                <value/>
+            </setting>
+            <setting name="SlaveSimulatorSlaveAddress" serializeAs="String">
+                <value>100</value>
+            </setting>
+        </ModbusRegisterViewer.Properties.Settings>
+    </userSettings>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.Practices.ServiceLocation" publicKeyToken="31bf3856ad364e35" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-1.3.0.0" newVersion="1.3.0.0"/>
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>
