@@ -37,9 +37,15 @@
                 <common:AutoGreyableImage Source="/ModbusTools.SlaveSimulator;component/Images/Stop.png" Width="16" />
             </Button>
             <Separator/>
-
             <Button Command="{Binding Path=AddSlaveCommand}">
                 Add Slave
+            </Button>
+            <Separator/>
+            <Button Command="{Binding Path=LoadCommand}" ToolTip="Load a simulator">
+                <common:AutoGreyableImage Source="/ModbusTools.SlaveSimulator;component/Images/OpenFolder_16x.png" Width="16" />
+            </Button>
+            <Button Command="{Binding Path=SaveCommand}" ToolTip="Save this simulator">
+                <common:AutoGreyableImage Source="/ModbusTools.SlaveSimulator;component/Images/save_16xLG.png" Width="16" />
             </Button>
         </ToolBar>
 

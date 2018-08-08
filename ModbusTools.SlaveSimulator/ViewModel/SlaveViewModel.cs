@@ -8,6 +8,8 @@ using NModbus;
 
 namespace ModbusTools.SlaveSimulator.ViewModel
 {
+    using ModbusTools.SlaveSimulator.Persistence;
+
     public class SlaveViewModel : ViewModelBase
     {
         private byte _slaveId;
@@ -171,6 +173,46 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 
             //Attach our custom storage
             return factory.CreateSlave(SlaveId, _slaveStorage);
+        }
+
+        public Slave ToModel()
+        {
+            return new Slave()
+            {
+                SlaveId = SlaveId,
+
+                HoldingRegisters = HoldingRegisters
+                    .Where(r => r.Value != 0)
+                    .Select(r => new Point<ushort>()
+                    {
+                        Address = r.Address,
+                        Value = r.Value
+                    }).ToArray(),
+
+                InputRegisters = InputRegisters
+                    .Where(r => r.Value != 0)
+                    .Select(r => new Point<ushort>()
+                    {
+                        Address = r.Address,
+                        Value = r.Value
+                    }).ToArray(),
+
+                Inputs = CoilInputs
+                    .Where(r => r.Value)
+                    .Select(d => new Point<bool>
+                    {
+                        Address = d.Address,
+                        Value = d.Value
+                    }).ToArray(),
+
+                Discretes = CoilDiscretes
+                    .Where(r => r.Value)
+                    .Select(d => new Point<bool>
+                    {
+                        Address = d.Address,
+                        Value = d.Value
+                    }).ToArray(),
+            };
         }
     }
 }
