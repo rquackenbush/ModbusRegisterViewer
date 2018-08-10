@@ -41,11 +41,14 @@
                 Add Slave
             </Button>
             <Separator/>
-            <Button Command="{Binding Path=LoadCommand}" ToolTip="Load a simulator">
+            <Button Command="{Binding Path=OpenCommand}" ToolTip="Load a simulator">
                 <common:AutoGreyableImage Source="/ModbusTools.SlaveSimulator;component/Images/OpenFolder_16x.png" Width="16" />
             </Button>
-            <Button Command="{Binding Path=SaveCommand}" ToolTip="Save this simulator">
+            <Button Command="{Binding Path=SaveCommand}" ToolTip="Save this simulator using the existing filename">
                 <common:AutoGreyableImage Source="/ModbusTools.SlaveSimulator;component/Images/save_16xLG.png" Width="16" />
+            </Button>
+            <Button Command="{Binding Path=SaveAsCommand}" ToolTip="Save this simulator with a new filename">
+                <common:AutoGreyableImage Source="/ModbusTools.SlaveSimulator;component/Images/SaveAs_16x.png" Width="16" />
             </Button>
         </ToolBar>
 

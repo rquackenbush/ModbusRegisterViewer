@@ -11,6 +11,8 @@ using Xceed.Wpf.AvalonDock.Layout;
 
 namespace ModbusTools.Launcher
 {
+    using System.Windows.Data;
+
     /// <summary>
     /// Interaction logic for MainWIndow.xaml
     /// </summary>
@@ -41,6 +43,28 @@ namespace ModbusTools.Launcher
             MainDocumentPane.SelectedContentIndex = MainDocumentPane.ChildrenCount - 1;
         }
 
+        private void AddToolWithTitle<TView>(string name)
+            where TView : FrameworkElement, new()
+        {
+            var view = new TView();
+
+            var layoutDocument = new LayoutDocument()
+            {
+                Content = view,
+            };
+
+            Binding binding = new Binding("Title")
+            {
+                Source = view.DataContext
+            };
+
+            BindingOperations.SetBinding(layoutDocument, LayoutContent.TitleProperty, binding);
+
+            MainDocumentPane.Children.Add(layoutDocument);
+            MainDocumentPane.SelectedContentIndex = MainDocumentPane.ChildrenCount - 1;
+        }
+
+
         private void AddTool(ToolType toolType)
         {
             switch (toolType)
@@ -59,7 +83,7 @@ namespace ModbusTools.Launcher
                     break;
 
                 case ToolType.SlaveSimulator:
-                    AddTool<SlaveSimulatorView>("Slave Simulator");
+                    AddToolWithTitle<SlaveSimulatorView>("Slave Simulator");
                     break;
 
                 case ToolType.SlaveScanner:

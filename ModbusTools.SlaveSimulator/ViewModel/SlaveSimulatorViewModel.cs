@@ -28,6 +28,8 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         private Task _listenTask;
 
         private const string Filter = "Slave Simulator (.slavesim)|*.slavesim";
+
+        private string _filename;
         
         public SlaveSimulatorViewModel()
         {
@@ -35,7 +37,8 @@ namespace ModbusTools.SlaveSimulator.ViewModel
             StopCommand = new RelayCommand(Stop, CanStop);
             AddSlaveCommand = new RelayCommand(AddSlave, CanAddSlave);
             SaveCommand = new RelayCommand(Save, CanSave);
-            LoadCommand = new RelayCommand(Load, CanLoad);
+            SaveAsCommand = new RelayCommand(SaveAs, CanSaveAs);
+            OpenCommand = new RelayCommand(Open, CanLoad);
             AddSlave();
         }
 
@@ -43,9 +46,33 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         public ICommand StopCommand { get; }
         public ICommand AddSlaveCommand { get; }
         public ICommand SaveCommand { get; }
-        public ICommand LoadCommand {  get;}
+        public ICommand SaveAsCommand { get; }
+        public ICommand OpenCommand {  get;}
 
         private void Save()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(_filename))
+                {
+                    SaveAs();
+                }
+                else
+                {
+                    var model = ToModel();
+
+                    string json = JsonConvert.SerializeObject(model, Formatting.Indented);
+
+                    File.WriteAllText(_filename, json);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
+        private void SaveAs()
         {
             try
             {
@@ -56,17 +83,20 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 
                 if (saveDialog.ShowDialog() == true)
                 {
-                    var model = ToModel();
+                    Filename = saveDialog.FileName;
 
-                    string json = JsonConvert.SerializeObject(model, Formatting.Indented);
-
-                    File.WriteAllText(saveDialog.FileName, json);
+                    Save();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error");
             }
+        }
+
+        private bool CanSaveAs()
+        {
+            return _slaveNetwork == null;
         }
 
         private bool CanSave()
@@ -78,13 +108,26 @@ namespace ModbusTools.SlaveSimulator.ViewModel
         {
             return new SimulatorProject()
             {
+                CommPort = ModbusAdapters.SelectedPort,
+                ReadTimeout = ModbusAdapters.ReadTimeout,
+                WriteTimeout = ModbusAdapters.WriteTimeout,
                 Slaves = Slaves
                     .Select(s => s.ToModel())
                     .ToArray()
             };
         }
 
-        private void Load()
+        private string Filename
+        {
+            get { return _filename; }
+            set
+            {
+                _filename = value;
+                RaisePropertyChanged(() => Title);
+            }
+        }
+
+        private void Open()
         {
             try
             {
@@ -95,6 +138,8 @@ namespace ModbusTools.SlaveSimulator.ViewModel
 
                 if (openDialog.ShowDialog() == true)
                 {
+                    Filename = openDialog.FileName;
+
                     string json = File.ReadAllText(openDialog.FileName);
 
                     var model = JsonConvert.DeserializeObject<SimulatorProject>(json);
@@ -148,6 +193,24 @@ namespace ModbusTools.SlaveSimulator.ViewModel
                         }
 
                         Slaves.Add(slave);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(model.CommPort))
+                    {
+                        if (ModbusAdapters.Ports.Contains(model.CommPort))
+                        {
+                            ModbusAdapters.SelectedPort = model.CommPort;
+                        }
+                    }
+
+                    if (model.ReadTimeout != null)
+                    {
+                        ModbusAdapters.ReadTimeout = model.ReadTimeout.Value;
+                    }
+
+                    if (model.WriteTimeout != null)
+                    {
+                        ModbusAdapters.WriteTimeout = model.WriteTimeout.Value;
                     }
                 }
             }
@@ -228,6 +291,17 @@ namespace ModbusTools.SlaveSimulator.ViewModel
                     }
                 }
             }, TaskCreationOptions.LongRunning);
+        }
+
+        public string Title
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_filename))
+                    return "Slave Simulator";
+
+                return $"Slave Simulator - {Path.GetFileName(_filename)}";
+            }
         }
 
         public bool CanCloseSlave()
